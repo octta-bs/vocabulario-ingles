@@ -11,5 +11,9 @@ public enum TipoEjercicio
 
     // Solo verbos: completas una frase con el verbo en pasado o en futuro.
     CompletarPasado,
-    CompletarFuturo
+    CompletarFuturo,
+
+    // Dictado: oyes la palabra (o la frase de ejemplo) y la escribes.
+    DictadoPalabra,
+    DictadoFrase
 }

@@ -2,6 +2,8 @@
 @{
     ViewData["Title"] = "Resultado";
     var escrito = string.IsNullOrWhiteSpace(Model.RespuestaDada) ? "(nada)" : Model.RespuestaDada;
+    var ejercicio = Model.Ejercicio;
+    var conFrase = ejercicio.EsCompletar || ejercicio.Tipo == TipoEjercicio.DictadoFrase;
 }
 
 @if (Model.Acerto)
@@ -12,9 +14,13 @@ else
 {
     <div class="alert alert-danger">
         <strong>Casi.</strong> Escribiste: <strong>@escrito</strong>.
-        @if (Model.Ejercicio.EsCompletar)
+        @if (ejercicio.EsCompletar)
         {
-            <text>En el hueco iba: <strong>@Model.Ejercicio.Respuesta</strong></text>
+            <text>En el hueco iba: <strong>@ejercicio.Respuesta</strong></text>
+        }
+        else if (ejercicio.Tipo == TipoEjercicio.DictadoFrase)
+        {
+            <text>La frase era: <strong>@ejercicio.Respuesta</strong></text>
         }
         else
         {
@@ -31,21 +37,24 @@ else
         </div>
         <p class="text-muted mb-1">@Model.Palabra.Espanol</p>
         <p class="mb-1">@Model.Palabra.Pronunciacion · se lee: <strong>@Model.Palabra.ComoSeLee</strong></p>
-        @if (Model.Ejercicio.EsCompletar)
+        @if (conFrase)
         {
             <hr />
-            <p class="mb-1">
-                @if (Model.Ejercicio.TiempoVerbal != null)
-                {
-                    <span class="badge bg-info text-dark me-1">@Model.Ejercicio.TiempoVerbal</span>
-                }
-                <strong>@Model.Ejercicio.Respuesta</strong>
-            </p>
+            @if (ejercicio.EsCompletar)
+            {
+                <p class="mb-1">
+                    @if (ejercicio.TiempoVerbal != null)
+                    {
+                        <span class="badge bg-info text-dark me-1">@ejercicio.TiempoVerbal</span>
+                    }
+                    <strong>@ejercicio.Respuesta</strong>
+                </p>
+            }
             <div class="d-flex align-items-center gap-2">
-                <p class="mb-0"><em>@Model.Ejercicio.FraseCompleta</em></p>
-                <button type="button" class="btn btn-sm btn-outline-secondary btn-audio" data-texto="@Model.Ejercicio.FraseCompleta">🔊</button>
+                <p class="mb-0"><em>@ejercicio.FraseCompleta</em></p>
+                <button type="button" class="btn btn-sm btn-outline-secondary btn-audio" data-texto="@ejercicio.FraseCompleta">🔊</button>
             </div>
-            <p class="text-muted mb-0">@Model.Ejercicio.FraseEs</p>
+            <p class="text-muted mb-0">@ejercicio.FraseEs</p>
         }
         else
         {

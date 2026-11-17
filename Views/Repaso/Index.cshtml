@@ -33,6 +33,19 @@ else
                 <h2 class="frase-hueco">@Model.FraseConHueco</h2>
                 <p class="text-muted mb-0">@Model.FraseEs</p>
             }
+            else if (Model.EsDictado)
+            {
+                <p class="mb-2 text-muted">
+                    Dictado: escucha y escribe
+                    @(Model.Tipo == TipoEjercicio.DictadoFrase ? "la frase completa" : "la palabra")
+                </p>
+                <div class="d-flex gap-2 flex-wrap">
+                    <button type="button" class="btn btn-outline-primary btn-lg btn-audio" data-autoplay
+                            data-texto="@Model.TextoAudio">🔊 Escuchar</button>
+                    <button type="button" class="btn btn-outline-secondary btn-lg btn-audio" data-lento
+                            data-texto="@Model.TextoAudio">🐢 Más lento</button>
+                </div>
+            }
             else
             {
                 <p class="mb-1 text-muted">¿Cómo se dice en inglés?</p>
@@ -48,7 +61,7 @@ else
                 <input type="hidden" name="tipo" value="@Model.Tipo" />
                 <input type="text" name="respuesta" class="form-control form-control-lg mb-3"
                        autocomplete="off" autocapitalize="none" spellcheck="false" autofocus
-                       placeholder="@(Model.EsCompletar ? "Escribe lo que va en el hueco" : "")" />
+                       placeholder="@(Model.EsCompletar ? "Escribe lo que va en el hueco" : Model.EsDictado ? "Escribe lo que oyes" : "")" />
                 <button type="submit" class="btn btn-primary btn-lg">Comprobar</button>
             </form>
         </div>

@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using VocabularioIngles.Data;
 using VocabularioIngles.Models;
@@ -119,8 +120,15 @@ public class RepasoService
         };
     }
 
+    /// <summary>
+    /// Deja el texto listo para comparar: sin mayúsculas, sin signos de puntuación y con un solo
+    /// espacio entre palabras. Así en el dictado de frases no cuenta si pusiste el punto final.
+    /// El apóstrofo se conserva (I'm, don't) pero se acepta también el "curvo" del celular.
+    /// </summary>
     private static string Normalizar(string? texto)
     {
-        return (texto ?? "").Trim().ToLowerInvariant();
+        var limpio = (texto ?? "").ToLowerInvariant().Replace('’', '\'');
+        limpio = Regex.Replace(limpio, @"[.,;:!?¿¡""“”]", " ");
+        return Regex.Replace(limpio, @"\s+", " ").Trim();
     }
 }

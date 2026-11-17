@@ -1,4 +1,13 @@
-// Botón de audio: lee el texto en inglés con la voz del navegador (sin costo, sin archivos de audio).
+// Lee un texto en inglés con la voz del navegador (sin costo, sin archivos de audio).
+function hablar(texto, lento) {
+    var voz = new SpeechSynthesisUtterance(texto);
+    voz.lang = 'en-US';
+    voz.rate = lento ? 0.6 : 0.9;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(voz);
+}
+
+// Botón de audio. Con data-lento lee más despacio (útil en el dictado).
 document.addEventListener('click', function (evento) {
     var boton = evento.target.closest('.btn-audio');
     if (!boton) {
@@ -11,12 +20,21 @@ document.addEventListener('click', function (evento) {
         return;
     }
 
-    var voz = new SpeechSynthesisUtterance(texto);
-    voz.lang = 'en-US';
-    voz.rate = 0.9;
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(voz);
+    hablar(texto, boton.hasAttribute('data-lento'));
+
+    // Después de escuchar, regresa el cursor a la caja de texto para seguir escribiendo.
+    var caja = document.querySelector('input[name=respuesta]');
+    if (caja) {
+        caja.focus();
+    }
 });
+
+// En el dictado intenta leer el texto al abrir la página. Algunos navegadores no dejan
+// reproducir sonido sin que toques algo antes; en ese caso basta con el botón "Escuchar".
+var botonAutomatico = document.querySelector('.btn-audio[data-autoplay]');
+if (botonAutomatico && 'speechSynthesis' in window) {
+    hablar(botonAutomatico.getAttribute('data-texto'), false);
+}
 
 // Permite instalar la página en el celular como si fuera una app.
 if ('serviceWorker' in navigator) {

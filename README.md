@@ -2,8 +2,12 @@
 
 Aplicación web para aprender vocabulario de inglés (empezando por tecnología y trabajo).
 Cada palabra tiene su escritura, su pronunciación y su audio; los verbos muestran presente,
-pasado y futuro. El repaso te pide **escribir** la palabra en inglés a partir del español, y las
-que fallas vuelven antes.
+pasado y futuro. En el repaso siempre **escribes** la respuesta, y las palabras que fallas vuelven
+antes. Cada vez se elige al azar uno de estos ejercicios:
+
+- Escribir la palabra en inglés a partir del español.
+- Completar una frase (para los verbos, también en pasado y en futuro: "Yesterday I ___ a bug").
+- Dictado: oyes la palabra o la frase de ejemplo y la escribes (no cuentan puntos ni mayúsculas).
 
 ## Tecnologías
 
@@ -33,6 +37,7 @@ que fallas vuelven antes.
 - Formas de los verbos: [monolithpl/verb.forms.dictionary](https://github.com/monolithpl/verb.forms.dictionary),
   licencia MIT (Copyright 2016 Wiktor Jakubczyc).
 - La columna "Se lee" (aproximación en español) está escrita a mano y debe revisarse.
+- Las frases en pasado y futuro de los verbos (`Data/FrasesVerbos.cs`) están escritas a mano y deben revisarse.
 
 ## Pendiente
 

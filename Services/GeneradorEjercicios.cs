@@ -5,18 +5,30 @@ using VocabularioIngles.Models;
 namespace VocabularioIngles.Services;
 
 /// <summary>
-/// Arma los ejercicios del repaso a partir de una palabra: escribirla, o completar una frase
-/// (y, si es verbo, también en pasado y en futuro).
+/// Arma los ejercicios del repaso a partir de una palabra: escribirla, completar una frase
+/// (y, si es verbo, también en pasado y en futuro) o escribir lo que oyes (dictado).
 /// </summary>
 public class GeneradorEjercicios
 {
     public const string Hueco = "___";
 
-    /// <summary>Elige al azar uno de los ejercicios que se pueden hacer con esta palabra.</summary>
+    /// <summary>
+    /// Elige al azar uno de los ejercicios que se pueden hacer con esta palabra. Primero elige la
+    /// familia (escribir, completar o dictado) y luego el ejercicio, para que ninguna familia
+    /// salga mucho más que las otras solo porque tiene más variantes.
+    /// </summary>
     public Ejercicio Elegir(Palabra palabra)
     {
-        var posibles = Posibles(palabra);
-        return posibles[Random.Shared.Next(posibles.Count)];
+        var familias = Posibles(palabra).GroupBy(Familia).ToList();
+        var familia = familias[Random.Shared.Next(familias.Count)].ToList();
+        return familia[Random.Shared.Next(familia.Count)];
+    }
+
+    private static string Familia(Ejercicio ejercicio)
+    {
+        if (ejercicio.EsCompletar) return "completar";
+        if (ejercicio.EsDictado) return "dictado";
+        return "escribir";
     }
 
     /// <summary>
@@ -53,6 +65,27 @@ public class GeneradorEjercicios
             {
                 lista.Add(futuro);
             }
+        }
+
+        lista.Add(new Ejercicio
+        {
+            Palabra = palabra,
+            Tipo = TipoEjercicio.DictadoPalabra,
+            Respuesta = palabra.Ingles,
+            TextoAudio = palabra.Ingles
+        });
+
+        if (!string.IsNullOrWhiteSpace(palabra.Ejemplo))
+        {
+            lista.Add(new Ejercicio
+            {
+                Palabra = palabra,
+                Tipo = TipoEjercicio.DictadoFrase,
+                Respuesta = palabra.Ejemplo,
+                TextoAudio = palabra.Ejemplo,
+                FraseCompleta = palabra.Ejemplo,
+                FraseEs = palabra.EjemploEs
+            });
         }
 
         return lista;
