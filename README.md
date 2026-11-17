@@ -41,6 +41,18 @@ La app se ajusta a ti:
 2. En esta carpeta: `dotnet run`
 3. Abrir http://localhost:5080
 
+## Pruebas
+
+Las pruebas automáticas (xUnit) están en `Pruebas/`, un proyecto aparte que la app no compila:
+
+```
+dotnet test Pruebas
+```
+
+Cubren las reglas del repaso (intervalos fijos y adaptativos), el ritmo de palabras nuevas, la comparación
+de respuestas (contracciones, puntuación), el generador de ejercicios y `RepasoService` contra una base
+SQLite en memoria creada con las migraciones reales.
+
 ## Base de datos y migraciones
 
 La base se crea y se actualiza sola al arrancar (`Data/PreparadorBaseDatos.cs`):
@@ -62,7 +74,9 @@ dotnet ef migrations add NombreDelCambio -o Data/Migraciones
 - `Models/`: Palabra, Categoria, ProgresoPalabra, RegistroRespuesta (historial) y Configuracion (meta)
 - `Data/`: AppDbContext, migraciones, el preparador de la base, las palabras iniciales (`SeedData.cs`)
   y las frases de trabajo (`FrasesTrabajo.cs`)
-- `Services/`: algoritmos de repaso, ritmo de palabras nuevas, generador de ejercicios y `RepasoService`
+- `Services/`: algoritmos de repaso, ritmo de palabras nuevas, generador de ejercicios, comparación de
+  respuestas (`ComparadorRespuestas`) y `RepasoService`
+- `Pruebas/`: pruebas automáticas
 - `Controllers/` y `Views/`: pantallas de inicio, lista de palabras y repaso
 
 ## Datos y licencias
@@ -80,5 +94,5 @@ dotnet ef migrations add NombreDelCambio -o Data/Migraciones
 ## Pendiente
 
 - Revisar traducciones, ejemplos y la columna "Se lee".
-- Pruebas automáticas del algoritmo de repaso y del ritmo de palabras nuevas.
+- Correr las pruebas automáticamente en GitHub (GitHub Actions) en cada pull request.
 - Más categorías y, después, otras profesiones.
