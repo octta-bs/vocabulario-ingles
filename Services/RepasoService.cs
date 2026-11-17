@@ -123,11 +123,28 @@ public class RepasoService
         return _db.Palabras.CountAsync(p => p.Progreso == null);
     }
 
+    /// <summary>Las categorías que todavía tienen palabras sin empezar, con cuántas les quedan.</summary>
+    public async Task<List<CategoriaSinEmpezar>> CategoriasConNuevasAsync()
+    {
+        var conteos = await _db.Palabras
+            .Where(p => p.Progreso == null)
+            .GroupBy(p => p.CategoriaId)
+            .Select(g => new { CategoriaId = g.Key, Cantidad = g.Count() })
+            .ToListAsync();
+
+        var categorias = await _db.Categorias.ToDictionaryAsync(c => c.Id, c => c.Nombre);
+        return conteos
+            .Select(c => new CategoriaSinEmpezar(c.CategoriaId, categorias[c.CategoriaId], c.Cantidad))
+            .OrderBy(c => c.Nombre)
+            .ToList();
+    }
+
     /// <summary>
     /// Mete al repaso las siguientes palabras que todavía no se han empezado a aprender.
-    /// La cantidad la decide la estrategia de ritmo según tus aciertos.
+    /// La cantidad la decide la estrategia de ritmo según tus aciertos. Si eliges una categoría,
+    /// solo salen de ella; si no, en el orden en que se cargaron.
     /// </summary>
-    public async Task<int> AgregarNuevasAsync()
+    public async Task<int> AgregarNuevasAsync(int? categoriaId = null)
     {
         var cantidad = (await CalcularRitmoAsync()).Cantidad;
         if (cantidad <= 0)
@@ -139,6 +156,7 @@ public class RepasoService
 
         var nuevas = await _db.Palabras
             .Where(p => p.Progreso == null)
+            .Where(p => categoriaId == null || p.CategoriaId == categoriaId)
             .OrderBy(p => p.Id)
             .Take(cantidad)
             .ToListAsync();

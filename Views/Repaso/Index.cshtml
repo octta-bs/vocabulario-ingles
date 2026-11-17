@@ -6,6 +6,12 @@
     var ritmo = (VocabularioIngles.Services.RitmoNuevas)ViewBag.Ritmo;
     var sinEmpezar = (int)ViewBag.SinEmpezar;
     var aAgregar = Math.Min(ritmo.Cantidad, sinEmpezar);
+    var categorias = (List<CategoriaSinEmpezar>)ViewBag.Categorias;
+    var elegida = (int?)ViewBag.CategoriaElegida;
+    if (elegida != null && categorias.All(c => c.Id != elegida))
+    {
+        elegida = null; // esa categoría ya no tiene palabras nuevas
+    }
 }
 
 <h1 class="mb-3">Repaso</h1>
@@ -85,9 +91,19 @@ else
     }
     else
     {
-        <button type="submit" class="btn btn-outline-primary">
-            ➕ Agregar @aAgregar @(aAgregar == 1 ? "palabra nueva" : "palabras nuevas")
-        </button>
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+            <label for="categoriaId" class="visually-hidden">Categoría de las palabras nuevas</label>
+            <select id="categoriaId" name="categoriaId" class="form-select w-auto">
+                <option value="">Cualquiera (en orden)</option>
+                @foreach (var categoria in categorias)
+                {
+                    <option value="@categoria.Id" selected="@(categoria.Id == elegida)">@categoria.Nombre (@categoria.SinEmpezar sin empezar)</option>
+                }
+            </select>
+            <button type="submit" class="btn btn-outline-primary">
+                ➕ Agregar @aAgregar @(aAgregar == 1 ? "palabra nueva" : "palabras nuevas")
+            </button>
+        </div>
     }
 
     <div class="form-text">

@@ -20,7 +20,8 @@ La app se ajusta a ti:
   sus intervalos se reducen a la mitad (1, 1, 3, 7 y 15 días) hasta que la aciertes varias veces seguidas.
 - **Palabras nuevas a tu ritmo:** el botón calcula cuántas te tocan según tus aciertos en las últimas
   50 respuestas: 90% o más → 8, 75–89% → 5, 60–74% → 3 y menos de 60% → 0 (primero refuerza).
-  Con menos de 10 respuestas da 5.
+  Con menos de 10 respuestas da 5. Puedes elegir de qué categoría salen (por ejemplo, solo
+  "Entrevista"); la app recuerda tu última elección.
 - **Meta diaria:** eliges cuántos ejercicios quieres responder al día (en "Mi meta") y ves tu avance
   en Inicio y en Repaso. "Hoy" se cuenta con la hora de México (`ZonaHoraria` en `appsettings.json`).
 
