@@ -17,6 +17,9 @@ public class Palabra
     public string? Pasado { get; set; }
     public string? Participio { get; set; }
 
+    // Solo para frases: la palabra que se quita en el ejercicio de completar ("working").
+    public string? PalabraClave { get; set; }
+
     public string Ejemplo { get; set; } = "";
     public string EjemploEs { get; set; } = "";
     public string? Nota { get; set; }
@@ -27,4 +30,5 @@ public class Palabra
     public ProgresoPalabra? Progreso { get; set; }
 
     public bool EsVerbo => Tipo == TipoPalabra.Verbo;
+    public bool EsFrase => Tipo == TipoPalabra.Frase;
 }

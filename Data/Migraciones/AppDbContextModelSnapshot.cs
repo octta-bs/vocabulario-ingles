@@ -78,6 +78,9 @@ namespace VocabularioIngles.Data.Migraciones
                     b.Property<string>("Nota")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("PalabraClave")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Participio")
                         .HasColumnType("TEXT");
 

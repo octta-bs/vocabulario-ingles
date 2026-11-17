@@ -8,14 +8,17 @@
 <div class="card">
     <div class="card-body">
         <div class="d-flex align-items-center gap-3 flex-wrap">
-            <h1 class="palabra-grande mb-0">@Model.Ingles</h1>
+            <h1 class="@(Model.EsFrase ? "frase-hueco" : "palabra-grande") mb-0">@Model.Ingles</h1>
             <button type="button" class="btn btn-outline-secondary btn-audio" data-texto="@Model.Ingles">🔊 Escuchar</button>
         </div>
 
         <p class="text-muted mb-3">@Model.Espanol · @(Model.Categoria?.Nombre)</p>
 
-        <p class="mb-1"><strong>Pronunciación:</strong> @Model.Pronunciacion</p>
-        <p class="mb-3"><strong>Se lee:</strong> @Model.ComoSeLee</p>
+        @if (!string.IsNullOrEmpty(Model.Pronunciacion))
+        {
+            <p class="mb-1"><strong>Pronunciación:</strong> @Model.Pronunciacion</p>
+            <p class="mb-3"><strong>Se lee:</strong> @Model.ComoSeLee</p>
+        }
 
         @if (Model.EsVerbo)
         {
@@ -34,11 +37,14 @@
             <div class="alert alert-info">@Model.Nota</div>
         }
 
+        @if (!string.IsNullOrEmpty(Model.Ejemplo))
+        {
         <p class="mt-3 mb-0">
             <em>@Model.Ejemplo</em>
             <button type="button" class="btn btn-sm btn-outline-secondary btn-audio ms-2" data-texto="@Model.Ejemplo">🔊</button>
             <br />
             <span class="text-muted">@Model.EjemploEs</span>
         </p>
+        }
     </div>
 </div>

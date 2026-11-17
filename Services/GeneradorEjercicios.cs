@@ -7,6 +7,7 @@ namespace VocabularioIngles.Services;
 /// <summary>
 /// Arma los ejercicios del repaso a partir de una palabra: escribirla, completar una frase
 /// (y, si es verbo, también en pasado y en futuro) o escribir lo que oyes (dictado).
+/// Con una frase de trabajo: traducirla completa, completar su palabra clave o escribirla al oírla.
 /// </summary>
 public class GeneradorEjercicios
 {
@@ -44,8 +45,12 @@ public class GeneradorEjercicios
     {
         var lista = new List<Ejercicio> { EscribirPalabra(palabra) };
 
-        var presente = Completar(palabra, TipoEjercicio.CompletarFrase, palabra.Ejemplo, palabra.EjemploEs,
-            palabra.Ingles, palabra.EsVerbo ? "presente" : null);
+        // En una frase de trabajo se quita su palabra clave; en una palabra, la palabra dentro de su ejemplo.
+        var presente = palabra.EsFrase
+            ? Completar(palabra, TipoEjercicio.CompletarFrase, palabra.Ingles, palabra.Espanol,
+                palabra.PalabraClave ?? "", null)
+            : Completar(palabra, TipoEjercicio.CompletarFrase, palabra.Ejemplo, palabra.EjemploEs,
+                palabra.Ingles, palabra.EsVerbo ? "presente" : null);
         if (presente != null)
         {
             lista.Add(presente);

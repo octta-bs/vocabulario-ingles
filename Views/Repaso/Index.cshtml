@@ -43,7 +43,7 @@ else
             {
                 <p class="mb-2 text-muted">
                     Dictado: escucha y escribe
-                    @(Model.Tipo == TipoEjercicio.DictadoFrase ? "la frase completa" : "la palabra")
+                    @(Model.Tipo == TipoEjercicio.DictadoFrase || Model.Palabra.EsFrase ? "la frase completa" : "la palabra")
                 </p>
                 <div class="d-flex gap-2 flex-wrap">
                     <button type="button" class="btn btn-outline-primary btn-lg btn-audio" data-autoplay
@@ -54,8 +54,8 @@ else
             }
             else
             {
-                <p class="mb-1 text-muted">¿Cómo se dice en inglés?</p>
-                <h2 class="palabra-grande">@Model.Palabra.Espanol</h2>
+                <p class="mb-1 text-muted">@(Model.Palabra.EsFrase ? "Escribe la frase en inglés" : "¿Cómo se dice en inglés?")</p>
+                <h2 class="@(Model.Palabra.EsFrase ? "frase-hueco" : "palabra-grande")">@Model.Palabra.Espanol</h2>
                 @if (Model.Palabra.EsVerbo)
                 {
                     <p class="text-muted">(verbo)</p>

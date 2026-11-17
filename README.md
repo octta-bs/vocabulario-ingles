@@ -2,12 +2,17 @@
 
 Aplicación web para aprender vocabulario de inglés (empezando por tecnología y trabajo).
 Cada palabra tiene su escritura, su pronunciación y su audio; los verbos muestran presente,
-pasado y futuro. En el repaso siempre **escribes** la respuesta, y las palabras que fallas vuelven
+pasado y futuro. También hay frases para el trabajo y las entrevistas: stand-up, code review y
+entrevista (incluida una respuesta de ejemplo a "Tell me about yourself"). En el repaso siempre **escribes** la respuesta, y las palabras que fallas vuelven
 antes. Cada vez se elige al azar uno de estos ejercicios:
 
 - Escribir la palabra en inglés a partir del español.
 - Completar una frase (para los verbos, también en pasado y en futuro: "Yesterday I ___ a bug").
 - Dictado: oyes la palabra o la frase de ejemplo y la escribes (no cuentan puntos ni mayúsculas).
+
+Con las frases de trabajo hay tres ejercicios: escribir la frase completa a partir del español,
+completar su palabra clave ("I'm ___ on the login page") y el dictado de la frase. Las contracciones
+cuentan igual que la forma larga ("I'm" = "I am", "don't" = "do not").
 
 La app se ajusta a ti:
 
@@ -54,7 +59,8 @@ dotnet ef migrations add NombreDelCambio -o Data/Migraciones
 ## Estructura
 
 - `Models/`: Palabra, Categoria, ProgresoPalabra, RegistroRespuesta (historial) y Configuracion (meta)
-- `Data/`: AppDbContext, migraciones, el preparador de la base y las palabras iniciales (`SeedData.cs`)
+- `Data/`: AppDbContext, migraciones, el preparador de la base, las palabras iniciales (`SeedData.cs`)
+  y las frases de trabajo (`FrasesTrabajo.cs`)
 - `Services/`: algoritmos de repaso, ritmo de palabras nuevas, generador de ejercicios y `RepasoService`
 - `Controllers/` y `Views/`: pantallas de inicio, lista de palabras y repaso
 
@@ -66,6 +72,9 @@ dotnet ef migrations add NombreDelCambio -o Data/Migraciones
   licencia MIT (Copyright 2016 Wiktor Jakubczyc).
 - La columna "Se lee" (aproximación en español) está escrita a mano y debe revisarse.
 - Las frases en pasado y futuro de los verbos (`Data/FrasesVerbos.cs`) están escritas a mano y deben revisarse.
+- Las frases de trabajo y entrevista (`Data/FrasesTrabajo.cs`) están escritas a mano y deben revisarse.
+  Las de "Tell me about yourself" son un ejemplo: cambia los años, las tecnologías y el proyecto por los tuyos.
+  Las categorías nuevas que agregues ahí se cargan solas en una base que ya existe, sin tocar tu progreso.
 
 ## Pendiente
 
