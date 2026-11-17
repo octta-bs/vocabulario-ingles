@@ -1,0 +1,24 @@
+@{
+    ViewData["Title"] = "Mi meta";
+    var meta = (int)ViewBag.MetaDiaria;
+}
+
+<h1 class="mb-3">Mi meta diaria</h1>
+
+<p class="text-muted">
+    ¿Cuántos ejercicios quieres responder cada día? Cuentan todos, aciertes o falles:
+    fallar también es practicar.
+</p>
+
+<form asp-action="Meta" method="post" class="card">
+    <div class="card-body">
+        <label for="metaDiaria" class="form-label">Ejercicios al día</label>
+        <input type="number" id="metaDiaria" name="metaDiaria" value="@meta" class="form-control form-control-lg mb-2"
+               min="@Configuracion.MetaMinima" max="@Configuracion.MetaMaxima" step="1" required />
+        <div class="form-text mb-3">
+            Entre @Configuracion.MetaMinima y @Configuracion.MetaMaxima. Como referencia, 30 ejercicios son unos 10 minutos.
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg">Guardar meta</button>
+        <a class="btn btn-link" asp-action="Index">Cancelar</a>
+    </div>
+</form>

@@ -18,6 +18,9 @@ public class RepasoController : Controller
     {
         var ejercicio = await _servicio.SiguienteEjercicioAsync();
         ViewBag.Pendientes = await _servicio.ContarPendientesAsync();
+        ViewBag.Meta = await _servicio.ObtenerMetaHoyAsync();
+        ViewBag.Ritmo = await _servicio.CalcularRitmoAsync();
+        ViewBag.SinEmpezar = await _servicio.ContarSinEmpezarAsync();
         return View(ejercicio);
     }
 
@@ -34,14 +37,17 @@ public class RepasoController : Controller
         return View("Resultado", resultado);
     }
 
-    // Mete 5 palabras nuevas al repaso.
+    // Mete al repaso las palabras nuevas que te tocan según tus aciertos.
     [HttpPost]
     public async Task<IActionResult> AgregarNuevas()
     {
-        var cantidad = await _servicio.AgregarNuevasAsync(5);
+        var ritmo = await _servicio.CalcularRitmoAsync();
+        var cantidad = await _servicio.AgregarNuevasAsync();
         TempData["Mensaje"] = cantidad > 0
             ? $"Se agregaron {cantidad} palabras nuevas a tu repaso."
-            : "Ya agregaste todas las palabras disponibles.";
+            : ritmo.Cantidad == 0
+                ? "Por ahora no te tocan palabras nuevas: primero refuerza las que ya tienes."
+                : "Ya agregaste todas las palabras disponibles.";
 
         return RedirectToAction(nameof(Index));
     }

@@ -2,7 +2,7 @@ namespace VocabularioIngles.Services;
 
 /// <summary>
 /// Algoritmo sencillo: cada acierto sube una etapa y la palabra tarda más en volver.
-/// Un error la regresa a la etapa 0.
+/// Un error la regresa a la etapa 0. No usa el historial de respuestas.
 /// </summary>
 public class IntervalosFijos : IAlgoritmoRepaso
 {
@@ -13,7 +13,7 @@ public class IntervalosFijos : IAlgoritmoRepaso
 
     public static int EtapaMaxima => DiasPorEtapa.Length - 1;
 
-    public ResultadoAlgoritmo Calcular(int etapaActual, bool acerto, DateTime ahora)
+    public ResultadoAlgoritmo Calcular(int etapaActual, bool acerto, DateTime ahora, IReadOnlyList<bool> ultimasRespuestas)
     {
         if (!acerto)
         {

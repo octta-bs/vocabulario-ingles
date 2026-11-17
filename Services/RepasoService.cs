@@ -10,12 +10,17 @@ public class RepasoService
     private readonly AppDbContext _db;
     private readonly IAlgoritmoRepaso _algoritmo;
     private readonly GeneradorEjercicios _generador;
+    private readonly IRitmoPalabrasNuevas _ritmo;
+    private readonly TimeZoneInfo _zonaHoraria;
 
-    public RepasoService(AppDbContext db, IAlgoritmoRepaso algoritmo, GeneradorEjercicios generador)
+    public RepasoService(AppDbContext db, IAlgoritmoRepaso algoritmo, GeneradorEjercicios generador,
+        IRitmoPalabrasNuevas ritmo, IConfiguration configuracion)
     {
         _db = db;
         _algoritmo = algoritmo;
         _generador = generador;
+        _ritmo = ritmo;
+        _zonaHoraria = BuscarZonaHoraria(configuracion["ZonaHoraria"]);
     }
 
     public Task<int> ContarPendientesAsync()
@@ -57,7 +62,26 @@ public class RepasoService
         var ejercicio = _generador.Crear(progreso.Palabra, tipo);
         var acerto = Normalizar(respuesta) == Normalizar(ejercicio.Respuesta);
         var ahora = DateTime.UtcNow;
-        var resultado = _algoritmo.Calcular(progreso.Etapa, acerto, ahora);
+
+        // Las últimas respuestas de esta palabra (la de ahora primero), para que el algoritmo
+        // sepa si es una palabra que fallas seguido.
+        var anteriores = await _db.Respuestas
+            .Where(r => r.PalabraId == palabraId)
+            .OrderByDescending(r => r.Fecha)
+            .Select(r => r.Acerto)
+            .Take(20)
+            .ToListAsync();
+        var ultimas = new List<bool> { acerto };
+        ultimas.AddRange(anteriores);
+
+        var resultado = _algoritmo.Calcular(progreso.Etapa, acerto, ahora, ultimas);
+        _db.Respuestas.Add(new RegistroRespuesta
+        {
+            PalabraId = palabraId,
+            Tipo = ejercicio.Tipo,
+            Acerto = acerto,
+            Fecha = ahora
+        });
 
         progreso.Etapa = resultado.NuevaEtapa;
         progreso.ProximoRepaso = resultado.ProximoRepaso;
@@ -82,9 +106,35 @@ public class RepasoService
         };
     }
 
-    /// <summary>Mete al repaso las siguientes palabras que todavía no se han empezado a aprender.</summary>
-    public async Task<int> AgregarNuevasAsync(int cantidad)
+    /// <summary>Cuántas palabras nuevas te tocan según tus aciertos recientes.</summary>
+    public async Task<RitmoNuevas> CalcularRitmoAsync()
     {
+        var ultimas = await _db.Respuestas
+            .OrderByDescending(r => r.Fecha)
+            .Select(r => r.Acerto)
+            .Take(_ritmo.RespuestasQueUsa)
+            .ToListAsync();
+
+        return _ritmo.Calcular(ultimas);
+    }
+
+    public Task<int> ContarSinEmpezarAsync()
+    {
+        return _db.Palabras.CountAsync(p => p.Progreso == null);
+    }
+
+    /// <summary>
+    /// Mete al repaso las siguientes palabras que todavía no se han empezado a aprender.
+    /// La cantidad la decide la estrategia de ritmo según tus aciertos.
+    /// </summary>
+    public async Task<int> AgregarNuevasAsync()
+    {
+        var cantidad = (await CalcularRitmoAsync()).Cantidad;
+        if (cantidad <= 0)
+        {
+            return 0;
+        }
+
         var ahora = DateTime.UtcNow;
 
         var nuevas = await _db.Palabras
@@ -116,8 +166,63 @@ public class RepasoService
             TotalPalabras = await _db.Palabras.CountAsync(),
             EnRepaso = await _db.Progresos.CountAsync(),
             Pendientes = await _db.Progresos.CountAsync(p => p.ProximoRepaso <= ahora),
-            Dominadas = await _db.Progresos.CountAsync(p => p.Etapa >= IntervalosFijos.EtapaMaxima)
+            Dominadas = await _db.Progresos.CountAsync(p => p.Etapa >= IntervalosFijos.EtapaMaxima),
+            Meta = await ObtenerMetaHoyAsync()
         };
+    }
+
+    /// <summary>Tu meta diaria y cuántos ejercicios llevas hoy (aciertos y fallos cuentan igual).</summary>
+    public async Task<MetaDelDia> ObtenerMetaHoyAsync()
+    {
+        var configuracion = await ObtenerConfiguracionAsync();
+        var inicioDeHoy = InicioDeHoyUtc();
+        var respondidas = await _db.Respuestas.CountAsync(r => r.Fecha >= inicioDeHoy);
+        return new MetaDelDia(configuracion.MetaDiaria, respondidas);
+    }
+
+    public async Task<int> ObtenerMetaDiariaAsync()
+    {
+        return (await ObtenerConfiguracionAsync()).MetaDiaria;
+    }
+
+    public async Task GuardarMetaDiariaAsync(int meta)
+    {
+        var configuracion = await ObtenerConfiguracionAsync();
+        configuracion.MetaDiaria = Math.Clamp(meta, Configuracion.MetaMinima, Configuracion.MetaMaxima);
+        await _db.SaveChangesAsync();
+    }
+
+    /// <summary>La única fila de configuración; si todavía no existe, la crea con los valores por defecto.</summary>
+    private async Task<Configuracion> ObtenerConfiguracionAsync()
+    {
+        var configuracion = await _db.Configuraciones.OrderBy(c => c.Id).FirstOrDefaultAsync();
+        if (configuracion == null)
+        {
+            configuracion = new Configuracion();
+            _db.Configuraciones.Add(configuracion);
+            await _db.SaveChangesAsync();
+        }
+
+        return configuracion;
+    }
+
+    /// <summary>La medianoche de hoy en tu zona horaria, convertida a UTC (así se guardan las fechas).</summary>
+    private DateTime InicioDeHoyUtc()
+    {
+        var ahoraLocal = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _zonaHoraria);
+        return TimeZoneInfo.ConvertTimeToUtc(ahoraLocal.Date, _zonaHoraria);
+    }
+
+    private static TimeZoneInfo BuscarZonaHoraria(string? id)
+    {
+        try
+        {
+            return TimeZoneInfo.FindSystemTimeZoneById(string.IsNullOrWhiteSpace(id) ? "America/Mexico_City" : id);
+        }
+        catch (Exception e) when (e is TimeZoneNotFoundException or InvalidTimeZoneException)
+        {
+            return TimeZoneInfo.Local;
+        }
     }
 
     /// <summary>

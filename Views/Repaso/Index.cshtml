@@ -2,6 +2,10 @@
 @{
     ViewData["Title"] = "Repaso";
     var pendientes = (int)ViewBag.Pendientes;
+    var meta = (MetaDelDia)ViewBag.Meta;
+    var ritmo = (VocabularioIngles.Services.RitmoNuevas)ViewBag.Ritmo;
+    var sinEmpezar = (int)ViewBag.SinEmpezar;
+    var aAgregar = Math.Min(ritmo.Cantidad, sinEmpezar);
 }
 
 <h1 class="mb-3">Repaso</h1>
@@ -10,6 +14,8 @@
 {
     <div class="alert alert-success">@TempData["Mensaje"]</div>
 }
+
+<partial name="_BarraMeta" model="meta" />
 
 @if (Model == null)
 {
@@ -68,6 +74,38 @@ else
     </div>
 }
 
-<form asp-action="AgregarNuevas" method="post" class="mt-4">
-    <button type="submit" class="btn btn-outline-primary">➕ Agregar 5 palabras nuevas</button>
+<form asp-action="AgregarNuevas" method="post" class="mt-4 palabras-nuevas">
+    @if (sinEmpezar == 0)
+    {
+        <button type="submit" class="btn btn-outline-primary" disabled>➕ Ya tienes todas las palabras</button>
+    }
+    else if (aAgregar == 0)
+    {
+        <button type="submit" class="btn btn-outline-primary" disabled>➕ Sin palabras nuevas por ahora</button>
+    }
+    else
+    {
+        <button type="submit" class="btn btn-outline-primary">
+            ➕ Agregar @aAgregar @(aAgregar == 1 ? "palabra nueva" : "palabras nuevas")
+        </button>
+    }
+
+    <div class="form-text">
+        @if (ritmo.PorcentajeAciertos is { } porcentaje)
+        {
+            <text>Llevas @porcentaje% de aciertos en tus últimas respuestas.&nbsp;</text>
+            @if (ritmo.Cantidad == 0)
+            {
+                <text>Cuando llegues a 60%, se desbloquean más palabras.</text>
+            }
+            else
+            {
+                <text>Mientras más aciertes, más palabras nuevas te tocan (hasta 8).</text>
+            }
+        }
+        else
+        {
+            <text>Cuando respondas más ejercicios, la cantidad se ajustará a tus aciertos.</text>
+        }
+    </div>
 </form>
