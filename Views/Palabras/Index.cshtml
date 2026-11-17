@@ -1,0 +1,41 @@
+@model List<Palabra>
+@{
+    ViewData["Title"] = "Palabras";
+    var categorias = (List<Categoria>)ViewBag.Categorias;
+    var categoriaActual = (int?)ViewBag.CategoriaId;
+}
+
+<h1 class="mb-3">Palabras</h1>
+
+<div class="mb-3 d-flex flex-wrap gap-2">
+    <a class="btn btn-sm @(categoriaActual == null ? "btn-primary" : "btn-outline-primary")" asp-action="Index">Todas</a>
+    @foreach (var categoria in categorias)
+    {
+        <a class="btn btn-sm @(categoriaActual == categoria.Id ? "btn-primary" : "btn-outline-primary")"
+           asp-action="Index" asp-route-categoriaId="@categoria.Id">@categoria.Nombre</a>
+    }
+</div>
+
+<table class="table align-middle">
+    <thead>
+        <tr>
+            <th>Inglés</th>
+            <th>Español</th>
+            <th>Se lee</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var palabra in Model)
+        {
+            <tr>
+                <td><a asp-action="Detalle" asp-route-id="@palabra.Id">@palabra.Ingles</a></td>
+                <td>@palabra.Espanol</td>
+                <td>@palabra.ComoSeLee</td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-outline-secondary btn-audio" data-texto="@palabra.Ingles">🔊</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

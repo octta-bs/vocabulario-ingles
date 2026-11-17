@@ -1,0 +1,30 @@
+@model RepasoResultado
+@{
+    ViewData["Title"] = "Resultado";
+    var escrito = string.IsNullOrWhiteSpace(Model.RespuestaDada) ? "(nada)" : Model.RespuestaDada;
+}
+
+@if (Model.Acerto)
+{
+    <div class="alert alert-success"><strong>¡Correcto!</strong> 🎉</div>
+}
+else
+{
+    <div class="alert alert-danger">
+        <strong>Casi.</strong> Escribiste: <strong>@escrito</strong>. Lo correcto es:
+    </div>
+}
+
+<div class="card mb-3">
+    <div class="card-body">
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+            <h2 class="palabra-grande mb-0">@Model.Palabra.Ingles</h2>
+            <button type="button" class="btn btn-outline-secondary btn-audio" data-texto="@Model.Palabra.Ingles">🔊</button>
+        </div>
+        <p class="text-muted mb-1">@Model.Palabra.Espanol</p>
+        <p class="mb-1">@Model.Palabra.Pronunciacion · se lee: <strong>@Model.Palabra.ComoSeLee</strong></p>
+        <p class="mb-0"><em>@Model.Palabra.Ejemplo</em></p>
+    </div>
+</div>
+
+<a class="btn btn-primary btn-lg" asp-action="Index">Siguiente</a>
