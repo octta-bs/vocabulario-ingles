@@ -1,0 +1,15 @@
+namespace VocabularioIngles.Models;
+
+/// <summary>Las formas en que se puede preguntar una palabra durante el repaso.</summary>
+public enum TipoEjercicio
+{
+    // Ves la palabra en español y la escribes en inglés.
+    EscribirPalabra,
+
+    // Completas el ejemplo de la palabra (para verbos, en presente).
+    CompletarFrase,
+
+    // Solo verbos: completas una frase con el verbo en pasado o en futuro.
+    CompletarPasado,
+    CompletarFuturo
+}

@@ -8,11 +8,13 @@ public class RepasoService
 {
     private readonly AppDbContext _db;
     private readonly IAlgoritmoRepaso _algoritmo;
+    private readonly GeneradorEjercicios _generador;
 
-    public RepasoService(AppDbContext db, IAlgoritmoRepaso algoritmo)
+    public RepasoService(AppDbContext db, IAlgoritmoRepaso algoritmo, GeneradorEjercicios generador)
     {
         _db = db;
         _algoritmo = algoritmo;
+        _generador = generador;
     }
 
     public Task<int> ContarPendientesAsync()
@@ -32,7 +34,14 @@ public class RepasoService
             .FirstOrDefaultAsync();
     }
 
-    public async Task<RepasoResultado?> ResponderAsync(int palabraId, string? respuesta)
+    /// <summary>El siguiente ejercicio del repaso (de un tipo elegido al azar), o null si no hay pendientes.</summary>
+    public async Task<Ejercicio?> SiguienteEjercicioAsync()
+    {
+        var progreso = await SiguientePendienteAsync();
+        return progreso?.Palabra == null ? null : _generador.Elegir(progreso.Palabra);
+    }
+
+    public async Task<RepasoResultado?> ResponderAsync(int palabraId, TipoEjercicio tipo, string? respuesta)
     {
         var progreso = await _db.Progresos
             .Include(p => p.Palabra)
@@ -43,7 +52,9 @@ public class RepasoService
             return null;
         }
 
-        var acerto = Normalizar(respuesta) == Normalizar(progreso.Palabra.Ingles);
+        // Acertar o fallar cuenta igual para el repaso, sea cual sea el tipo de ejercicio.
+        var ejercicio = _generador.Crear(progreso.Palabra, tipo);
+        var acerto = Normalizar(respuesta) == Normalizar(ejercicio.Respuesta);
         var ahora = DateTime.UtcNow;
         var resultado = _algoritmo.Calcular(progreso.Etapa, acerto, ahora);
 
@@ -65,7 +76,8 @@ public class RepasoService
         {
             Acerto = acerto,
             RespuestaDada = (respuesta ?? "").Trim(),
-            Palabra = progreso.Palabra
+            Palabra = progreso.Palabra,
+            Ejercicio = ejercicio
         };
     }
 

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using VocabularioIngles.Models;
 using VocabularioIngles.Services;
 
 namespace VocabularioIngles.Controllers;
@@ -12,19 +13,19 @@ public class RepasoController : Controller
         _servicio = servicio;
     }
 
-    // Muestra la siguiente palabra pendiente (o avisa que no hay).
+    // Muestra el siguiente ejercicio pendiente (o avisa que no hay).
     public async Task<IActionResult> Index()
     {
-        var pendiente = await _servicio.SiguientePendienteAsync();
+        var ejercicio = await _servicio.SiguienteEjercicioAsync();
         ViewBag.Pendientes = await _servicio.ContarPendientesAsync();
-        return View(pendiente);
+        return View(ejercicio);
     }
 
     // Recibe lo que escribiste, lo compara y muestra el resultado.
     [HttpPost]
-    public async Task<IActionResult> Responder(int palabraId, string? respuesta)
+    public async Task<IActionResult> Responder(int palabraId, TipoEjercicio tipo, string? respuesta)
     {
-        var resultado = await _servicio.ResponderAsync(palabraId, respuesta);
+        var resultado = await _servicio.ResponderAsync(palabraId, tipo, respuesta);
         if (resultado == null)
         {
             return RedirectToAction(nameof(Index));

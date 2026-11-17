@@ -11,7 +11,15 @@
 else
 {
     <div class="alert alert-danger">
-        <strong>Casi.</strong> Escribiste: <strong>@escrito</strong>. Lo correcto es:
+        <strong>Casi.</strong> Escribiste: <strong>@escrito</strong>.
+        @if (Model.Ejercicio.EsCompletar)
+        {
+            <text>En el hueco iba: <strong>@Model.Ejercicio.Respuesta</strong></text>
+        }
+        else
+        {
+            <text>Lo correcto es:</text>
+        }
     </div>
 }
 
@@ -23,7 +31,26 @@ else
         </div>
         <p class="text-muted mb-1">@Model.Palabra.Espanol</p>
         <p class="mb-1">@Model.Palabra.Pronunciacion · se lee: <strong>@Model.Palabra.ComoSeLee</strong></p>
-        <p class="mb-0"><em>@Model.Palabra.Ejemplo</em></p>
+        @if (Model.Ejercicio.EsCompletar)
+        {
+            <hr />
+            <p class="mb-1">
+                @if (Model.Ejercicio.TiempoVerbal != null)
+                {
+                    <span class="badge bg-info text-dark me-1">@Model.Ejercicio.TiempoVerbal</span>
+                }
+                <strong>@Model.Ejercicio.Respuesta</strong>
+            </p>
+            <div class="d-flex align-items-center gap-2">
+                <p class="mb-0"><em>@Model.Ejercicio.FraseCompleta</em></p>
+                <button type="button" class="btn btn-sm btn-outline-secondary btn-audio" data-texto="@Model.Ejercicio.FraseCompleta">🔊</button>
+            </div>
+            <p class="text-muted mb-0">@Model.Ejercicio.FraseEs</p>
+        }
+        else
+        {
+            <p class="mb-0"><em>@Model.Palabra.Ejemplo</em></p>
+        }
     </div>
 </div>
 

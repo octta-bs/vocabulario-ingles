@@ -13,6 +13,7 @@ builder.Services.AddDbContext<AppDbContext>(opciones =>
 // Patrón Strategy: hoy se usan intervalos fijos. Para cambiar a FSRS más adelante
 // solo hay que cambiar esta línea por otra clase que implemente IAlgoritmoRepaso.
 builder.Services.AddScoped<IAlgoritmoRepaso, IntervalosFijos>();
+builder.Services.AddSingleton<GeneradorEjercicios>();
 builder.Services.AddScoped<RepasoService>();
 
 var app = builder.Build();
