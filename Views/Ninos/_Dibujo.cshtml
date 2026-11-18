@@ -1,0 +1,3 @@
+@model string
+@* El dibujo SVG de una palabra del modo infantil (contenido fijo de DibujosInfantiles, sin datos del usuario). *@
+@Html.Raw(VocabularioIngles.Data.DibujosInfantiles.Svg(Model) ?? "")

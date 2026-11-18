@@ -10,6 +10,16 @@
 
 <ul class="opciones">
     <li>
+        <a class="opcion" asp-controller="Ninos" asp-action="Index">
+            <span class="icono-caja" style="background: #FFF3E0; color: #E65100"><partial name="_Icono" model='"estrella"' view-data="tamano" /></span>
+            <span class="textos">
+                <span class="nombre">Modo niños</span>
+                <span class="detalle">Dibujos, audio y tocar la respuesta (preescolar)</span>
+            </span>
+            <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
+        </a>
+    </li>
+    <li>
         <a class="opcion" asp-controller="Simulacro" asp-action="Index">
             <span class="icono-caja"><partial name="_Icono" model='"maletin"' view-data="tamano" /></span>
             <span class="textos">

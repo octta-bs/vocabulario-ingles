@@ -1,0 +1,68 @@
+@model List<RondaInfantil>
+@using System.Text.Json
+@{
+    var categoria = (CategoriaInfantil)ViewBag.Categoria;
+    var nombre = (string)ViewBag.Nombre;
+    ViewData["Title"] = "Escucha y toca: " + categoria.Nombre;
+    ViewData["ModoEnfocado"] = true;
+    ViewData["ClaseBody"] = "modo-ninos";
+
+    // El juego viaja a la página como datos; cada dibujo va ya armado (contenido fijo de DibujosInfantiles).
+    var datos = Model.Select(r => new
+    {
+        id = r.PalabraId,
+        ingles = r.Ingles,
+        opciones = r.Opciones.Select(o => new { id = o.Id, dibujo = VocabularioIngles.Data.DibujosInfantiles.Svg(o.Ingles) })
+    });
+}
+
+<div class="barra-enfoque">
+    <a class="boton-icono" asp-action="Index" aria-label="Salir del juego">
+        <partial name="_Icono" model='"cerrar"' />
+    </a>
+    <ol class="ninos-rondas" aria-label="Rondas del juego">
+        @for (var i = 0; i < Model.Count; i++)
+        {
+            <li></li>
+        }
+    </ol>
+</div>
+
+@if (Model.Count == 0)
+{
+    <p class="alert alert-secondary">Esta categoría todavía no tiene suficientes dibujos para jugar.</p>
+}
+else
+{
+    @Html.AntiForgeryToken()
+    <div id="juego" data-responder="@Url.Action("Responder")">
+        <p class="ninos-subtitulo text-center mb-2" id="instruccion">Escucha y toca el dibujo</p>
+        <div class="text-center mb-3">
+            <button type="button" class="ninos-escuchar" id="btn-escuchar" aria-label="Escuchar otra vez">
+                <partial name="_Icono" model='"bocina"' view-data='new ViewDataDictionary(ViewData) { ["Tamano"] = 40 }' />
+            </button>
+        </div>
+        <div class="ninos-opciones" id="opciones" role="group" aria-label="Opciones"></div>
+        <p class="ninos-mensaje" id="mensaje" aria-live="polite"></p>
+        <div class="barra-accion">
+            <button type="button" class="btn btn-primary btn-lg btn-bloque" id="btn-siguiente" hidden>Siguiente</button>
+        </div>
+    </div>
+
+    <section id="final" class="text-center" hidden>
+        <div class="ninos-estrellas" id="estrellas" role="img"></div>
+        <h1 class="ninos-titulo" id="final-titulo"></h1>
+        <p class="ninos-subtitulo" id="final-texto"></p>
+        <div class="d-flex gap-2" style="flex-direction: column">
+            <a class="btn btn-primary btn-lg btn-bloque" asp-action="Juego" asp-route-id="@categoria.Id">Jugar otra vez</a>
+            <a class="btn btn-outline-primary btn-lg btn-bloque" asp-action="Index">Elegir otra cosa</a>
+        </div>
+    </section>
+
+    <script type="application/json" id="rondas">@Html.Raw(JsonSerializer.Serialize(datos))</script>
+    <script type="application/json" id="nombre-nino">@Html.Raw(JsonSerializer.Serialize(nombre))</script>
+}
+
+@section Scripts {
+    <script src="~/js/ninos.js" asp-append-version="true"></script>
+}

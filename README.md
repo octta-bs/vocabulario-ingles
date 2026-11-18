@@ -28,6 +28,16 @@ Con las frases de trabajo hay tres ejercicios: escribir la frase completa a part
 completar su palabra clave ("I'm ___ on the login page") y el dictado de la frase. Las contracciones
 cuentan igual que la forma larga ("I'm" = "I am", "don't" = "do not").
 
+**Modo niños** (en Practicar): para preescolar, con dibujos grandes, audio y tocar la respuesta (sin escribir).
+
+- 4 categorías de Pre A1: Colores, Números, Animales y El cuerpo (48 palabras). Los dibujos son SVG propios
+  (`Data/DibujosInfantiles.cs`): colores en círculos, números con puntitos para contar, caritas de animales y
+  una figura con la parte del cuerpo resaltada.
+- **Aprende:** tarjetas que dicen la palabra al tocarlas. **Escucha y toca:** 8 rondas; la app dice la palabra y
+  el niño elige entre 3 dibujos de la misma categoría; al final, de 1 a 3 estrellas.
+- Perfil del niño (nombre opcional) con su propio progreso (`ProgresosInfantiles`), aparte del tuyo: una palabra
+  queda aprendida con 3 aciertos seguidos y el juego repite primero las que falló.
+
 **Practicar en voz alta** (menú "Hablar"): eliges una categoría, escuchas una frase de trabajo o de
 entrevista, la dices y el navegador marca en verde las palabras que entendió y en rojo las que no.
 Es solo práctica: no cuenta para el repaso ni para la meta, y no se guarda nada.

@@ -23,6 +23,7 @@ builder.Services.AddSingleton<ZonaHorariaUsuario>();
 builder.Services.AddScoped<RepasoService>();
 builder.Services.AddScoped<EstadisticasService>();
 builder.Services.AddScoped<RespuestasPropiasService>();
+builder.Services.AddScoped<JuegoInfantilService>();
 
 var app = builder.Build();
 

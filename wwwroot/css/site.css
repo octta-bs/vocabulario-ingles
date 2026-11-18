@@ -806,3 +806,233 @@ textarea.form-control {
     flex: 1;
     text-align: center;
 }
+
+/* ---------- Modo infantil: letra grande, colores alegres y botones muy grandes ---------- */
+
+/* El modo infantil cambia el fondo de toda la página (también el degradado de la barra de acción). */
+body.modo-ninos {
+    --fondo: #FFF8E7;
+    background-color: var(--fondo);
+}
+
+.ninos-titulo {
+    font-size: 2rem;
+    margin-bottom: 4px;
+}
+
+.ninos-subtitulo {
+    font-size: 1.125rem;
+    color: var(--texto-2);
+    margin-bottom: 20px;
+}
+
+.ninos-dibujo svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.ninos-categorias,
+.ninos-tarjetas {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.ninos-categoria {
+    background: var(--superficie);
+    border-radius: 24px;
+    padding: 16px;
+    box-shadow: var(--sombra);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+}
+
+.ninos-categoria .ninos-dibujo {
+    width: 88px;
+    height: 88px;
+}
+
+.ninos-categoria h2 {
+    font-size: 1.125rem;
+    margin: 0;
+}
+
+.ninos-avance {
+    margin: 0;
+    font-size: 13px;
+    color: var(--texto-2);
+}
+
+.ninos-avance .estrella {
+    color: #F59E0B;
+}
+
+.ninos-acciones {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    margin-top: 4px;
+}
+
+.ninos-tarjeta {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 14px 8px;
+    border: 0;
+    border-radius: 24px;
+    background: var(--superficie);
+    box-shadow: var(--sombra);
+    font: inherit;
+    color: var(--texto);
+    cursor: pointer;
+}
+
+.ninos-tarjeta:active {
+    transform: scale(0.97);
+}
+
+.ninos-tarjeta .ninos-dibujo {
+    width: 96px;
+    height: 96px;
+}
+
+.ninos-palabra {
+    font-size: 1.375rem;
+    font-weight: 700;
+}
+
+.ninos-traduccion {
+    font-size: 14px;
+    color: var(--texto-2);
+}
+
+/* Juego "Escucha y toca" */
+
+.ninos-rondas {
+    flex: 1;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.ninos-rondas li {
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+    background: #E5DCC8;
+}
+
+.ninos-rondas li.actual { background: var(--acento); }
+.ninos-rondas li.bien { background: #43A047; }
+.ninos-rondas li.mal { background: #E53935; }
+
+.ninos-escuchar {
+    width: 96px;
+    height: 96px;
+    border-radius: 999px;
+    border: 0;
+    background: var(--acento);
+    color: #FFFFFF;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 16px rgba(67, 56, 202, 0.35);
+    cursor: pointer;
+}
+
+.ninos-opciones {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.ninos-empezar {
+    grid-column: 1 / -1;
+}
+
+.ninos-opcion {
+    aspect-ratio: 1;
+    padding: 10px;
+    border-radius: 24px;
+    border: 4px solid transparent;
+    background: var(--superficie);
+    box-shadow: var(--sombra);
+    cursor: pointer;
+    transition: transform 0.15s, border-color 0.15s;
+}
+
+.ninos-opcion svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.ninos-opcion:disabled {
+    cursor: default;
+    color: inherit;
+}
+
+/* Al responder, los dibujos que no importan se atenúan: así destaca el correcto (y el elegido, si falló). */
+.ninos-opcion:disabled:not(.correcta):not(.incorrecta) {
+    opacity: 0.45;
+}
+
+.ninos-opcion.correcta {
+    border-color: #43A047;
+    background: #E8F5E9;
+    transform: scale(1.06);
+}
+
+.ninos-opcion.incorrecta {
+    border-color: #E53935;
+    background: #FFEBEE;
+    animation: sacudir 0.4s;
+}
+
+.ninos-mensaje {
+    min-height: 2.5rem;
+    margin: 16px 0 0;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.ninos-mensaje.bien { color: #2E7D32; }
+.ninos-mensaje.mal { color: #C62828; }
+
+.ninos-estrellas {
+    font-size: 64px;
+    line-height: 1;
+    margin: 24px 0 8px;
+}
+
+.ninos-estrellas .llena { color: #F59E0B; }
+.ninos-estrellas .vacia { color: #E5DCC8; }
+
+@keyframes sacudir {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ninos-opcion,
+    .ninos-opcion.incorrecta {
+        transition: none;
+        animation: none;
+    }
+}

@@ -15,6 +15,8 @@ public class AppDbContext : DbContext
     public DbSet<RegistroRespuesta> Respuestas => Set<RegistroRespuesta>();
     public DbSet<Configuracion> Configuraciones => Set<Configuracion>();
     public DbSet<RespuestaPropia> RespuestasPropias => Set<RespuestaPropia>();
+    public DbSet<PerfilInfantil> PerfilesInfantiles => Set<PerfilInfantil>();
+    public DbSet<ProgresoInfantil> ProgresosInfantiles => Set<ProgresoInfantil>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -32,5 +34,10 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<RespuestaPropia>().HasIndex(r => r.ClavePregunta).IsUnique();
         modelBuilder.Entity<RespuestaPropia>().Property(r => r.ClavePregunta).HasMaxLength(100);
         modelBuilder.Entity<RespuestaPropia>().Property(r => r.Texto).HasMaxLength(RespuestaPropia.LargoMaximo);
+
+        // Modo infantil: un progreso por palabra, separado del progreso del adulto.
+        modelBuilder.Entity<ProgresoInfantil>().HasIndex(p => p.PalabraId).IsUnique();
+        modelBuilder.Entity<ProgresoInfantil>().Ignore(p => p.Aprendida);
+        modelBuilder.Entity<PerfilInfantil>().Property(p => p.Nombre).HasMaxLength(PerfilInfantil.LargoMaximoNombre);
     }
 }

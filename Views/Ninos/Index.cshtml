@@ -1,0 +1,47 @@
+@model List<CategoriaInfantil>
+@{
+    ViewData["Title"] = "Niños";
+    ViewData["ModoEnfocado"] = true;
+    ViewData["ClaseBody"] = "modo-ninos";
+    var nombre = (string)ViewBag.Nombre;
+}
+
+<div class="barra-enfoque">
+    <a class="boton-icono" asp-controller="Home" asp-action="Practicar" aria-label="Salir del modo niños">
+        <partial name="_Icono" model='"cerrar"' />
+    </a>
+</div>
+
+<h1 class="ninos-titulo">@(string.IsNullOrEmpty(nombre) ? "¡Hola!" : $"¡Hola, {nombre}!")</h1>
+<p class="ninos-subtitulo">¿Qué quieres aprender hoy?</p>
+
+<ul class="ninos-categorias">
+    @foreach (var categoria in Model)
+    {
+        <li class="ninos-categoria">
+            <div class="ninos-dibujo"><partial name="_Dibujo" model="categoria.PalabraMuestra" /></div>
+            <h2>@categoria.Nombre</h2>
+            <p class="ninos-avance">
+                <span class="estrella" aria-hidden="true">★</span>
+                @categoria.Aprendidas de @categoria.Total aprendidas
+            </p>
+            <div class="ninos-acciones">
+                <a class="btn btn-outline-primary" asp-action="Aprende" asp-route-id="@categoria.Id">Aprende</a>
+                <a class="btn btn-primary" asp-action="Juego" asp-route-id="@categoria.Id">Jugar</a>
+            </div>
+        </li>
+    }
+</ul>
+
+<details class="mt-4">
+    <summary class="text-muted small">Para papá o mamá: nombre del niño o la niña</summary>
+    <form asp-action="Nombre" method="post" class="d-flex gap-2 mt-2">
+        <label for="nombre" class="visually-hidden">Nombre</label>
+        <input id="nombre" name="nombre" class="form-control" value="@nombre" maxlength="@PerfilInfantil.LargoMaximoNombre" placeholder="Opcional" />
+        <button type="submit" class="btn btn-outline-secondary">Guardar</button>
+    </form>
+    <p class="form-text">
+        Se guarda solo en tu base de datos. Una palabra cuenta como aprendida con @ProgresoInfantil.AciertosParaAprender aciertos seguidos.
+        Este progreso es aparte del tuyo.
+    </p>
+</details>

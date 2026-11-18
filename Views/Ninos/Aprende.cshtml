@@ -1,0 +1,34 @@
+@model List<PalabraInfantil>
+@{
+    var categoria = (CategoriaInfantil)ViewBag.Categoria;
+    ViewData["Title"] = "Aprende: " + categoria.Nombre;
+    ViewData["ModoEnfocado"] = true;
+    ViewData["ClaseBody"] = "modo-ninos";
+}
+
+<div class="barra-enfoque">
+    <a class="boton-icono" asp-action="Index" aria-label="Volver a las categorías">
+        <partial name="_Icono" model='"cerrar"' />
+    </a>
+    <span class="avance-texto" style="flex: 1">@categoria.Nombre</span>
+</div>
+
+<h1 class="ninos-titulo">Toca y escucha</h1>
+
+<ul class="ninos-tarjetas">
+    @foreach (var palabra in Model)
+    {
+        <li>
+            <button type="button" class="ninos-tarjeta btn-audio" data-lento data-texto="@palabra.Ingles"
+                    aria-label="@palabra.Ingles, @palabra.Espanol">
+                <span class="ninos-dibujo"><partial name="_Dibujo" model="palabra.Ingles" /></span>
+                <span class="ninos-palabra">@palabra.Ingles</span>
+                <span class="ninos-traduccion">@palabra.Espanol</span>
+            </button>
+        </li>
+    }
+</ul>
+
+<div class="barra-accion">
+    <a class="btn btn-primary btn-lg btn-bloque" asp-action="Juego" asp-route-id="@categoria.Id">¡A jugar!</a>
+</div>
