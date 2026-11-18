@@ -1,0 +1,43 @@
+@model Dictionary<string, string>
+@using VocabularioIngles.Data
+@{
+    ViewData["Title"] = "Mis respuestas";
+}
+
+<h1 class="mb-2">Mis respuestas de entrevista</h1>
+<p class="text-muted">
+    Escribe en inglés tu propia respuesta a cada pregunta, con tus datos reales. En el simulacro
+    verás tu respuesta en lugar del ejemplo. Se guardan solo en tu base de datos, no en el repositorio.
+    Si dejas una caja vacía, esa respuesta se borra.
+</p>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success">@TempData["Mensaje"]</div>
+}
+
+<form asp-action="Index" method="post">
+    @foreach (var pregunta in PreguntasEntrevista.Todas)
+    {
+        Model.TryGetValue(pregunta.Clave, out var mia);
+        var id = "respuesta-" + pregunta.Clave;
+        <div class="card mb-3">
+            <div class="card-body">
+                <label for="@id" class="form-label mb-0"><strong>@pregunta.Ingles</strong></label>
+                <div class="text-muted small mb-2">@pregunta.Espanol</div>
+                <textarea id="@id" name="respuestas[@pregunta.Clave]" class="form-control mb-2" rows="4"
+                          maxlength="@RespuestaPropia.LargoMaximo" spellcheck="true" lang="en">@mia</textarea>
+                <details>
+                    <summary class="small text-muted">Ver un ejemplo</summary>
+                    <p class="small mb-1 mt-1">@string.Join(" ", pregunta.RespuestaModelo)</p>
+                    <p class="small text-muted mb-0">💡 @pregunta.Consejo</p>
+                </details>
+            </div>
+        </div>
+    }
+
+    <div class="d-flex flex-wrap gap-2 mb-4">
+        <button type="submit" class="btn btn-primary btn-lg">Guardar</button>
+        <a class="btn btn-outline-primary btn-lg" asp-controller="Simulacro" asp-action="Index">Practicar en el simulacro</a>
+    </div>
+</form>

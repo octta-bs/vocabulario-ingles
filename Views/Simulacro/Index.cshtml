@@ -2,13 +2,25 @@
 @using System.Text.Json
 @{
     ViewData["Title"] = "Simulacro de entrevista";
-    var datos = Model.Select(p => new { ingles = p.Ingles, espanol = p.Espanol, modelo = p.RespuestaModelo, consejo = p.Consejo });
+    var mias = (Dictionary<string, string>)ViewBag.MisRespuestas;
+    var datos = Model.Select(p => new
+    {
+        ingles = p.Ingles,
+        espanol = p.Espanol,
+        modelo = p.RespuestaModelo,
+        consejo = p.Consejo,
+        mia = mias.TryGetValue(p.Clave, out var texto) ? texto : null
+    });
 }
 
 <h1 class="mb-2">Simulacro de entrevista</h1>
 <p class="text-muted">
     @Model.Count preguntas como en una entrevista real. Escucha cada una, respóndela en voz alta (o escríbela)
     y luego compárala con la respuesta modelo. Es solo práctica: no se guarda nada.
+</p>
+<p>
+    <a asp-controller="MisRespuestas" asp-action="Index">✏️ Escribir mis propias respuestas</a>
+    <span class="text-muted small">(@mias.Count de @VocabularioIngles.Data.PreguntasEntrevista.Todas.Length escritas)</span>
 </p>
 
 <noscript><div class="alert alert-warning">El simulacro necesita JavaScript.</div></noscript>
@@ -38,7 +50,18 @@
         <button type="button" class="btn btn-outline-primary" id="btn-modelo">Ver respuesta modelo</button>
 
         <div id="modelo" class="mt-3" hidden>
-            <h3 class="h6">Una respuesta posible</h3>
+            <div id="mia" hidden>
+                <h3 class="h6">Tu respuesta</h3>
+                <p class="mb-1">
+                    <button type="button" class="btn btn-sm btn-outline-secondary btn-audio me-2" id="btn-mia" aria-label="Escuchar tu respuesta">🔊</button>
+                    <span id="mia-texto"></span>
+                </p>
+                <div id="comparacion" class="small mb-3" hidden>
+                    <span id="comparacion-puntaje"></span>
+                    <p class="mb-0" id="comparacion-palabras"></p>
+                </div>
+            </div>
+            <h3 class="h6" id="titulo-modelo">Una respuesta posible</h3>
             <ul id="modelo-frases" class="list-unstyled mb-2"></ul>
             <p class="text-muted small mb-3">💡 <span id="consejo"></span></p>
             <button type="button" class="btn btn-primary" id="btn-siguiente">Siguiente pregunta →</button>
@@ -54,5 +77,6 @@
 <script type="application/json" id="preguntas">@Html.Raw(JsonSerializer.Serialize(datos))</script>
 
 @section Scripts {
+    <script src="~/js/practica.js" asp-append-version="true"></script>
     <script src="~/js/simulacro.js" asp-append-version="true"></script>
 }

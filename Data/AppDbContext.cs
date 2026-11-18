@@ -14,6 +14,7 @@ public class AppDbContext : DbContext
     public DbSet<ProgresoPalabra> Progresos => Set<ProgresoPalabra>();
     public DbSet<RegistroRespuesta> Respuestas => Set<RegistroRespuesta>();
     public DbSet<Configuracion> Configuraciones => Set<Configuracion>();
+    public DbSet<RespuestaPropia> RespuestasPropias => Set<RespuestaPropia>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -26,5 +27,10 @@ public class AppDbContext : DbContext
         // Se busca seguido por fecha (respuestas de hoy, las últimas N) y por palabra.
         modelBuilder.Entity<RegistroRespuesta>().HasIndex(r => r.Fecha);
         modelBuilder.Entity<RegistroRespuesta>().HasIndex(r => new { r.PalabraId, r.Fecha });
+
+        // Una sola respuesta tuya por pregunta.
+        modelBuilder.Entity<RespuestaPropia>().HasIndex(r => r.ClavePregunta).IsUnique();
+        modelBuilder.Entity<RespuestaPropia>().Property(r => r.ClavePregunta).HasMaxLength(100);
+        modelBuilder.Entity<RespuestaPropia>().Property(r => r.Texto).HasMaxLength(RespuestaPropia.LargoMaximo);
     }
 }

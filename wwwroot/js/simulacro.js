@@ -40,6 +40,13 @@
             lista.appendChild(li);
         });
 
+        // Tu propia respuesta (de "Mis respuestas"): va primero y el ejemplo queda como referencia.
+        document.getElementById('mia').hidden = !p.mia;
+        document.getElementById('mia-texto').textContent = p.mia || '';
+        document.getElementById('btn-mia').setAttribute('data-texto', p.mia || '');
+        document.getElementById('titulo-modelo').textContent = p.mia ? 'Otro ejemplo' : 'Una respuesta posible';
+        document.getElementById('comparacion').hidden = true;
+
         caja.value = '';
         estado.textContent = avisoSinVoz;
         document.getElementById('modelo').hidden = true;
@@ -56,8 +63,36 @@
         leer(preguntas[actual].ingles, true);
     });
 
+    // Marca en verde las palabras de tu respuesta que dijiste (o escribiste) y en rojo las que faltaron.
+    function comparar() {
+        var p = preguntas[actual];
+        var dicho = caja.value.trim();
+        var bloque = document.getElementById('comparacion');
+        if (!p.mia || !dicho || typeof Practica === 'undefined') {
+            bloque.hidden = true;
+            return;
+        }
+
+        var r = Practica.comparar(p.mia, dicho);
+        var contenedor = document.getElementById('comparacion-palabras');
+        contenedor.textContent = '';
+        r.palabras.forEach(function (palabra, i) {
+            if (i > 0) {
+                contenedor.appendChild(document.createTextNode(' '));
+            }
+            var span = document.createElement('span');
+            span.className = palabra.ok ? 'practica-ok' : 'practica-falta';
+            span.textContent = palabra.texto;
+            contenedor.appendChild(span);
+        });
+        document.getElementById('comparacion-puntaje').textContent =
+            'De tu respuesta dijiste ' + r.aciertos + ' de ' + r.total + ' palabras:';
+        bloque.hidden = false;
+    }
+
     document.getElementById('btn-modelo').addEventListener('click', function () {
         detenerDictado();
+        comparar();
         document.getElementById('modelo').hidden = false;
         this.hidden = true;
     });
@@ -130,6 +165,10 @@
                 botonDictar.textContent = '🎤 Responder en voz alta';
                 if (!errorMostrado) {
                     estado.textContent = caja.value ? 'Listo. Compárala con la respuesta modelo.' : '';
+                }
+                // Si ya estás viendo la respuesta modelo, la comparación se actualiza con lo último que dijiste.
+                if (!document.getElementById('modelo').hidden) {
+                    comparar();
                 }
             };
 

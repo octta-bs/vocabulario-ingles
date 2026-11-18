@@ -22,6 +22,7 @@ builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddSingleton<ZonaHorariaUsuario>();
 builder.Services.AddScoped<RepasoService>();
 builder.Services.AddScoped<EstadisticasService>();
+builder.Services.AddScoped<RespuestasPropiasService>();
 
 var app = builder.Build();
 
