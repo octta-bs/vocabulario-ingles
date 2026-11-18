@@ -1,53 +1,101 @@
-@model ResumenViewModel
+@model InicioViewModel
 @{
     ViewData["Title"] = "Inicio";
+    // Anillo de la meta: un círculo de radio 40 mide 251.33 de contorno.
+    var contorno = 2 * Math.PI * 40;
+    var lleno = contorno * Model.Meta.Porcentaje / 100.0;
+    var dash = $"{lleno.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)} {contorno.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)}";
 }
 
-<h1 class="mb-4">Vocabulario de inglés</h1>
+<p class="inicio-fecha">@Model.Fecha</p>
+<h1 class="mb-4">@Model.Saludo</h1>
 
 @if (TempData["Mensaje"] != null)
 {
-    <div class="alert alert-success">@TempData["Mensaje"]</div>
+    <div class="alert alert-success" role="status">@TempData["Mensaje"]</div>
 }
 
-<partial name="_BarraMeta" model="Model.Meta" />
+<section class="card card-body tarjeta-meta mb-3" aria-labelledby="titulo-meta">
+    <svg width="96" height="96" viewBox="0 0 96 96" role="img" aria-label="Meta de hoy: @Model.Meta.Respondidas de @Model.Meta.Meta ejercicios">
+        <circle cx="48" cy="48" r="40" fill="none" stroke="#E4E6EB" stroke-width="10"></circle>
+        <circle cx="48" cy="48" r="40" fill="none" stroke="@(Model.Meta.Cumplida ? "#15803D" : "#4338CA")" stroke-width="10"
+                stroke-linecap="round" stroke-dasharray="@dash" transform="rotate(-90 48 48)"></circle>
+        <text x="48" y="47" text-anchor="middle" font-size="22" font-weight="700" fill="#15171C">@Model.Meta.Respondidas</text>
+        <text x="48" y="65" text-anchor="middle" font-size="12" fill="#5B6170">de @Model.Meta.Meta</text>
+    </svg>
+    <div class="detalle">
+        <h2 id="titulo-meta" class="h6 mb-0">Meta de hoy</h2>
+        <p class="mb-0 text-muted small">
+            @if (Model.Meta.Cumplida)
+            {
+                <text>¡Meta cumplida! Puedes seguir si quieres.</text>
+            }
+            else
+            {
+                <text>Te faltan @Model.Meta.Faltan @(Model.Meta.Faltan == 1 ? "ejercicio" : "ejercicios")</text>
+            }
+        </p>
+        @if (Model.Racha > 0)
+        {
+            <span class="chip chip-racha">
+                <partial name="_Icono" model='"fuego"' view-data='new ViewDataDictionary(ViewData) { ["Tamano"] = 14 }' />
+                @Model.Racha @(Model.Racha == 1 ? "día seguido" : "días seguidos")
+            </span>
+        }
+        <a class="small" asp-action="Meta">Cambiar meta</a>
+    </div>
+</section>
 
-<div class="row g-3 mb-4">
-    <div class="col-6 col-md-3">
-        <div class="card text-center">
-            <div class="card-body">
-                <div class="display-6">@Model.Pendientes</div>
-                <div class="text-muted">Pendientes hoy</div>
-            </div>
-        </div>
+@if (Model.Pendientes > 0)
+{
+    <a class="boton-principal mb-4" asp-controller="Repaso" asp-action="Index">
+        <span style="flex: 1">
+            <span class="titulo">Empezar repaso</span>
+            <span class="subtitulo">
+                @Model.Pendientes @(Model.Pendientes == 1 ? "palabra pendiente" : "palabras pendientes")
+            </span>
+        </span>
+        <partial name="_Icono" model='"flecha"' />
+    </a>
+}
+else if (Model.NuevasPorAgregar > 0)
+{
+    <a class="boton-principal mb-4" asp-controller="Repaso" asp-action="Nuevas">
+        <span style="flex: 1">
+            <span class="titulo">Aprender palabras nuevas</span>
+            <span class="subtitulo">Ya repasaste todo. Te tocan @Model.NuevasPorAgregar nuevas.</span>
+        </span>
+        <partial name="_Icono" model='"flecha"' />
+    </a>
+}
+else
+{
+    <div class="card card-body mb-4">
+        <h2 class="h6 mb-1">Ya repasaste todo por hoy</h2>
+        <p class="mb-0 text-muted small">Puedes practicar en voz alta o con un simulacro de entrevista.</p>
     </div>
-    <div class="col-6 col-md-3">
-        <div class="card text-center">
-            <div class="card-body">
-                <div class="display-6">@Model.EnRepaso</div>
-                <div class="text-muted">En repaso</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-6 col-md-3">
-        <div class="card text-center">
-            <div class="card-body">
-                <div class="display-6">@Model.Dominadas</div>
-                <div class="text-muted">Dominadas</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-6 col-md-3">
-        <div class="card text-center">
-            <div class="card-body">
-                <div class="display-6">@Model.TotalPalabras</div>
-                <div class="text-muted">Palabras en total</div>
-            </div>
-        </div>
-    </div>
-</div>
+}
 
-<div class="d-flex flex-wrap gap-2">
-    <a class="btn btn-primary btn-lg" asp-controller="Repaso" asp-action="Index">Empezar repaso</a>
-    <a class="btn btn-outline-primary btn-lg" asp-controller="Palabras" asp-action="Index">Ver palabras</a>
+<h2 class="seccion-titulo">Practica también</h2>
+<div class="accesos">
+    <a class="acceso" asp-controller="Practica" asp-action="Index">
+        <span class="icono-caja"><partial name="_Icono" model='"microfono"' view-data='new ViewDataDictionary(ViewData) { ["Tamano"] = 22 }' /></span>
+        <span class="nombre">Hablar</span>
+        <span class="detalle">Di frases en voz alta</span>
+    </a>
+    <a class="acceso" asp-controller="Simulacro" asp-action="Index">
+        <span class="icono-caja"><partial name="_Icono" model='"maletin"' view-data='new ViewDataDictionary(ViewData) { ["Tamano"] = 22 }' /></span>
+        <span class="nombre">Entrevista</span>
+        <span class="detalle">Simulacro de 5 preguntas</span>
+    </a>
+    <a class="acceso" asp-controller="Repaso" asp-action="Errores">
+        <span class="icono-caja"><partial name="_Icono" model='"diana"' view-data='new ViewDataDictionary(ViewData) { ["Tamano"] = 22 }' /></span>
+        <span class="nombre">Mis errores</span>
+        <span class="detalle">@(Model.Errores == 0 ? "Aún no fallas ninguna" : $"{Model.Errores} para reforzar")</span>
+    </a>
+    <a class="acceso" asp-controller="Repaso" asp-action="Nuevas">
+        <span class="icono-caja"><partial name="_Icono" model='"mas"' view-data='new ViewDataDictionary(ViewData) { ["Tamano"] = 22 }' /></span>
+        <span class="nombre">Palabras nuevas</span>
+        <span class="detalle">@(Model.NuevasPorAgregar == 0 ? "Primero refuerza las tuyas" : $"Te tocan {Model.NuevasPorAgregar}")</span>
+    </a>
 </div>

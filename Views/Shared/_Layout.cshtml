@@ -1,33 +1,58 @@
+@{
+    // Las pantallas del repaso piden el "modo enfocado": sin barra de pestañas, solo el ejercicio.
+    var enfocado = ViewData["ModoEnfocado"] as bool? == true;
+
+    // Qué pestaña se marca como activa, según la pantalla actual.
+    var controlador = ViewContext.RouteData.Values["controller"]?.ToString();
+    var accion = ViewContext.RouteData.Values["action"]?.ToString();
+    var pestana = controlador switch
+    {
+        "Repaso" => "repaso",
+        "Progreso" => "progreso",
+        "Practica" or "Simulacro" or "MisRespuestas" or "Palabras" => "practicar",
+        "Home" when accion == "Practicar" => "practicar",
+        _ => "inicio"
+    };
+    var pestanas = new[]
+    {
+        (Id: "inicio", Texto: "Inicio", Icono: "inicio", Controlador: "Home", Accion: "Index"),
+        (Id: "repaso", Texto: "Repaso", Icono: "repaso", Controlador: "Repaso", Accion: "Index"),
+        (Id: "practicar", Texto: "Practicar", Icono: "microfono", Controlador: "Home", Accion: "Practicar"),
+        (Id: "progreso", Texto: "Progreso", Icono: "progreso", Controlador: "Progreso", Accion: "Index")
+    };
+}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>@ViewData["Title"] - Vocabulario</title>
     <link rel="manifest" href="~/manifest.webmanifest" />
-    <meta name="theme-color" content="#0d6efd" />
+    <meta name="theme-color" content="#4338CA" />
     <link rel="icon" href="~/icons/icon-192.png" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body>
-    <nav class="navbar navbar-expand navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand" asp-controller="Home" asp-action="Index">Vocabulario</a>
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" asp-controller="Palabras" asp-action="Index">Palabras</a></li>
-                <li class="nav-item"><a class="nav-link" asp-controller="Repaso" asp-action="Index">Repaso</a></li>
-                <li class="nav-item"><a class="nav-link" asp-controller="Practica" asp-action="Index">Hablar</a></li>
-                <li class="nav-item"><a class="nav-link" asp-controller="Simulacro" asp-action="Index">Entrevista</a></li>
-                <li class="nav-item"><a class="nav-link" asp-controller="Progreso" asp-action="Index">Progreso</a></li>
-                <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Meta">Mi meta</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <main class="container py-4">
+<body class="@(enfocado ? "modo-enfocado" : "con-pestanas")">
+    <main class="container contenido">
         @RenderBody()
     </main>
+
+    @if (!enfocado)
+    {
+        <nav class="barra-pestanas" aria-label="Navegación principal">
+            <ul>
+                @foreach (var p in pestanas)
+                {
+                    <li>
+                        <a asp-controller="@p.Controlador" asp-action="@p.Accion" aria-current="@(p.Id == pestana ? "page" : null)">
+                            <partial name="_Icono" model="p.Icono" />
+                            @p.Texto
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
 
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)

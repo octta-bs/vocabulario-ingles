@@ -1,0 +1,62 @@
+@model PracticarViewModel
+@{
+    ViewData["Title"] = "Practicar";
+    var tamano = new ViewDataDictionary(ViewData) { ["Tamano"] = 22 };
+    var chico = new ViewDataDictionary(ViewData) { ["Tamano"] = 20 };
+}
+
+<h1 class="mb-1">Practicar</h1>
+<p class="text-muted mb-4">Práctica extra: no cambia tu repaso.</p>
+
+<ul class="opciones">
+    <li>
+        <a class="opcion" asp-controller="Simulacro" asp-action="Index">
+            <span class="icono-caja"><partial name="_Icono" model='"maletin"' view-data="tamano" /></span>
+            <span class="textos">
+                <span class="nombre">Simulacro de entrevista</span>
+                <span class="detalle">5 preguntas · @Model.RespuestasEscritas de @Model.TotalPreguntas respuestas tuyas escritas</span>
+            </span>
+            <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
+        </a>
+    </li>
+    <li>
+        <a class="opcion" asp-controller="Practica" asp-action="Index">
+            <span class="icono-caja"><partial name="_Icono" model='"microfono"' view-data="tamano" /></span>
+            <span class="textos">
+                <span class="nombre">Hablar en voz alta</span>
+                <span class="detalle">Di frases de trabajo y revisa tu pronunciación</span>
+            </span>
+            <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
+        </a>
+    </li>
+    <li>
+        <a class="opcion" asp-controller="Repaso" asp-action="Errores">
+            <span class="icono-caja"><partial name="_Icono" model='"diana"' view-data="tamano" /></span>
+            <span class="textos">
+                <span class="nombre">Mis errores</span>
+                <span class="detalle">@(Model.Errores == 0 ? "Todavía no has fallado ninguna palabra" : Model.Errores == 1 ? "1 palabra que fallaste" : $"{Model.Errores} palabras que más fallas")</span>
+            </span>
+            <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
+        </a>
+    </li>
+    <li>
+        <a class="opcion" asp-controller="MisRespuestas" asp-action="Index">
+            <span class="icono-caja"><partial name="_Icono" model='"lapiz"' view-data="tamano" /></span>
+            <span class="textos">
+                <span class="nombre">Mis respuestas</span>
+                <span class="detalle">Escribe tus respuestas de entrevista</span>
+            </span>
+            <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
+        </a>
+    </li>
+    <li>
+        <a class="opcion" asp-controller="Palabras" asp-action="Index">
+            <span class="icono-caja"><partial name="_Icono" model='"lista"' view-data="tamano" /></span>
+            <span class="textos">
+                <span class="nombre">Todas las palabras</span>
+                <span class="detalle">@Model.TotalPalabras palabras y frases en @Model.Categorias categorías</span>
+            </span>
+            <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
+        </a>
+    </li>
+</ul>

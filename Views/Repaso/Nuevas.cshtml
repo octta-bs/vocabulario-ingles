@@ -1,0 +1,63 @@
+@{
+    ViewData["Title"] = "Palabras nuevas";
+    var ritmo = (VocabularioIngles.Services.RitmoNuevas)ViewBag.Ritmo;
+    var sinEmpezar = (int)ViewBag.SinEmpezar;
+    var aAgregar = Math.Min(ritmo.Cantidad, sinEmpezar);
+    var categorias = (List<CategoriaSinEmpezar>)ViewBag.Categorias;
+    var elegida = (int?)ViewBag.CategoriaElegida;
+    if (elegida != null && categorias.All(c => c.Id != elegida))
+    {
+        elegida = null; // esa categoría ya no tiene palabras nuevas
+    }
+}
+
+<h1 class="mb-1">Palabras nuevas</h1>
+<p class="text-muted mb-4">
+    @if (ritmo.PorcentajeAciertos is { } porcentaje)
+    {
+        <text>Llevas @porcentaje% de aciertos en tus últimas respuestas.</text>
+        @if (ritmo.Cantidad == 0)
+        {
+            <text>Cuando llegues a 60%, se desbloquean más palabras.</text>
+        }
+        else
+        {
+            <text>Mientras más aciertes, más palabras nuevas te tocan (hasta 8).</text>
+        }
+    }
+    else
+    {
+        <text>Cuando respondas más ejercicios, la cantidad se ajustará a tus aciertos.</text>
+    }
+</p>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-info" role="status">@TempData["Mensaje"]</div>
+}
+
+@if (sinEmpezar == 0)
+{
+    <div class="alert alert-secondary">Ya tienes todas las palabras en tu repaso.</div>
+}
+else if (aAgregar == 0)
+{
+    <div class="alert alert-warning">Por ahora no te tocan palabras nuevas: primero refuerza las que ya tienes.</div>
+    <a class="btn btn-outline-primary btn-lg btn-bloque" asp-action="Errores">Practicar mis errores</a>
+}
+else
+{
+    <form asp-action="AgregarNuevas" method="post" class="card card-body palabras-nuevas">
+        <label for="categoriaId" class="form-label">¿De qué categoría?</label>
+        <select id="categoriaId" name="categoriaId" class="form-select mb-3">
+            <option value="">Cualquiera (en orden)</option>
+            @foreach (var categoria in categorias)
+            {
+                <option value="@categoria.Id" selected="@(categoria.Id == elegida)">@categoria.Nombre (@categoria.SinEmpezar sin empezar)</option>
+            }
+        </select>
+        <button type="submit" class="btn btn-primary btn-lg btn-bloque">
+            Agregar @aAgregar @(aAgregar == 1 ? "palabra nueva" : "palabras nuevas")
+        </button>
+    </form>
+}

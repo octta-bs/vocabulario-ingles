@@ -1,0 +1,58 @@
+@model string
+@* Íconos de línea (SVG) por nombre. Son decorativos: el texto junto a ellos dice qué hacen. *@
+@{
+    var tamano = ViewData["Tamano"] as int? ?? 24;
+}
+<svg width="@tamano" height="@tamano" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+@switch (Model)
+{
+    case "inicio":
+        <path d="M3 11l9-7 9 7"></path><path d="M5 10v10h14V10"></path>
+        break;
+    case "repaso":
+        <rect x="4" y="4" width="16" height="16" rx="3"></rect><path d="M8 12l3 3 5-6"></path>
+        break;
+    case "microfono":
+        <rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0"></path><path d="M12 18v3"></path>
+        break;
+    case "progreso":
+        <path d="M4 20V10"></path><path d="M10 20V4"></path><path d="M16 20v-7"></path><path d="M21 20H3"></path>
+        break;
+    case "maletin":
+        <rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"></path>
+        break;
+    case "diana":
+        <circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5"></circle><circle cx="12" cy="12" r="1"></circle>
+        break;
+    case "mas":
+        <path d="M12 5v14"></path><path d="M5 12h14"></path>
+        break;
+    case "lapiz":
+        <path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"></path>
+        break;
+    case "lista":
+        <path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h10"></path>
+        break;
+    case "flecha":
+        <path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path>
+        break;
+    case "chevron":
+        <path d="M9 6l6 6-6 6"></path>
+        break;
+    case "cerrar":
+        <path d="M6 6l12 12"></path><path d="M18 6L6 18"></path>
+        break;
+    case "palomita":
+        <path d="M5 12l5 5 9-10"></path>
+        break;
+    case "fuego":
+        <path d="M12 2c1 3 4 5 4 9a4 4 0 0 1-8 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 0-8z"></path>
+        break;
+    case "bocina":
+        <path d="M11 5L6 9H3v6h3l5 4z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path><path d="M18.5 5.5a9 9 0 0 1 0 13"></path>
+        break;
+    case "bandera":
+        <path d="M5 21V4"></path><path d="M5 4h11l-2 4 2 4H5"></path>
+        break;
+}
+</svg>
