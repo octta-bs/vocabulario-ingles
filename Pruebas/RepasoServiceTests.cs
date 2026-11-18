@@ -18,6 +18,15 @@ public sealed class RepasoServiceTests : IDisposable
     private readonly RepasoService _servicio;
 
     private static readonly int TotalFrases = FrasesTrabajo.PorCategoria.Values.Sum(f => f.Length);
+    private static readonly int TotalGeneral = VocabularioGeneral.Categorias.Sum(c => c.Palabras.Length);
+    private const int TotalInicial = 35;
+
+    /// <summary>Mete al repaso las primeras palabras de Tecnología ("code", "bug"…), como antes de los niveles.</summary>
+    private Task<int> AgregarTecnologiaAsync()
+    {
+        var tecnologia = _db.Categorias.Single(c => c.Nombre == "Tecnología");
+        return _servicio.AgregarNuevasAsync(tecnologia.Id);
+    }
 
     public RepasoServiceTests()
     {
@@ -44,7 +53,7 @@ public sealed class RepasoServiceTests : IDisposable
     [Fact]
     public void Las_migraciones_y_la_carga_inicial_dejan_palabras_y_frases()
     {
-        Assert.Equal(35, _db.Palabras.Count(p => p.Tipo != TipoPalabra.Frase));
+        Assert.Equal(TotalInicial + TotalGeneral, _db.Palabras.Count(p => p.Tipo != TipoPalabra.Frase));
         Assert.Equal(TotalFrases, _db.Palabras.Count(p => p.Tipo == TipoPalabra.Frase));
     }
 
@@ -53,8 +62,8 @@ public sealed class RepasoServiceTests : IDisposable
     {
         SeedData.Cargar(_db);
 
-        Assert.Equal(35 + TotalFrases, _db.Palabras.Count());
-        Assert.Equal(3 + FrasesTrabajo.PorCategoria.Count, _db.Categorias.Count());
+        Assert.Equal(TotalInicial + TotalGeneral + TotalFrases, _db.Palabras.Count());
+        Assert.Equal(3 + VocabularioGeneral.Categorias.Length + FrasesTrabajo.PorCategoria.Count, _db.Categorias.Count());
     }
 
     [Fact]
@@ -80,12 +89,81 @@ public sealed class RepasoServiceTests : IDisposable
     }
 
     [Fact]
-    public async Task Al_principio_agrega_5_palabras_en_orden()
+    public async Task En_orden_empieza_por_el_nivel_mas_basico()
     {
         var agregadas = await _servicio.AgregarNuevasAsync();
 
+        var primeras = VocabularioGeneral.Categorias[0].Palabras.Take(5).Select(p => p.Ingles).ToArray();
+        var enRepaso = _db.Progresos.Include(p => p.Palabra).ThenInclude(p => p!.Categoria)
+            .OrderBy(p => p.PalabraId).ToList();
         Assert.Equal(5, agregadas);
-        Assert.Equal(new[] { 1, 2, 3, 4, 5 }, _db.Progresos.Select(p => p.PalabraId).OrderBy(id => id).ToArray());
+        Assert.All(enRepaso, p => Assert.Equal(NivelMcer.PreA1, p.Palabra!.Categoria!.Nivel));
+        Assert.Equal(primeras, enRepaso.Select(p => p.Palabra!.Ingles).ToArray());
+    }
+
+    [Fact]
+    public async Task La_primera_categoria_es_la_que_de_verdad_sigue_en_orden()
+    {
+        var siguiente = (await _servicio.CategoriasConNuevasAsync())[0];
+
+        await _servicio.AgregarNuevasAsync();
+
+        Assert.All(_db.Progresos.Include(p => p.Palabra).ToList(), p => Assert.Equal(siguiente.Id, p.Palabra!.CategoriaId));
+    }
+
+    [Fact]
+    public async Task Despues_de_Pre_A1_siguen_A1_y_luego_A2()
+    {
+        // Todo Pre A1 ya en repaso: lo siguiente debe ser A1.
+        var preA1 = _db.Palabras.Where(p => p.Categoria!.Nivel == NivelMcer.PreA1).Select(p => p.Id).ToList();
+        foreach (var id in preA1)
+        {
+            _db.Progresos.Add(new ProgresoPalabra { PalabraId = id, ProximoRepaso = DateTime.UtcNow.AddDays(30) });
+        }
+        await _db.SaveChangesAsync();
+
+        await _servicio.AgregarNuevasAsync();
+
+        var nuevas = _db.Progresos.Include(p => p.Palabra).ThenInclude(p => p!.Categoria)
+            .Where(p => !preA1.Contains(p.PalabraId)).ToList();
+        Assert.Equal(5, nuevas.Count);
+        Assert.All(nuevas, p => Assert.Equal(NivelMcer.A1, p.Palabra!.Categoria!.Nivel));
+    }
+
+    [Fact]
+    public async Task Las_categorias_con_palabras_nuevas_van_por_nivel()
+    {
+        var categorias = await _servicio.CategoriasConNuevasAsync();
+
+        Assert.Equal(categorias.OrderBy(c => c.Nivel).Select(c => c.Id), categorias.Select(c => c.Id));
+        Assert.Equal(VocabularioGeneral.Categorias[0].Nombre, categorias[0].Nombre);
+        Assert.Equal(NivelMcer.B2, _db.Categorias.Single(c => c.Nombre == "Entrevista técnica").Nivel);
+        Assert.Equal(NivelMcer.B1, _db.Categorias.Single(c => c.Nombre == "Stand-up").Nivel);
+        Assert.Equal(NivelMcer.A2, _db.Categorias.Single(c => c.Nombre == "Tecnología").Nivel);
+    }
+
+    [Fact]
+    public void El_vocabulario_general_es_valido()
+    {
+        var generador = new GeneradorEjercicios();
+        var generales = _db.Palabras.Where(p => p.Categoria!.Nivel <= NivelMcer.A2 && p.Categoria.Nombre != "Tecnología"
+                                               && p.Categoria.Nombre != "Trabajo" && p.Categoria.Nombre != "Verbos de programación")
+            .ToList();
+
+        Assert.Equal(TotalGeneral, generales.Count);
+        Assert.All(generales, p =>
+        {
+            Assert.StartsWith("/", p.Pronunciacion);
+            Assert.False(string.IsNullOrWhiteSpace(p.ComoSeLee));
+            // Su ejemplo contiene la palabra completa, así que tiene ejercicio de completar.
+            Assert.Contains(generador.Posibles(p), e => e.Tipo == TipoEjercicio.CompletarFrase);
+            if (p.EsVerbo)
+            {
+                Assert.False(string.IsNullOrWhiteSpace(p.Pasado));
+                Assert.False(string.IsNullOrWhiteSpace(p.Participio));
+            }
+        });
+        Assert.Equal(generales.Count, generales.Select(p => p.Ingles.ToLowerInvariant()).Distinct().Count());
     }
 
     [Fact]
@@ -102,7 +180,7 @@ public sealed class RepasoServiceTests : IDisposable
     [Fact]
     public async Task Cada_respuesta_se_guarda_y_cuenta_para_la_meta()
     {
-        await _servicio.AgregarNuevasAsync();
+        await AgregarTecnologiaAsync();
         await _servicio.GuardarMetaDiariaAsync(6);
 
         await _servicio.ResponderAsync(1, TipoEjercicio.EscribirPalabra, "code");
@@ -128,7 +206,7 @@ public sealed class RepasoServiceTests : IDisposable
     [Fact]
     public async Task Una_palabra_que_fallas_seguido_vuelve_antes()
     {
-        await _servicio.AgregarNuevasAsync();
+        await AgregarTecnologiaAsync();
 
         // "bug" (id 2): dos fallos y luego tres aciertos. En la etapa 3 lo normal son 3 días; difícil, 1.
         await _servicio.ResponderAsync(2, TipoEjercicio.EscribirPalabra, "mal");
@@ -146,7 +224,7 @@ public sealed class RepasoServiceTests : IDisposable
     [Fact]
     public async Task Con_muchos_fallos_no_tocan_palabras_nuevas()
     {
-        await _servicio.AgregarNuevasAsync();
+        await AgregarTecnologiaAsync();
         for (var i = 0; i < 10; i++)
         {
             await _servicio.ResponderAsync(1, TipoEjercicio.EscribirPalabra, "mal");

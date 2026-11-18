@@ -15,7 +15,7 @@ public class PalabrasController : Controller
 
     public async Task<IActionResult> Index(int? categoriaId)
     {
-        ViewBag.Categorias = await _db.Categorias.OrderBy(c => c.Nombre).ToListAsync();
+        ViewBag.Categorias = await _db.Categorias.OrderBy(c => c.Nivel).ThenBy(c => c.Id).ToListAsync();
         ViewBag.CategoriaId = categoriaId;
 
         var consulta = _db.Palabras.Include(p => p.Categoria).AsQueryable();

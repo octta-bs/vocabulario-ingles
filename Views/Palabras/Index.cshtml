@@ -8,14 +8,20 @@
 <h1 class="mb-3">Palabras</h1>
 <p class="text-muted mb-3">@Model.Count @(Model.Count == 1 ? "palabra" : "palabras y frases"). Toca una para ver su pronunciación y ejemplo.</p>
 
-<div class="mb-3 d-flex flex-wrap gap-2">
+<div class="mb-3">
     <a class="btn btn-sm @(categoriaActual == null ? "btn-primary" : "btn-outline-primary")" asp-action="Index">Todas</a>
-    @foreach (var categoria in categorias)
-    {
-        <a class="btn btn-sm @(categoriaActual == categoria.Id ? "btn-primary" : "btn-outline-primary")"
-           asp-action="Index" asp-route-categoriaId="@categoria.Id">@categoria.Nombre</a>
-    }
 </div>
+@foreach (var grupo in categorias.GroupBy(c => c.Nivel))
+{
+    <h2 class="seccion-titulo mb-2">@grupo.Key.Texto() · @grupo.Key.Descripcion()</h2>
+    <div class="mb-3 d-flex flex-wrap gap-2">
+        @foreach (var categoria in grupo)
+        {
+            <a class="btn btn-sm @(categoriaActual == categoria.Id ? "btn-primary" : "btn-outline-primary")"
+               asp-action="Index" asp-route-categoriaId="@categoria.Id">@categoria.Nombre</a>
+        }
+    </div>
+}
 
 <ul class="opciones lista-palabras">
     @foreach (var palabra in Model)

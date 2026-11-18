@@ -14,6 +14,9 @@ public static class FrasesTrabajo
 {
     public record FraseSemilla(string Ingles, string Espanol, string PalabraClave, string? Nota = null);
 
+    /// <summary>El nivel del MCER de cada categoría de frases (intermedio, salvo la entrevista técnica).</summary>
+    public static NivelMcer Nivel(string categoria) => categoria == "Entrevista técnica" ? NivelMcer.B2 : NivelMcer.B1;
+
     public static readonly Dictionary<string, FraseSemilla[]> PorCategoria = new()
     {
         ["Stand-up"] = new FraseSemilla[]

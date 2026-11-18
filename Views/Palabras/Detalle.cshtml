@@ -12,7 +12,13 @@
             <button type="button" class="btn btn-outline-secondary btn-audio" data-texto="@Model.Ingles">🔊 Escuchar</button>
         </div>
 
-        <p class="text-muted mb-3">@Model.Espanol · @(Model.Categoria?.Nombre)</p>
+        <p class="text-muted mb-3">
+            @Model.Espanol · @(Model.Categoria?.Nombre)
+            @if (Model.Categoria != null)
+            {
+                <span class="badge ms-1">@Model.Categoria.Nivel.Texto()</span>
+            }
+        </p>
 
         @if (!string.IsNullOrEmpty(Model.Pronunciacion))
         {

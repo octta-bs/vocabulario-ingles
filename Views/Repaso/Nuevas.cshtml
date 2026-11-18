@@ -49,13 +49,19 @@ else
 {
     <form asp-action="AgregarNuevas" method="post" class="card card-body palabras-nuevas">
         <label for="categoriaId" class="form-label">¿De qué categoría?</label>
-        <select id="categoriaId" name="categoriaId" class="form-select mb-3">
-            <option value="">Cualquiera (en orden)</option>
-            @foreach (var categoria in categorias)
+        <select id="categoriaId" name="categoriaId" class="form-select">
+            <option value="">En orden: sigue @categorias[0].Nombre (@categorias[0].Nivel.Texto())</option>
+            @foreach (var grupo in categorias.GroupBy(c => c.Nivel))
             {
-                <option value="@categoria.Id" selected="@(categoria.Id == elegida)">@categoria.Nombre (@categoria.SinEmpezar sin empezar)</option>
+                <optgroup label="@grupo.Key.Texto() · @grupo.Key.Descripcion()">
+                    @foreach (var categoria in grupo)
+                    {
+                        <option value="@categoria.Id" selected="@(categoria.Id == elegida)">@categoria.Nombre (@categoria.SinEmpezar sin empezar)</option>
+                    }
+                </optgroup>
             }
         </select>
+        <p class="form-text mt-0 mb-3">En orden, las palabras van de lo más básico (Pre A1) a lo más avanzado.</p>
         <button type="submit" class="btn btn-primary btn-lg btn-bloque">
             Agregar @aAgregar @(aAgregar == 1 ? "palabra nueva" : "palabras nuevas")
         </button>
