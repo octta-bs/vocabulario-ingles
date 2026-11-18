@@ -28,8 +28,15 @@ Es solo práctica: no cuenta para el repaso ni para la meta, y no se guarda nada
 
 **Simulacro de entrevista** (menú "Entrevista"): 5 preguntas típicas, empezando siempre por
 "Tell me about yourself". Escuchas cada una, la respondes en voz alta o por escrito y luego ves una
-respuesta modelo con un consejo. Las preguntas están en `Data/PreguntasEntrevista.cs` (escritas a mano:
-adapta las respuestas a tu experiencia). Es solo práctica: no se guarda nada.
+respuesta modelo con un consejo. Las preguntas están en `Data/PreguntasEntrevista.cs` (escritas a mano).
+Es solo práctica: no se guarda nada.
+
+**Mis respuestas** (enlace en el simulacro): escribes en inglés tu propia respuesta a cada una de las 10
+preguntas, con tus datos reales. En el simulacro ves tu respuesta primero (con 🔊) y el ejemplo genérico
+queda como "Otro ejemplo"; si respondiste en voz alta o por escrito, se marcan en verde las palabras de tu
+respuesta que dijiste y en rojo las que faltaron. Se guardan en tu base de datos (tabla `RespuestasPropias`),
+no en el repositorio. Cada pregunta tiene una clave fija (`Clave`): no la cambies aunque corrijas el texto
+de la pregunta, o se pierde la relación con tu respuesta.
 
 **Progreso** (menú "Progreso"): días seguidos cumpliendo tu meta (si hoy todavía no la cumples, la racha
 cuenta hasta ayer), tu mejor racha, los ejercicios por día de las últimas 2 semanas y las 10 palabras que más

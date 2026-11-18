@@ -160,6 +160,33 @@ namespace VocabularioIngles.Data.Migraciones
                     b.ToTable("Respuestas");
                 });
 
+            modelBuilder.Entity("VocabularioIngles.Models.RespuestaPropia", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Actualizada")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ClavePregunta")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Texto")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClavePregunta")
+                        .IsUnique();
+
+                    b.ToTable("RespuestasPropias");
+                });
+
             modelBuilder.Entity("VocabularioIngles.Models.Palabra", b =>
                 {
                     b.HasOne("VocabularioIngles.Models.Categoria", "Categoria")

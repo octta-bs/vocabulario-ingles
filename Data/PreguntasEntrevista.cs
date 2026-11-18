@@ -6,14 +6,15 @@ namespace VocabularioIngles.Data;
 /// </summary>
 public static class PreguntasEntrevista
 {
-    public record Pregunta(string Ingles, string Espanol, string[] RespuestaModelo, string Consejo);
+    /// <param name="Clave">Identificador fijo: con él se guardan tus respuestas. No lo cambies aunque cambie el texto.</param>
+    public record Pregunta(string Clave, string Ingles, string Espanol, string[] RespuestaModelo, string Consejo);
 
     public const int PorSimulacro = 5;
 
     // La primera siempre es "Tell me about yourself": casi todas las entrevistas empiezan así.
     public static readonly Pregunta[] Todas =
     {
-        new("Tell me about yourself.", "Háblame de ti.",
+        new("tell-me-about-yourself", "Tell me about yourself.", "Háblame de ti.",
             new[]
             {
                 "I'm a software developer from Mexico.",
@@ -22,7 +23,7 @@ public static class PreguntasEntrevista
                 "In my last project, I built a REST API for an online store."
             },
             "Responde en un minuto: quién eres, tu experiencia, tus tecnologías y un proyecto. Cambia los datos por los tuyos."),
-        new("Why do you want to work with us?", "¿Por qué quieres trabajar con nosotros?",
+        new("why-work-with-us", "Why do you want to work with us?", "¿Por qué quieres trabajar con nosotros?",
             new[]
             {
                 "I like your product and the technologies you use.",
@@ -30,7 +31,7 @@ public static class PreguntasEntrevista
                 "I'm looking for a remote position with a good team."
             },
             "Menciona algo concreto de la empresa que hayas investigado."),
-        new("What are your strengths?", "¿Cuáles son tus fortalezas?",
+        new("strengths", "What are your strengths?", "¿Cuáles son tus fortalezas?",
             new[]
             {
                 "My strongest skill is backend development.",
@@ -38,7 +39,7 @@ public static class PreguntasEntrevista
                 "I work well in a team."
             },
             "Da un ejemplo real de cada fortaleza si te piden más detalle."),
-        new("What is your biggest weakness?", "¿Cuál es tu mayor debilidad?",
+        new("weakness", "What is your biggest weakness?", "¿Cuál es tu mayor debilidad?",
             new[]
             {
                 "My English is not perfect yet.",
@@ -46,7 +47,7 @@ public static class PreguntasEntrevista
                 "I practice with an app and in meetings."
             },
             "Di una debilidad real y lo que haces para mejorarla."),
-        new("What is dependency injection?", "¿Qué es la inyección de dependencias?",
+        new("dependency-injection", "What is dependency injection?", "¿Qué es la inyección de dependencias?",
             new[]
             {
                 "A class receives its dependencies instead of creating them.",
@@ -54,7 +55,7 @@ public static class PreguntasEntrevista
                 "Dependency injection makes the code easier to test."
             },
             "Si puedes, menciona un ejemplo de tu propio código."),
-        new("How do you use async and await?", "¿Cómo usas async y await?",
+        new("async-await", "How do you use async and await?", "¿Cómo usas async y await?",
             new[]
             {
                 "I use async and await for operations that wait on the database.",
@@ -62,7 +63,7 @@ public static class PreguntasEntrevista
                 "That way the app can handle more requests."
             },
             "Menciona operaciones de entrada y salida: base de datos, archivos o llamadas HTTP."),
-        new("What is Entity Framework?", "¿Qué es Entity Framework?",
+        new("entity-framework", "What is Entity Framework?", "¿Qué es Entity Framework?",
             new[]
             {
                 "Entity Framework is an ORM for .NET.",
@@ -70,7 +71,7 @@ public static class PreguntasEntrevista
                 "I use migrations to update the database schema."
             },
             "ORM significa Object-Relational Mapper: traduce entre objetos y tablas."),
-        new("Tell me about a difficult bug you fixed.", "Cuéntame de un error difícil que hayas arreglado.",
+        new("difficult-bug", "Tell me about a difficult bug you fixed.", "Cuéntame de un error difícil que hayas arreglado.",
             new[]
             {
                 "The app was very slow in production.",
@@ -78,7 +79,7 @@ public static class PreguntasEntrevista
                 "I fixed it, and the page was ten times faster."
             },
             "Usa el orden situación, acción y resultado. Cambia el ejemplo por uno tuyo."),
-        new("How do you handle a disagreement in a code review?", "¿Cómo manejas un desacuerdo en un code review?",
+        new("code-review-disagreement", "How do you handle a disagreement in a code review?", "¿Cómo manejas un desacuerdo en un code review?",
             new[]
             {
                 "I listen to the other person's point of view.",
@@ -86,7 +87,7 @@ public static class PreguntasEntrevista
                 "If we can't agree, we ask the team."
             },
             "Muestra que te importa más el código que tener la razón."),
-        new("Do you have any questions for us?", "¿Tienes alguna pregunta para nosotros?",
+        new("questions-for-us", "Do you have any questions for us?", "¿Tienes alguna pregunta para nosotros?",
             new[]
             {
                 "Yes. What does a typical day look like in this role?",
