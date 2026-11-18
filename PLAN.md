@@ -65,12 +65,34 @@ Con los datos de Progreso, no a ciegas. Candidatos:
 - [ ] Más categorías para niños (comida, familia, casa).
 - [ ] Revisión del inglés escrito a mano (frases, ejemplos y "se lee").
 
+## Fase 5 · Funciones inspiradas en otras apps ⬜
+
+Salen de comparar la app con Anki, LingQ, Duolingo, ELSA Speak y Speak (noviembre de 2026). Todas son gratis
+y sin IA de pago. Van después de la Fase 2, porque el uso real dirá cuál conviene primero. Orden recomendado:
+
+- [ ] **Leer en contexto** (como LingQ): pegar un texto real del trabajo (documentación, un README, un correo),
+  tocar las palabras que no se conocen y meterlas al repaso con su frase. Es lo que más acerca al inglés real de
+  un developer.
+- [ ] **Explicar el error sin IA** (como "Explain My Answer" de Duolingo): en vez de solo mostrar la respuesta
+  correcta, decir por qué con reglas sencillas: tiempo verbal equivocado ("usaste presente; aquí va pasado"),
+  una letra de más o de menos, o una palabra parecida.
+- [ ] **Situaciones guiadas** (como el roleplay de Duolingo y Speak): diálogos armados de stand-up y de entrevista;
+  la app dice su parte y tú respondes en voz alta.
+
+Descartadas por ahora:
+
+- Conversación libre con IA: necesita un servicio de pago y la regla es no gastar dinero.
+- Pronunciación sonido por sonido (como ELSA): necesita modelos especializados que el navegador no tiene.
+- Cambiar el algoritmo de repaso a FSRS (como Anki): vale la pena, pero cuando haya semanas de historial para
+  notar la diferencia. El patrón Strategy (`IAlgoritmoRepaso`) ya permite cambiarlo sin tocar lo demás.
+
 ## Ideas para después
 
 Anotarlas aquí antes de programarlas:
 
 - Varios perfiles de niño.
 - Modo shadowing calificando mientras se habla (solo con audífonos).
+- Algoritmo de repaso FSRS, cuando haya suficiente historial.
 
 ## Reglas de trabajo
 
