@@ -87,6 +87,8 @@ La app se ajusta a ti:
 - **Meta diaria:** eliges cuántos ejercicios quieres responder al día (en "Mi meta") y ves tu avance
   en Inicio y en Repaso. "Hoy" se cuenta con la hora de México (`ZonaHoraria` en `appsettings.json`).
 
+El plan de cambios futuros, por fases, está en [PLAN.md](PLAN.md).
+
 ## Tecnologías
 
 - ASP.NET Core 10 (MVC) y Razor
