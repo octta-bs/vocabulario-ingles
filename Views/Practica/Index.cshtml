@@ -1,0 +1,65 @@
+@model Palabra?
+@{
+    ViewData["Title"] = "Hablar";
+    var categorias = (List<Categoria>)ViewBag.Categorias;
+    var categoriaId = (int?)ViewBag.CategoriaId;
+}
+
+<h1 class="mb-2">Practicar en voz alta</h1>
+<p class="text-muted">
+    Escucha la frase, dila en voz alta y mira qué palabras entendió el navegador.
+    Es solo práctica: no cuenta para tu repaso ni para tu meta.
+</p>
+
+<form method="get" asp-action="Index" class="d-flex flex-wrap gap-2 align-items-center mb-3">
+    <label for="categoriaId" class="visually-hidden">Categoría</label>
+    <select id="categoriaId" name="categoriaId" class="form-select w-auto" onchange="this.form.submit()">
+        <option value="">Todas las frases</option>
+        @foreach (var categoria in categorias)
+        {
+            <option value="@categoria.Id" selected="@(categoria.Id == categoriaId)">@categoria.Nombre</option>
+        }
+    </select>
+    <noscript><button type="submit" class="btn btn-outline-secondary">Cambiar</button></noscript>
+</form>
+
+<div id="sin-soporte" class="alert alert-warning" hidden>
+    Tu navegador no tiene reconocimiento de voz. Usa Chrome o Edge (en la computadora o en Android).
+    Si abres la app desde otro dispositivo, necesita <strong>https</strong> o <strong>localhost</strong>
+    para poder usar el micrófono.
+</div>
+
+@if (Model == null)
+{
+    <div class="alert alert-secondary">No hay frases en esta categoría.</div>
+}
+else
+{
+    <div class="card" id="practica" data-frase="@Model.Ingles">
+        <div class="card-body">
+            <p class="text-muted mb-1">@Model.Categoria?.Nombre</p>
+            <h2 class="frase-hueco mb-1" id="frase">@Model.Ingles</h2>
+            <p class="text-muted">@Model.Espanol</p>
+
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                <button type="button" class="btn btn-outline-secondary btn-lg btn-audio" data-texto="@Model.Ingles">🔊 Escuchar</button>
+                <button type="button" class="btn btn-outline-secondary btn-lg btn-audio" data-lento data-texto="@Model.Ingles">🐢 Más lento</button>
+                <button type="button" class="btn btn-primary btn-lg" id="btn-hablar">🎤 Decirla</button>
+            </div>
+
+            <div id="estado" class="text-muted" aria-live="polite"></div>
+
+            <div id="resultado" hidden>
+                <p class="mb-1"><strong id="puntaje"></strong></p>
+                <p class="frase-hueco mb-2" id="palabras"></p>
+                <p class="text-muted mb-0">Entendí: <em id="entendido"></em></p>
+            </div>
+        </div>
+    </div>
+
+    <a class="btn btn-link ps-0 mt-3" asp-action="Index" asp-route-categoriaId="@categoriaId" asp-route-anterior="@Model.Id">Otra frase →</a>
+}
+
+@section Scripts {
+    <script src="~/js/practica.js" asp-append-version="true"></script>
+}

@@ -11,3 +11,13 @@ body {
     font-size: 1.6rem;
     font-weight: 500;
 }
+
+/* Práctica en voz alta: palabras que el navegador entendió (verde) o no (rojo y subrayadas). */
+.practica-ok {
+    color: #198754;
+}
+
+.practica-falta {
+    color: #dc3545;
+    text-decoration: underline wavy;
+}
