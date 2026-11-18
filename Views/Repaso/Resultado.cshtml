@@ -6,6 +6,11 @@
     var conFrase = ejercicio.EsCompletar || ejercicio.Tipo == TipoEjercicio.DictadoFrase;
 }
 
+@if (ViewBag.EsPractica == true)
+{
+    <p class="text-muted">🎯 Practicando tus errores: esto no cambia tu repaso ni cuenta para tu meta.</p>
+}
+
 @if (Model.Acerto)
 {
     <div class="alert alert-success"><strong>¡Correcto!</strong> 🎉</div>
@@ -73,4 +78,4 @@ else
     </div>
 </div>
 
-<a class="btn btn-primary btn-lg" asp-action="Index">Siguiente</a>
+<a class="btn btn-primary btn-lg" asp-action="@(ViewBag.SiguienteAccion ?? "Index")" asp-route-anterior="@ViewBag.Anterior">Siguiente</a>

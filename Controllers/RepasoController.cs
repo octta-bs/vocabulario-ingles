@@ -7,10 +7,14 @@ namespace VocabularioIngles.Controllers;
 public class RepasoController : Controller
 {
     private readonly RepasoService _servicio;
+    private readonly EstadisticasService _estadisticas;
+    private readonly GeneradorEjercicios _generador;
 
-    public RepasoController(RepasoService servicio)
+    public RepasoController(RepasoService servicio, EstadisticasService estadisticas, GeneradorEjercicios generador)
     {
         _servicio = servicio;
+        _estadisticas = estadisticas;
+        _generador = generador;
     }
 
     // Cookie donde se recuerda la última categoría elegida para las palabras nuevas.
@@ -39,6 +43,39 @@ public class RepasoController : Controller
             return RedirectToAction(nameof(Index));
         }
 
+        return View("Resultado", resultado);
+    }
+
+    // Práctica extra con las palabras que más has fallado (no cambia el repaso ni la meta).
+    public async Task<IActionResult> Errores(int? anterior)
+    {
+        var dificiles = await _estadisticas.MasFalladasAsync(10);
+        if (dificiles.Count > 1 && anterior.HasValue)
+        {
+            dificiles.RemoveAll(d => d.Palabra.Id == anterior.Value);
+        }
+
+        if (dificiles.Count == 0)
+        {
+            return View((Ejercicio?)null);
+        }
+
+        var palabra = dificiles[Random.Shared.Next(dificiles.Count)].Palabra;
+        return View(_generador.Elegir(palabra));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ResponderError(int palabraId, TipoEjercicio tipo, string? respuesta)
+    {
+        var resultado = await _servicio.EvaluarSinGuardarAsync(palabraId, tipo, respuesta);
+        if (resultado == null)
+        {
+            return RedirectToAction(nameof(Errores));
+        }
+
+        ViewBag.EsPractica = true;
+        ViewBag.SiguienteAccion = nameof(Errores);
+        ViewBag.Anterior = palabraId;
         return View("Resultado", resultado);
     }
 

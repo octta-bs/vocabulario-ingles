@@ -21,3 +21,70 @@ body {
     color: #dc3545;
     text-decoration: underline wavy;
 }
+
+/* Gráfica de ejercicios por día (pantalla de progreso): una sola serie, barras delgadas con
+   esquinas redondeadas arriba, 2px de separación y una línea punteada para la meta. */
+.grafica-area {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 160px;
+    border-bottom: 1px solid #ced4da;
+}
+
+.grafica-columna {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    border-radius: 4px 4px 0 0;
+}
+
+.grafica-columna:hover,
+.grafica-columna:focus {
+    background-color: rgba(13, 110, 253, 0.08);
+    outline: none;
+}
+
+.grafica-barra {
+    width: 70%;
+    max-width: 24px;
+    background-color: #9ec5fe;
+    border-radius: 4px 4px 0 0;
+}
+
+.grafica-barra.cumplida {
+    background-color: #0d6efd;
+}
+
+.grafica-meta {
+    position: absolute;
+    left: 0;
+    right: 0;
+    border-top: 2px dashed #6c757d;
+    pointer-events: none;
+}
+
+.grafica-meta span {
+    position: absolute;
+    right: 0;
+    top: -1.3rem;
+    font-size: 0.75rem;
+    color: #6c757d;
+    background-color: #f8f9fa;
+    padding: 0 0.25rem;
+}
+
+.grafica-etiquetas {
+    display: flex;
+    gap: 2px;
+    font-size: 0.7rem;
+    color: #6c757d;
+}
+
+.grafica-etiquetas span {
+    flex: 1;
+    text-align: center;
+}

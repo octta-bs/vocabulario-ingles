@@ -32,7 +32,7 @@ public sealed class RepasoServiceTests : IDisposable
             .AddInMemoryCollection(new Dictionary<string, string?> { ["ZonaHoraria"] = "America/Mexico_City" })
             .Build();
         _servicio = new RepasoService(_db, new IntervalosAdaptativos(), new GeneradorEjercicios(),
-            new RitmoPorAciertos(), configuracion);
+            new RitmoPorAciertos(), new ZonaHorariaUsuario(configuracion, TimeProvider.System));
     }
 
     public void Dispose()

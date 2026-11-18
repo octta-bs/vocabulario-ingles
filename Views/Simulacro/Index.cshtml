@@ -1,0 +1,58 @@
+@model List<VocabularioIngles.Data.PreguntasEntrevista.Pregunta>
+@using System.Text.Json
+@{
+    ViewData["Title"] = "Simulacro de entrevista";
+    var datos = Model.Select(p => new { ingles = p.Ingles, espanol = p.Espanol, modelo = p.RespuestaModelo, consejo = p.Consejo });
+}
+
+<h1 class="mb-2">Simulacro de entrevista</h1>
+<p class="text-muted">
+    @Model.Count preguntas como en una entrevista real. Escucha cada una, respóndela en voz alta (o escríbela)
+    y luego compárala con la respuesta modelo. Es solo práctica: no se guarda nada.
+</p>
+
+<noscript><div class="alert alert-warning">El simulacro necesita JavaScript.</div></noscript>
+
+<div class="card" id="simulacro" hidden>
+    <div class="card-body">
+        <p class="text-muted mb-1" id="numero"></p>
+        <h2 class="frase-hueco mb-2" id="pregunta"></h2>
+        <details class="mb-3">
+            <summary class="text-muted">Ver en español</summary>
+            <span id="pregunta-es"></span>
+        </details>
+
+        <div class="d-flex flex-wrap gap-2 mb-3">
+            <button type="button" class="btn btn-outline-secondary" id="btn-escuchar">🔊 Escuchar</button>
+            <button type="button" class="btn btn-outline-secondary" id="btn-lento">🐢 Más lento</button>
+        </div>
+
+        <label for="respuesta" class="form-label">Tu respuesta</label>
+        <textarea id="respuesta" class="form-control mb-2" rows="4" spellcheck="false"
+                  placeholder="Responde en voz alta con 🎤 o escribe aquí"></textarea>
+        <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+            <button type="button" class="btn btn-primary" id="btn-dictar">🎤 Responder en voz alta</button>
+            <span id="estado" class="text-muted small" aria-live="polite"></span>
+        </div>
+
+        <button type="button" class="btn btn-outline-primary" id="btn-modelo">Ver respuesta modelo</button>
+
+        <div id="modelo" class="mt-3" hidden>
+            <h3 class="h6">Una respuesta posible</h3>
+            <ul id="modelo-frases" class="list-unstyled mb-2"></ul>
+            <p class="text-muted small mb-3">💡 <span id="consejo"></span></p>
+            <button type="button" class="btn btn-primary" id="btn-siguiente">Siguiente pregunta →</button>
+        </div>
+    </div>
+</div>
+
+<div id="final" class="alert alert-success" hidden>
+    <strong>¡Terminaste el simulacro!</strong> 🎉 Repetirlo seguido es la mejor forma de soltarte antes de una entrevista.
+    <div class="mt-2"><a class="btn btn-primary" asp-action="Index">Otro simulacro</a></div>
+</div>
+
+<script type="application/json" id="preguntas">@Html.Raw(JsonSerializer.Serialize(datos))</script>
+
+@section Scripts {
+    <script src="~/js/simulacro.js" asp-append-version="true"></script>
+}
