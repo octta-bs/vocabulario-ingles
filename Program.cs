@@ -18,7 +18,10 @@ builder.Services.AddScoped<IAlgoritmoRepaso, IntervalosAdaptativos>();
 // Patrón Strategy: regla para decidir cuántas palabras nuevas te tocan según tus aciertos.
 builder.Services.AddScoped<IRitmoPalabrasNuevas, RitmoPorAciertos>();
 builder.Services.AddSingleton<GeneradorEjercicios>();
+builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.AddSingleton<ZonaHorariaUsuario>();
 builder.Services.AddScoped<RepasoService>();
+builder.Services.AddScoped<EstadisticasService>();
 
 var app = builder.Build();
 

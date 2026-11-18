@@ -1,0 +1,131 @@
+@model ResumenProgreso
+@using System.Globalization
+@{
+    ViewData["Title"] = "Progreso";
+    var es = CultureInfo.GetCultureInfo("es-MX");
+    var maximo = Math.Max(Model.Meta, Model.UltimosDias.Count == 0 ? 0 : Model.UltimosDias.Max(d => d.Ejercicios));
+    maximo = Math.Max(maximo, 1);
+    var alturaMeta = Model.Meta * 100.0 / maximo;
+}
+
+<h1 class="mb-3">Tu progreso</h1>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <div class="display-6" id="racha">@Model.RachaActual</div>
+                <div class="text-muted">@(Model.RachaActual == 1 ? "día seguido" : "días seguidos") cumpliendo tu meta</div>
+                @if (!Model.HoyCumplida && Model.RachaActual > 0)
+                {
+                    <div class="small text-muted mt-1">Cumple tu meta hoy para no perderla.</div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <div class="display-6">@Model.MejorRacha</div>
+                <div class="text-muted">Mejor racha</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <div class="display-6">@Model.TotalRespuestas</div>
+                <div class="text-muted">Ejercicios respondidos</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <div class="display-6">@(Model.PorcentajeTotal is { } total ? $"{total}%" : "—")</div>
+                <div class="text-muted">De aciertos</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h2 class="h4">Ejercicios por día</h2>
+<p class="text-muted small mb-2">
+    Últimos @VocabularioIngles.Services.EstadisticasService.DiasEnGrafica días. La línea punteada es tu meta (@Model.Meta); las barras oscuras son los días que la cumpliste.
+</p>
+
+<figure class="grafica-dias mb-2" aria-label="Ejercicios por día de los últimos días">
+    <div class="grafica-area">
+        <div class="grafica-meta" style="bottom: @alturaMeta.ToString("0.##", CultureInfo.InvariantCulture)%">
+            <span>meta</span>
+        </div>
+        @foreach (var dia in Model.UltimosDias)
+        {
+            var altura = dia.Ejercicios * 100.0 / maximo;
+            var fecha = dia.Dia.ToString("dddd d 'de' MMMM", es);
+            var detalle = dia.Ejercicios == 0
+                ? $"{fecha}: sin práctica"
+                : $"{fecha}: {dia.Ejercicios} ejercicios, {dia.Aciertos} aciertos ({dia.Porcentaje}%)";
+            <div class="grafica-columna" tabindex="0" title="@detalle" aria-label="@detalle">
+                <div class="grafica-barra @(dia.Ejercicios >= Model.Meta ? "cumplida" : "")"
+                     style="height: @altura.ToString("0.##", CultureInfo.InvariantCulture)%"></div>
+            </div>
+        }
+    </div>
+    <div class="grafica-etiquetas" aria-hidden="true">
+        @foreach (var dia in Model.UltimosDias)
+        {
+            <span>@dia.Dia.Day</span>
+        }
+    </div>
+</figure>
+
+<details class="mb-4">
+    <summary>Ver como tabla</summary>
+    <table class="table table-sm mt-2 w-auto">
+        <thead><tr><th>Día</th><th>Ejercicios</th><th>Aciertos</th></tr></thead>
+        <tbody>
+            @foreach (var dia in Model.UltimosDias.AsEnumerable().Reverse())
+            {
+                <tr>
+                    <td>@dia.Dia.ToString("ddd d MMM", es)</td>
+                    <td>@dia.Ejercicios</td>
+                    <td>@(dia.Porcentaje is { } pc ? $"{dia.Aciertos} ({pc}%)" : "—")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</details>
+
+<h2 class="h4">Las palabras que más fallas</h2>
+@if (Model.MasFalladas.Count == 0)
+{
+    <p class="text-muted">Todavía no has fallado ninguna. 🎉</p>
+}
+else
+{
+    <table class="table align-middle" id="mas-falladas">
+        <thead><tr><th>Palabra</th><th>Fallos</th><th>Aciertos</th></tr></thead>
+        <tbody>
+            @foreach (var p in Model.MasFalladas)
+            {
+                <tr>
+                    <td>
+                        <a asp-controller="Palabras" asp-action="Detalle" asp-route-id="@p.Palabra.Id">@p.Palabra.Ingles</a>
+                        <div class="small text-muted">@p.Palabra.Espanol</div>
+                    </td>
+                    <td>@p.Fallos</td>
+                    <td>@p.Aciertos</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <a class="btn btn-outline-primary mb-4" asp-controller="Repaso" asp-action="Errores">🎯 Practicar mis errores</a>
+}
+
+<h2 class="h4 mt-2">Respaldo</h2>
+<p class="text-muted">
+    Descarga una copia de tu progreso (el archivo <code>vocabulario.db</code>). Para restaurarlo, cierra la app
+    y reemplaza <code>vocabulario.db</code> con la copia (renómbrala a ese nombre).
+</p>
+<a class="btn btn-outline-secondary" asp-action="Respaldo" id="btn-respaldo">⬇️ Descargar respaldo</a>

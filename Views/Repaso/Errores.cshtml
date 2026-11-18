@@ -1,0 +1,21 @@
+@model Ejercicio?
+@{
+    ViewData["Title"] = "Practicar mis errores";
+}
+
+<h1 class="mb-2">Practicar mis errores</h1>
+<p class="text-muted">
+    Salen al azar las palabras que más has fallado. Es práctica extra: no cambia cuándo te toca
+    repasarlas ni cuenta para tu meta.
+</p>
+
+@if (Model == null)
+{
+    <div class="alert alert-secondary">Todavía no has fallado ninguna palabra. 🎉</div>
+    <a class="btn btn-link ps-0" asp-action="Index">← Volver al repaso</a>
+}
+else
+{
+    <partial name="_Ejercicio" model="Model" view-data='new ViewDataDictionary(ViewData) { ["Accion"] = "ResponderError" }' />
+    <a class="btn btn-link ps-0 mt-3" asp-action="Index">← Volver al repaso</a>
+}

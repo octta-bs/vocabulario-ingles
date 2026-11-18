@@ -26,6 +26,21 @@ Es solo práctica: no cuenta para el repaso ni para la meta, y no se guarda nada
 - El micrófono solo funciona en `localhost` o con **https**. Si abres la app desde el celular con la IP de
   tu computadora (`http://192.168...`), el navegador no deja usar el micrófono.
 
+**Simulacro de entrevista** (menú "Entrevista"): 5 preguntas típicas, empezando siempre por
+"Tell me about yourself". Escuchas cada una, la respondes en voz alta o por escrito y luego ves una
+respuesta modelo con un consejo. Las preguntas están en `Data/PreguntasEntrevista.cs` (escritas a mano:
+adapta las respuestas a tu experiencia). Es solo práctica: no se guarda nada.
+
+**Progreso** (menú "Progreso"): días seguidos cumpliendo tu meta (si hoy todavía no la cumples, la racha
+cuenta hasta ayer), tu mejor racha, los ejercicios por día de las últimas 2 semanas y las 10 palabras que más
+fallas. La racha usa tu meta actual también para los días anteriores. Desde ahí puedes:
+
+- **Practicar mis errores:** repasar ahora las palabras que más fallas. Es práctica extra: no cambia cuándo
+  te toca repasarlas ni cuenta para tu meta. También está en la pantalla de Repaso.
+- **Descargar respaldo:** baja una copia de `vocabulario.db`. Para restaurarla, cierra la app y reemplaza
+  `vocabulario.db` con la copia. La app no tiene usuarios ni contraseñas: si algún día la publicas en
+  internet, cualquiera podría descargar ese archivo.
+
 La app se ajusta a ti:
 
 - **Más repetición de lo que fallas:** si fallaste 2 o más de las últimas 5 respuestas de una palabra,

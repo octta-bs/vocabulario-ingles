@@ -10,16 +10,16 @@ public class RepasoService
     private readonly IAlgoritmoRepaso _algoritmo;
     private readonly GeneradorEjercicios _generador;
     private readonly IRitmoPalabrasNuevas _ritmo;
-    private readonly TimeZoneInfo _zonaHoraria;
+    private readonly ZonaHorariaUsuario _zona;
 
     public RepasoService(AppDbContext db, IAlgoritmoRepaso algoritmo, GeneradorEjercicios generador,
-        IRitmoPalabrasNuevas ritmo, IConfiguration configuracion)
+        IRitmoPalabrasNuevas ritmo, ZonaHorariaUsuario zona)
     {
         _db = db;
         _algoritmo = algoritmo;
         _generador = generador;
         _ritmo = ritmo;
-        _zonaHoraria = BuscarZonaHoraria(configuracion["ZonaHoraria"]);
+        _zona = zona;
     }
 
     public Task<int> ContarPendientesAsync()
@@ -101,6 +101,28 @@ public class RepasoService
             Acerto = acerto,
             RespuestaDada = (respuesta ?? "").Trim(),
             Palabra = progreso.Palabra,
+            Ejercicio = ejercicio
+        };
+    }
+
+    /// <summary>
+    /// Califica una respuesta sin guardar nada: no cambia el repaso, el historial ni la meta.
+    /// Se usa en "Practicar mis errores".
+    /// </summary>
+    public async Task<RepasoResultado?> EvaluarSinGuardarAsync(int palabraId, TipoEjercicio tipo, string? respuesta)
+    {
+        var palabra = await _db.Palabras.FirstOrDefaultAsync(p => p.Id == palabraId);
+        if (palabra == null)
+        {
+            return null;
+        }
+
+        var ejercicio = _generador.Crear(palabra, tipo);
+        return new RepasoResultado
+        {
+            Acerto = ComparadorRespuestas.SonIguales(respuesta, ejercicio.Respuesta),
+            RespuestaDada = (respuesta ?? "").Trim(),
+            Palabra = palabra,
             Ejercicio = ejercicio
         };
     }
@@ -192,7 +214,7 @@ public class RepasoService
     public async Task<MetaDelDia> ObtenerMetaHoyAsync()
     {
         var configuracion = await ObtenerConfiguracionAsync();
-        var inicioDeHoy = InicioDeHoyUtc();
+        var inicioDeHoy = _zona.InicioDeHoyUtc();
         var respondidas = await _db.Respuestas.CountAsync(r => r.Fecha >= inicioDeHoy);
         return new MetaDelDia(configuracion.MetaDiaria, respondidas);
     }
@@ -221,24 +243,5 @@ public class RepasoService
         }
 
         return configuracion;
-    }
-
-    /// <summary>La medianoche de hoy en tu zona horaria, convertida a UTC (así se guardan las fechas).</summary>
-    private DateTime InicioDeHoyUtc()
-    {
-        var ahoraLocal = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _zonaHoraria);
-        return TimeZoneInfo.ConvertTimeToUtc(ahoraLocal.Date, _zonaHoraria);
-    }
-
-    private static TimeZoneInfo BuscarZonaHoraria(string? id)
-    {
-        try
-        {
-            return TimeZoneInfo.FindSystemTimeZoneById(string.IsNullOrWhiteSpace(id) ? "America/Mexico_City" : id);
-        }
-        catch (Exception e) when (e is TimeZoneNotFoundException or InvalidTimeZoneException)
-        {
-            return TimeZoneInfo.Local;
-        }
     }
 }
