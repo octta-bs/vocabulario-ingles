@@ -22,17 +22,42 @@ public class RepasoService
         _zona = zona;
     }
 
-    public Task<int> ContarPendientesAsync()
+    /// <param name="modo">Si viene, solo cuenta las palabras de ese modo.</param>
+    public async Task<int> ContarPendientesAsync(ModoApp? modo = null)
     {
         var ahora = DateTime.UtcNow;
-        return _db.Progresos.CountAsync(p => p.ProximoRepaso <= ahora);
+        return await (await ProgresosDelModoAsync(modo)).CountAsync(p => p.ProximoRepaso <= ahora);
+    }
+
+    /// <summary>Los progresos de las palabras de un modo (o todos, si no se indica modo).</summary>
+    private async Task<IQueryable<ProgresoPalabra>> ProgresosDelModoAsync(ModoApp? modo)
+    {
+        if (modo == null)
+        {
+            return _db.Progresos;
+        }
+
+        var ids = await Modos.CategoriasAsync(_db, modo.Value);
+        return _db.Progresos.Where(p => ids.Contains(p.Palabra!.CategoriaId));
+    }
+
+    /// <summary>Las palabras de un modo (o todas, si no se indica modo).</summary>
+    private async Task<IQueryable<Palabra>> PalabrasDelModoAsync(ModoApp? modo)
+    {
+        if (modo == null)
+        {
+            return _db.Palabras;
+        }
+
+        var ids = await Modos.CategoriasAsync(_db, modo.Value);
+        return _db.Palabras.Where(p => ids.Contains(p.CategoriaId));
     }
 
     /// <summary>La palabra que más tiempo lleva sin repasarse entre las que ya tocan.</summary>
-    public Task<ProgresoPalabra?> SiguientePendienteAsync()
+    public async Task<ProgresoPalabra?> SiguientePendienteAsync(ModoApp? modo = null)
     {
         var ahora = DateTime.UtcNow;
-        return _db.Progresos
+        return await (await ProgresosDelModoAsync(modo))
             .Include(p => p.Palabra)
             .Where(p => p.ProximoRepaso <= ahora)
             .OrderBy(p => p.UltimoRepaso)
@@ -40,9 +65,9 @@ public class RepasoService
     }
 
     /// <summary>El siguiente ejercicio del repaso (de un tipo elegido al azar), o null si no hay pendientes.</summary>
-    public async Task<Ejercicio?> SiguienteEjercicioAsync()
+    public async Task<Ejercicio?> SiguienteEjercicioAsync(ModoApp? modo = null)
     {
-        var progreso = await SiguientePendienteAsync();
+        var progreso = await SiguientePendienteAsync(modo);
         return progreso?.Palabra == null ? null : _generador.Elegir(progreso.Palabra);
     }
 
@@ -139,15 +164,15 @@ public class RepasoService
         return _ritmo.Calcular(ultimas);
     }
 
-    public Task<int> ContarSinEmpezarAsync()
+    public async Task<int> ContarSinEmpezarAsync(ModoApp? modo = null)
     {
-        return _db.Palabras.CountAsync(p => p.Progreso == null);
+        return await (await PalabrasDelModoAsync(modo)).CountAsync(p => p.Progreso == null);
     }
 
     /// <summary>Las categorías que todavía tienen palabras sin empezar, con cuántas les quedan.</summary>
-    public async Task<List<CategoriaSinEmpezar>> CategoriasConNuevasAsync()
+    public async Task<List<CategoriaSinEmpezar>> CategoriasConNuevasAsync(ModoApp? modo = null)
     {
-        var conteos = await _db.Palabras
+        var conteos = await (await PalabrasDelModoAsync(modo))
             .Where(p => p.Progreso == null)
             .GroupBy(p => p.CategoriaId)
             .Select(g => new { CategoriaId = g.Key, Cantidad = g.Count(), PrimeraPalabra = g.Min(p => p.Id) })
@@ -167,9 +192,9 @@ public class RepasoService
     /// <summary>
     /// Mete al repaso las siguientes palabras que todavía no se han empezado a aprender.
     /// La cantidad la decide la estrategia de ritmo según tus aciertos. Si eliges una categoría,
-    /// solo salen de ella; si no, de nivel en nivel (Pre A1 primero).
+    /// solo salen de ella; si no, de nivel en nivel (Pre A1 primero). Con un modo, solo palabras de ese modo.
     /// </summary>
-    public async Task<int> AgregarNuevasAsync(int? categoriaId = null)
+    public async Task<int> AgregarNuevasAsync(int? categoriaId = null, ModoApp? modo = null)
     {
         var cantidad = (await CalcularRitmoAsync()).Cantidad;
         if (cantidad <= 0)
@@ -179,7 +204,7 @@ public class RepasoService
 
         var ahora = DateTime.UtcNow;
 
-        var nuevas = await _db.Palabras
+        var nuevas = await (await PalabrasDelModoAsync(modo))
             .Where(p => p.Progreso == null)
             .Where(p => categoriaId == null || p.CategoriaId == categoriaId)
             // En orden: primero los niveles más básicos (Pre A1, A1…) y, dentro de cada uno, como se cargaron.

@@ -1,0 +1,40 @@
+@model VocabularioIngles.Services.ModoApp?
+@{
+    ViewData["Title"] = "Elegir modo";
+    ViewData["ModoEnfocado"] = true;
+    var tamano = new ViewDataDictionary(ViewData) { ["Tamano"] = 26 };
+}
+
+<h1 class="mb-1">¿Qué quieres practicar?</h1>
+<p class="text-muted mb-4">Cada modo tiene su propio repaso y sus palabras. Puedes cambiar cuando quieras.</p>
+
+<form asp-action="Modo" method="post" class="modos">
+    <button type="submit" name="modo" value="principiante" class="modo-opcion"
+            aria-current="@(Model == VocabularioIngles.Services.ModoApp.Principiante ? "true" : null)">
+        <span class="icono-caja"><partial name="_Icono" model='"repaso"' view-data="tamano" /></span>
+        <span class="textos">
+            <span class="nombre">Principiante</span>
+            <span class="detalle">Inglés desde cero: colores, números, familia, comida, casa, ciudad, viajes… (Pre A1 a A2)</span>
+        </span>
+    </button>
+    <button type="submit" name="modo" value="trabajo" class="modo-opcion"
+            aria-current="@(Model == VocabularioIngles.Services.ModoApp.Trabajo ? "true" : null)">
+        <span class="icono-caja"><partial name="_Icono" model='"maletin"' view-data="tamano" /></span>
+        <span class="textos">
+            <span class="nombre">Trabajo</span>
+            <span class="detalle">Inglés para developers: tecnología, stand-up, code review, entrevistas, shadowing y simulacro (A2 a B2)</span>
+        </span>
+    </button>
+    <button type="submit" name="modo" value="ninos" class="modo-opcion modo-ninos-opcion">
+        <span class="icono-caja"><partial name="_Icono" model='"estrella"' view-data="tamano" /></span>
+        <span class="textos">
+            <span class="nombre">Niños</span>
+            <span class="detalle">Para preescolar: dibujos, audio y tocar la respuesta</span>
+        </span>
+    </button>
+</form>
+
+@if (Model != null)
+{
+    <a class="btn btn-link ps-0 mt-3" asp-action="Index">← Seguir en modo @Model.Value.Texto()</a>
+}

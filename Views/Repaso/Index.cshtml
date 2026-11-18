@@ -47,8 +47,15 @@ else
         <span class="icono-caja" style="margin: 0 auto 12px; width: 56px; height: 56px; background: var(--exito-suave); color: var(--exito)">
             <partial name="_Icono" model='"palomita"' view-data='new ViewDataDictionary(ViewData) { ["Tamano"] = 28 }' />
         </span>
-        <h1 class="h4">Ya no tienes palabras pendientes</h1>
+        <h1 class="h4">Ya no tienes palabras pendientes en modo @(((VocabularioIngles.Services.ModoApp)ViewBag.Modo).Texto())</h1>
         <p class="text-muted mb-0">Llevas @meta.Respondidas @(meta.Respondidas == 1 ? "ejercicio" : "ejercicios") hoy.</p>
+        @if ((int)ViewBag.PendientesOtroModo > 0)
+        {
+            <p class="small mt-2 mb-0">
+                En modo @VocabularioIngles.Services.Modos.Otro((VocabularioIngles.Services.ModoApp)ViewBag.Modo).Texto()
+                tienes @ViewBag.PendientesOtroModo pendientes. <a asp-controller="Home" asp-action="Modo">Cambiar de modo</a>
+            </p>
+        }
     </section>
 
     <div class="d-flex gap-2" style="flex-direction: column">

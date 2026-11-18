@@ -2,7 +2,17 @@
 
 Aplicación web para aprender vocabulario de inglés (empezando por tecnología y trabajo).
 Cada palabra tiene su escritura, su pronunciación y su audio; los verbos muestran presente,
-pasado y futuro. El contenido va **por niveles del MCER** (el mismo orden que usa Cambridge), desde cero hasta intermedio alto:
+pasado y futuro. La app tiene **3 modos**, que eliges al entrar y se recuerdan (puedes cambiar desde el Inicio):
+
+- **Principiante:** el vocabulario general de Pre A1 a A2.
+- **Trabajo:** el inglés técnico y las frases de trabajo y entrevista (A2 a B2), con Hablar, Shadowing,
+  el simulacro y Mis respuestas.
+- **Niños:** el modo infantil.
+
+Principiante y Trabajo tienen cada uno su repaso, sus palabras nuevas y sus errores; el Inicio avisa si hay
+pendientes en el otro modo. La meta diaria, la racha y el progreso son uno solo.
+
+El contenido va **por niveles del MCER** (el mismo orden que usa Cambridge), desde cero hasta intermedio alto:
 
 | Nivel | Contenido |
 |---|---|

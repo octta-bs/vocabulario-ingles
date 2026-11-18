@@ -12,7 +12,7 @@ Repaso escrito con intervalos adaptativos, meta diaria, ritmo de palabras nuevas
 Progreso (racha, gráfica, errores), práctica de errores, respaldo, rediseño móvil sin Bootstrap, modo niños,
 pruebas automáticas y GitHub Actions. Detalle en el [README](README.md).
 
-## Fase 1 · Ordenar en modos 🔄
+## Fase 1 · Ordenar en modos ✅
 
 Que la app se separe en 3 modos y cada uno muestre solo lo suyo.
 
@@ -31,7 +31,11 @@ Decisión tomada:
 Listo cuando: los 3 modos funcionan, cada pantalla aparece solo en su modo, el progreso guardado no cambia y las
 pruebas automáticas y en el navegador pasan.
 
-## Fase 2 · Usarla una semana ⬜
+Hecho: el modo se elige al entrar y se recuerda en el navegador (cookie, sin cambios en la base). Principiante son
+las categorías de `Data/VocabularioGeneral.cs`; Trabajo, todas las demás. Por modo se separan el repaso, las palabras
+nuevas, Mis errores, Practicar y la lista de palabras; la meta, la racha y el progreso son uno solo.
+
+## Fase 2 · Usarla una semana 🔄
 
 Sin programar. Seguir la rutina diaria (repaso 10 min, shadowing 5 min, simulacro un día sí y uno no) y anotar:
 
