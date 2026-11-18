@@ -196,20 +196,6 @@ public class RepasoService
         return nuevas.Count;
     }
 
-    public async Task<ResumenViewModel> ObtenerResumenAsync()
-    {
-        var ahora = DateTime.UtcNow;
-
-        return new ResumenViewModel
-        {
-            TotalPalabras = await _db.Palabras.CountAsync(),
-            EnRepaso = await _db.Progresos.CountAsync(),
-            Pendientes = await _db.Progresos.CountAsync(p => p.ProximoRepaso <= ahora),
-            Dominadas = await _db.Progresos.CountAsync(p => p.Etapa >= IntervalosFijos.EtapaMaxima),
-            Meta = await ObtenerMetaHoyAsync()
-        };
-    }
-
     /// <summary>Tu meta diaria y cuántos ejercicios llevas hoy (aciertos y fallos cuentan igual).</summary>
     public async Task<MetaDelDia> ObtenerMetaHoyAsync()
     {

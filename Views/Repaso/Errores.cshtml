@@ -1,21 +1,26 @@
 @model Ejercicio?
 @{
     ViewData["Title"] = "Practicar mis errores";
+    var icono = new ViewDataDictionary(ViewData) { ["Tamano"] = 22 };
+    if (Model != null)
+    {
+        ViewData["ModoEnfocado"] = true;
+    }
 }
-
-<h1 class="mb-2">Practicar mis errores</h1>
-<p class="text-muted">
-    Salen al azar las palabras que más has fallado. Es práctica extra: no cambia cuándo te toca
-    repasarlas ni cuenta para tu meta.
-</p>
 
 @if (Model == null)
 {
-    <div class="alert alert-secondary">Todavía no has fallado ninguna palabra. 🎉</div>
-    <a class="btn btn-link ps-0" asp-action="Index">← Volver al repaso</a>
+    <h1 class="mb-1">Practicar mis errores</h1>
+    <div class="alert alert-secondary mt-3">Todavía no has fallado ninguna palabra.</div>
+    <a class="btn btn-outline-primary btn-lg btn-bloque" asp-controller="Home" asp-action="Practicar">Volver a Practicar</a>
 }
 else
 {
+    <div class="barra-enfoque">
+        <a class="boton-icono" asp-controller="Home" asp-action="Practicar" aria-label="Salir de la práctica">
+            <partial name="_Icono" model='"cerrar"' view-data="icono" />
+        </a>
+        <span class="avance-texto" style="flex: 1">Mis errores · práctica extra</span>
+    </div>
     <partial name="_Ejercicio" model="Model" view-data='new ViewDataDictionary(ViewData) { ["Accion"] = "ResponderError" }' />
-    <a class="btn btn-link ps-0 mt-3" asp-action="Index">← Volver al repaso</a>
 }

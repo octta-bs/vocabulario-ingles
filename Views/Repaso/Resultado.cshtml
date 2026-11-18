@@ -1,81 +1,74 @@
 @model RepasoResultado
 @{
-    ViewData["Title"] = "Resultado";
+    ViewData["Title"] = Model.Acerto ? "¡Correcto!" : "Respuesta incorrecta";
+    ViewData["ModoEnfocado"] = true;
     var escrito = string.IsNullOrWhiteSpace(Model.RespuestaDada) ? "(nada)" : Model.RespuestaDada;
     var ejercicio = Model.Ejercicio;
     var conFrase = ejercicio.EsCompletar || ejercicio.Tipo == TipoEjercicio.DictadoFrase;
+    var esPractica = ViewBag.EsPractica == true;
+    var siguiente = (string?)ViewBag.SiguienteAccion ?? "Index";
+    var icono = new ViewDataDictionary(ViewData) { ["Tamano"] = 22 };
+    var iconoChico = new ViewDataDictionary(ViewData) { ["Tamano"] = 18 };
 }
 
-@if (ViewBag.EsPractica == true)
-{
-    <p class="text-muted">🎯 Practicando tus errores: esto no cambia tu repaso ni cuenta para tu meta.</p>
-}
-
-@if (Model.Acerto)
-{
-    <div class="alert alert-success"><strong>¡Correcto!</strong> 🎉</div>
-}
-else
-{
-    <div class="alert alert-danger">
-        <strong>Casi.</strong> Escribiste: <strong>@escrito</strong>.
-        @if (ejercicio.EsCompletar)
-        {
-            <text>En el hueco iba: <strong>@ejercicio.Respuesta</strong></text>
-        }
-        else if (ejercicio.Tipo == TipoEjercicio.DictadoFrase)
-        {
-            <text>La frase era: <strong>@ejercicio.Respuesta</strong></text>
-        }
-        else
-        {
-            <text>Lo correcto es:</text>
-        }
-    </div>
-}
-
-<div class="card mb-3">
-    <div class="card-body">
-        <div class="d-flex align-items-center gap-3 flex-wrap">
-            <h2 class="@(Model.Palabra.EsFrase ? "frase-hueco" : "palabra-grande") mb-0">@Model.Palabra.Ingles</h2>
-            <button type="button" class="btn btn-outline-secondary btn-audio" data-texto="@Model.Palabra.Ingles">🔊</button>
-        </div>
-        <p class="text-muted mb-1">@Model.Palabra.Espanol</p>
-        @if (!string.IsNullOrEmpty(Model.Palabra.Pronunciacion))
-        {
-            <p class="mb-1">@Model.Palabra.Pronunciacion · se lee: <strong>@Model.Palabra.ComoSeLee</strong></p>
-        }
-        @if (Model.Palabra.EsFrase)
-        {
-            @if (!string.IsNullOrEmpty(Model.Palabra.Nota))
-            {
-                <p class="mb-0 mt-2 text-muted">💡 @Model.Palabra.Nota</p>
-            }
-        }
-        else if (conFrase)
-        {
-            <hr />
-            @if (ejercicio.EsCompletar)
-            {
-                <p class="mb-1">
-                    @if (ejercicio.TiempoVerbal != null)
-                    {
-                        <span class="badge bg-info text-dark me-1">@ejercicio.TiempoVerbal</span>
-                    }
-                    <strong>@ejercicio.Respuesta</strong>
-                </p>
-            }
-            <div class="d-flex align-items-center gap-2">
-                <p class="mb-0"><em>@ejercicio.FraseCompleta</em></p>
-                <button type="button" class="btn btn-sm btn-outline-secondary btn-audio" data-texto="@ejercicio.FraseCompleta">🔊</button>
-            </div>
-            <p class="text-muted mb-0">@ejercicio.FraseEs</p>
-        }
-        else
-        {
-            <p class="mb-0"><em>@Model.Palabra.Ejemplo</em></p>
-        }
-    </div>
+<div class="barra-enfoque">
+    <a class="boton-icono" asp-controller="Home" asp-action="@(esPractica ? "Practicar" : "Index")" aria-label="Salir">
+        <partial name="_Icono" model='"cerrar"' view-data="icono" />
+    </a>
+    <span class="avance-texto" style="flex: 1">@(esPractica ? "Mis errores · no cuenta para tu repaso" : "Repaso")</span>
 </div>
 
-<a class="btn btn-primary btn-lg" asp-action="@(ViewBag.SiguienteAccion ?? "Index")" asp-route-anterior="@ViewBag.Anterior">Siguiente</a>
+<section class="card card-body" aria-label="La palabra">
+    <div class="d-flex align-items-center gap-3 flex-wrap">
+        <h1 class="@(Model.Palabra.EsFrase ? "frase-hueco" : "palabra-grande") mb-0">@Model.Palabra.Ingles</h1>
+        <button type="button" class="boton-icono btn-audio" data-texto="@Model.Palabra.Ingles" aria-label="Escuchar @Model.Palabra.Ingles">
+            <partial name="_Icono" model='"bocina"' view-data="icono" />
+        </button>
+    </div>
+    <p class="text-muted mb-1">@Model.Palabra.Espanol</p>
+    @if (!string.IsNullOrEmpty(Model.Palabra.Pronunciacion))
+    {
+        <p class="mb-1 small">@Model.Palabra.Pronunciacion · se lee: <strong>@Model.Palabra.ComoSeLee</strong></p>
+    }
+    @if (Model.Palabra.EsFrase)
+    {
+        @if (!string.IsNullOrEmpty(Model.Palabra.Nota))
+        {
+            <p class="mb-0 mt-2 text-muted small">@Model.Palabra.Nota</p>
+        }
+    }
+    else if (conFrase)
+    {
+        <hr />
+        <div class="d-flex align-items-center gap-2">
+            <p class="mb-0"><em>@ejercicio.FraseCompleta</em></p>
+            <button type="button" class="boton-icono btn-audio" data-texto="@ejercicio.FraseCompleta" aria-label="Escuchar la frase">
+                <partial name="_Icono" model='"bocina"' view-data="iconoChico" />
+            </button>
+        </div>
+        <p class="text-muted mb-0 small">@ejercicio.FraseEs</p>
+    }
+    else if (!string.IsNullOrEmpty(Model.Palabra.Ejemplo))
+    {
+        <p class="mb-0 mt-2"><em>@Model.Palabra.Ejemplo</em></p>
+    }
+</section>
+
+<section class="panel-resultado @(Model.Acerto ? "" : "error")" aria-labelledby="titulo-resultado" role="status">
+    <h2 id="titulo-resultado" class="titulo">
+        <span class="circulo"><partial name="_Icono" model='Model.Acerto ? "palomita" : "cerrar"' view-data="iconoChico" /></span>
+        @(Model.Acerto ? "¡Correcto!" : "Casi")
+    </h2>
+
+    @if (!Model.Acerto)
+    {
+        <p class="mb-1 small">Escribiste <strong>@escrito</strong>. Lo correcto es:</p>
+        <p class="correcta mb-2">@ejercicio.Respuesta</p>
+        @if (!esPractica)
+        {
+            <p class="small text-muted">Esta palabra volverá en unos minutos para que la practiques otra vez.</p>
+        }
+    }
+
+    <a class="btn btn-primary btn-lg btn-bloque" asp-action="@siguiente" asp-route-anterior="@ViewBag.Anterior">Continuar</a>
+</section>

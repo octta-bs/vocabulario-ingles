@@ -1,50 +1,58 @@
 @model Ejercicio
-@* La tarjeta de un ejercicio con su caja de respuesta. ViewData["Accion"] dice a qué acción se envía. *@
+@* La tarjeta de un ejercicio con su caja de respuesta y el botón "Comprobar" pegado abajo.
+   ViewData["Accion"] dice a qué acción se envía. *@
+@{
+    var icono = new ViewDataDictionary(ViewData) { ["Tamano"] = 18 };
+}
 
-<div class="card">
-    <div class="card-body">
-        @if (Model.EsCompletar)
-        {
-            <p class="mb-1 text-muted">
-                Completa la frase
-                @if (Model.TiempoVerbal != null)
-                {
-                    <span class="badge bg-info text-dark ms-1">@Model.TiempoVerbal</span>
-                }
-            </p>
-            <h2 class="frase-hueco">@Model.FraseConHueco</h2>
-            <p class="text-muted mb-0">@Model.FraseEs</p>
-        }
-        else if (Model.EsDictado)
-        {
-            <p class="mb-2 text-muted">
-                Dictado: escucha y escribe
-                @(Model.Tipo == TipoEjercicio.DictadoFrase || Model.Palabra.EsFrase ? "la frase completa" : "la palabra")
-            </p>
-            <div class="d-flex gap-2 flex-wrap">
-                <button type="button" class="btn btn-outline-primary btn-lg btn-audio" data-autoplay
-                        data-texto="@Model.TextoAudio">🔊 Escuchar</button>
-                <button type="button" class="btn btn-outline-secondary btn-lg btn-audio" data-lento
-                        data-texto="@Model.TextoAudio">🐢 Más lento</button>
-            </div>
-        }
-        else
-        {
-            <p class="mb-1 text-muted">@(Model.Palabra.EsFrase ? "Escribe la frase en inglés" : "¿Cómo se dice en inglés?")</p>
-            <h2 class="@(Model.Palabra.EsFrase ? "frase-hueco" : "palabra-grande")">@Model.Palabra.Espanol</h2>
-            @if (Model.Palabra.EsVerbo)
+<section class="card card-body mb-4" aria-labelledby="enunciado">
+    @if (Model.EsCompletar)
+    {
+        <p class="mb-2 d-flex align-items-center gap-2">
+            <span class="text-muted" style="font-weight: 600">Completa la frase</span>
+            @if (Model.TiempoVerbal != null)
             {
-                <p class="text-muted">(verbo)</p>
+                <span class="badge">@Model.TiempoVerbal</span>
             }
+        </p>
+        <h1 id="enunciado" class="frase-hueco mb-2">@Model.FraseConHueco</h1>
+        <p class="text-muted mb-0">@Model.FraseEs</p>
+    }
+    else if (Model.EsDictado)
+    {
+        <h1 id="enunciado" class="h6 text-muted mb-3">
+            Dictado: escucha y escribe
+            @(Model.Tipo == TipoEjercicio.DictadoFrase || Model.Palabra.EsFrase ? "la frase completa" : "la palabra")
+        </h1>
+        <div class="d-flex gap-2 flex-wrap">
+            <button type="button" class="btn btn-outline-primary btn-lg btn-audio" data-autoplay data-texto="@Model.TextoAudio">
+                <partial name="_Icono" model='"bocina"' view-data="icono" /> Escuchar
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-lg btn-audio" data-lento data-texto="@Model.TextoAudio">
+                Más lento
+            </button>
+        </div>
+    }
+    else
+    {
+        <p class="text-muted mb-2" style="font-weight: 600">@(Model.Palabra.EsFrase ? "Escribe la frase en inglés" : "¿Cómo se dice en inglés?")</p>
+        <h1 id="enunciado" class="@(Model.Palabra.EsFrase ? "frase-hueco" : "palabra-grande") mb-0">@Model.Palabra.Espanol</h1>
+        @if (Model.Palabra.EsVerbo)
+        {
+            <p class="text-muted mb-0 mt-1">(verbo)</p>
         }
+    }
+</section>
 
-        <form asp-action="@ViewData["Accion"]" method="post" class="mt-3">
-            <input type="hidden" name="palabraId" value="@Model.Palabra.Id" />
-            <input type="hidden" name="tipo" value="@Model.Tipo" />
-            <input type="text" name="respuesta" class="form-control form-control-lg mb-3"
-                   autocomplete="off" autocapitalize="none" spellcheck="false" autofocus
-                   placeholder="@(Model.EsCompletar ? "Escribe lo que va en el hueco" : Model.EsDictado ? "Escribe lo que oyes" : "")" />
-            <button type="submit" class="btn btn-primary btn-lg">Comprobar</button>
-        </form>
+<form asp-action="@ViewData["Accion"]" method="post">
+    <input type="hidden" name="palabraId" value="@Model.Palabra.Id" />
+    <input type="hidden" name="tipo" value="@Model.Tipo" />
+    <label for="respuesta" class="form-label">Tu respuesta</label>
+    <input type="text" id="respuesta" name="respuesta" class="form-control form-control-lg"
+           autocomplete="off" autocapitalize="none" spellcheck="false" autofocus
+           placeholder="@(Model.EsCompletar ? "Lo que va en el hueco" : Model.EsDictado ? "Escribe lo que oyes" : "")" />
+    <p class="form-text">No cuentan mayúsculas ni puntos.</p>
+    <div class="barra-accion">
+        <button type="submit" class="btn btn-primary btn-lg btn-bloque">Comprobar</button>
     </div>
-</div>
+</form>

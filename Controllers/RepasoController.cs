@@ -26,11 +26,17 @@ public class RepasoController : Controller
         var ejercicio = await _servicio.SiguienteEjercicioAsync();
         ViewBag.Pendientes = await _servicio.ContarPendientesAsync();
         ViewBag.Meta = await _servicio.ObtenerMetaHoyAsync();
+        return View(ejercicio);
+    }
+
+    // Cuántas palabras nuevas te tocan y de qué categoría agregarlas.
+    public async Task<IActionResult> Nuevas()
+    {
         ViewBag.Ritmo = await _servicio.CalcularRitmoAsync();
         ViewBag.SinEmpezar = await _servicio.ContarSinEmpezarAsync();
         ViewBag.Categorias = await _servicio.CategoriasConNuevasAsync();
         ViewBag.CategoriaElegida = int.TryParse(Request.Cookies[CookieCategoria], out var elegida) ? elegida : (int?)null;
-        return View(ejercicio);
+        return View();
     }
 
     // Recibe lo que escribiste, lo compara y muestra el resultado.
@@ -96,12 +102,16 @@ public class RepasoController : Controller
 
         var ritmo = await _servicio.CalcularRitmoAsync();
         var cantidad = await _servicio.AgregarNuevasAsync(categoriaId);
-        TempData["Mensaje"] = cantidad > 0
-            ? $"Se agregaron {cantidad} palabras nuevas a tu repaso."
-            : ritmo.Cantidad == 0
-                ? "Por ahora no te tocan palabras nuevas: primero refuerza las que ya tienes."
-                : "Ya agregaste todas las palabras disponibles.";
+        if (cantidad > 0)
+        {
+            // Las nuevas entran como pendientes: el repaso empieza con ellas.
+            TempData["Mensaje"] = $"Se agregaron {cantidad} palabras nuevas a tu repaso.";
+            return RedirectToAction(nameof(Index));
+        }
 
-        return RedirectToAction(nameof(Index));
+        TempData["Mensaje"] = ritmo.Cantidad == 0
+            ? "Por ahora no te tocan palabras nuevas: primero refuerza las que ya tienes."
+            : "Ya agregaste todas las palabras disponibles.";
+        return RedirectToAction(nameof(Nuevas));
     }
 }

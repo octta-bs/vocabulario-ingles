@@ -17,6 +17,9 @@ public class ZonaHorariaUsuario
 
     public DateTime AhoraUtc => _reloj.GetUtcNow().UtcDateTime;
 
+    /// <summary>La fecha y hora actuales en tu zona horaria.</summary>
+    public DateTime AhoraLocal => TimeZoneInfo.ConvertTimeFromUtc(AhoraUtc, _zona);
+
     /// <summary>El día de hoy en tu zona horaria.</summary>
     public DateOnly Hoy => DiaLocal(AhoraUtc);
 

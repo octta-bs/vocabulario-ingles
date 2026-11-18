@@ -62,6 +62,11 @@ La app se ajusta a ti:
 ## Tecnologías
 
 - ASP.NET Core 10 (MVC) y Razor
+- Estilos propios en `wwwroot/css/site.css`, sin Bootstrap ni archivos de internet: la app carga igual sin
+  conexión (salvo el reconocimiento de voz). Diseño para celular primero: barra inferior con 4 pestañas
+  (Inicio, Repaso, Practicar, Progreso), una acción principal por pantalla y botones de al menos 44px.
+  El repaso va en "modo enfocado" (sin pestañas) con "Comprobar" y el resultado abajo, al alcance del pulgar.
+  Los íconos están en `Views/Shared/_Icono.cshtml`.
 - Entity Framework Core con SQLite (un solo archivo, `vocabulario.db`, que se crea solo) y migraciones
 - Patrón **Strategy** para el algoritmo de repaso (`IAlgoritmoRepaso`): hoy `IntervalosAdaptativos`,
   que usa los intervalos fijos (mismo día, 1, 3, 7, 14 y 30 días) y los acorta para las palabras difíciles;

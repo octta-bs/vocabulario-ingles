@@ -1,83 +1,58 @@
-@model Ejercicio
+@model Ejercicio?
 @{
     ViewData["Title"] = "Repaso";
     var pendientes = (int)ViewBag.Pendientes;
     var meta = (MetaDelDia)ViewBag.Meta;
-    var ritmo = (VocabularioIngles.Services.RitmoNuevas)ViewBag.Ritmo;
-    var sinEmpezar = (int)ViewBag.SinEmpezar;
-    var aAgregar = Math.Min(ritmo.Cantidad, sinEmpezar);
-    var categorias = (List<CategoriaSinEmpezar>)ViewBag.Categorias;
-    var elegida = (int?)ViewBag.CategoriaElegida;
-    if (elegida != null && categorias.All(c => c.Id != elegida))
+    var icono = new ViewDataDictionary(ViewData) { ["Tamano"] = 22 };
+
+    // Mientras hay ejercicio, la pantalla va "enfocada": sin pestañas, solo el repaso.
+    if (Model != null)
     {
-        elegida = null; // esa categoría ya no tiene palabras nuevas
+        ViewData["ModoEnfocado"] = true;
     }
+
+    var hechas = meta.Respondidas;
+    var total = hechas + pendientes;
+    var avance = total == 0 ? 0 : hechas * 100 / total;
 }
 
-<h1 class="mb-3">Repaso</h1>
-
-@if (TempData["Mensaje"] != null)
+@if (Model != null)
 {
-    <div class="alert alert-success">@TempData["Mensaje"]</div>
-}
+    <div class="barra-enfoque">
+        <a class="boton-icono" asp-controller="Home" asp-action="Index" aria-label="Salir del repaso">
+            <partial name="_Icono" model='"cerrar"' view-data="icono" />
+        </a>
+        <div class="avance" role="progressbar" aria-label="Avance del repaso de hoy"
+             aria-valuenow="@hechas" aria-valuemin="0" aria-valuemax="@total">
+            <div style="width: @avance%"></div>
+        </div>
+        <span class="avance-texto">@pendientes @(pendientes == 1 ? "pendiente" : "pendientes")</span>
+    </div>
 
-<partial name="_BarraMeta" model="meta" />
-
-@if (Model == null)
-{
-    <div class="alert alert-secondary">Hoy no tienes palabras pendientes. 🎉</div>
-}
-else
-{
-    <p class="text-muted">Te faltan @pendientes por repasar.</p>
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success" role="status">@TempData["Mensaje"]</div>
+    }
 
     <partial name="_Ejercicio" model="Model" view-data='new ViewDataDictionary(ViewData) { ["Accion"] = "Responder" }' />
 }
-
-<a class="btn btn-outline-secondary mt-4" asp-action="Errores">🎯 Practicar mis errores</a>
-
-<form asp-action="AgregarNuevas" method="post" class="mt-4 palabras-nuevas">
-    @if (sinEmpezar == 0)
+else
+{
+    @if (TempData["Mensaje"] != null)
     {
-        <button type="submit" class="btn btn-outline-primary" disabled>➕ Ya tienes todas las palabras</button>
-    }
-    else if (aAgregar == 0)
-    {
-        <button type="submit" class="btn btn-outline-primary" disabled>➕ Sin palabras nuevas por ahora</button>
-    }
-    else
-    {
-        <div class="d-flex flex-wrap gap-2 align-items-center">
-            <label for="categoriaId" class="visually-hidden">Categoría de las palabras nuevas</label>
-            <select id="categoriaId" name="categoriaId" class="form-select w-auto">
-                <option value="">Cualquiera (en orden)</option>
-                @foreach (var categoria in categorias)
-                {
-                    <option value="@categoria.Id" selected="@(categoria.Id == elegida)">@categoria.Nombre (@categoria.SinEmpezar sin empezar)</option>
-                }
-            </select>
-            <button type="submit" class="btn btn-outline-primary">
-                ➕ Agregar @aAgregar @(aAgregar == 1 ? "palabra nueva" : "palabras nuevas")
-            </button>
-        </div>
+        <div class="alert alert-success" role="status">@TempData["Mensaje"]</div>
     }
 
-    <div class="form-text">
-        @if (ritmo.PorcentajeAciertos is { } porcentaje)
-        {
-            <text>Llevas @porcentaje% de aciertos en tus últimas respuestas.&nbsp;</text>
-            @if (ritmo.Cantidad == 0)
-            {
-                <text>Cuando llegues a 60%, se desbloquean más palabras.</text>
-            }
-            else
-            {
-                <text>Mientras más aciertes, más palabras nuevas te tocan (hasta 8).</text>
-            }
-        }
-        else
-        {
-            <text>Cuando respondas más ejercicios, la cantidad se ajustará a tus aciertos.</text>
-        }
+    <section class="card card-body text-center mb-4">
+        <span class="icono-caja" style="margin: 0 auto 12px; width: 56px; height: 56px; background: var(--exito-suave); color: var(--exito)">
+            <partial name="_Icono" model='"palomita"' view-data='new ViewDataDictionary(ViewData) { ["Tamano"] = 28 }' />
+        </span>
+        <h1 class="h4">Ya no tienes palabras pendientes</h1>
+        <p class="text-muted mb-0">Llevas @meta.Respondidas @(meta.Respondidas == 1 ? "ejercicio" : "ejercicios") hoy.</p>
+    </section>
+
+    <div class="d-flex gap-2" style="flex-direction: column">
+        <a class="btn btn-primary btn-lg btn-bloque" asp-action="Nuevas">Aprender palabras nuevas</a>
+        <a class="btn btn-outline-primary btn-lg btn-bloque" asp-action="Errores">Practicar mis errores</a>
     </div>
-</form>
+}
