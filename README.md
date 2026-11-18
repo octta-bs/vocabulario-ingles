@@ -53,6 +53,9 @@ Cubren las reglas del repaso (intervalos fijos y adaptativos), el ritmo de palab
 de respuestas (contracciones, puntuación), el generador de ejercicios y `RepasoService` contra una base
 SQLite en memoria creada con las migraciones reales.
 
+GitHub las corre solas en cada pull request y en cada push a `main`
+(`.github/workflows/pruebas.yml`); el resultado aparece como ✅ o ❌ en el pull request.
+
 ## Base de datos y migraciones
 
 La base se crea y se actualiza sola al arrancar (`Data/PreparadorBaseDatos.cs`):
@@ -94,5 +97,4 @@ dotnet ef migrations add NombreDelCambio -o Data/Migraciones
 ## Pendiente
 
 - Revisar traducciones, ejemplos y la columna "Se lee".
-- Correr las pruebas automáticamente en GitHub (GitHub Actions) en cada pull request.
 - Más categorías y, después, otras profesiones.
