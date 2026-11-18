@@ -104,6 +104,51 @@ namespace VocabularioIngles.Data.Migraciones
                     b.ToTable("Palabras");
                 });
 
+            modelBuilder.Entity("VocabularioIngles.Models.PerfilInfantil", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PerfilesInfantiles");
+                });
+
+            modelBuilder.Entity("VocabularioIngles.Models.ProgresoInfantil", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Aciertos")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("AciertosSeguidos")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Fallos")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PalabraId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("UltimaVez")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PalabraId")
+                        .IsUnique();
+
+                    b.ToTable("ProgresosInfantiles");
+                });
+
             modelBuilder.Entity("VocabularioIngles.Models.ProgresoPalabra", b =>
                 {
                     b.Property<int>("Id")
@@ -199,6 +244,17 @@ namespace VocabularioIngles.Data.Migraciones
                         .IsRequired();
 
                     b.Navigation("Categoria");
+                });
+
+            modelBuilder.Entity("VocabularioIngles.Models.ProgresoInfantil", b =>
+                {
+                    b.HasOne("VocabularioIngles.Models.Palabra", "Palabra")
+                        .WithMany()
+                        .HasForeignKey("PalabraId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Palabra");
                 });
 
             modelBuilder.Entity("VocabularioIngles.Models.ProgresoPalabra", b =>
