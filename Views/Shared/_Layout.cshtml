@@ -17,6 +17,7 @@
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link" asp-controller="Palabras" asp-action="Index">Palabras</a></li>
                 <li class="nav-item"><a class="nav-link" asp-controller="Repaso" asp-action="Index">Repaso</a></li>
+                <li class="nav-item"><a class="nav-link" asp-controller="Practica" asp-action="Index">Hablar</a></li>
                 <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Meta">Mi meta</a></li>
             </ul>
         </div>
@@ -27,5 +28,6 @@
     </main>
 
     <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -15,6 +15,17 @@ Con las frases de trabajo hay tres ejercicios: escribir la frase completa a part
 completar su palabra clave ("I'm ___ on the login page") y el dictado de la frase. Las contracciones
 cuentan igual que la forma larga ("I'm" = "I am", "don't" = "do not").
 
+**Practicar en voz alta** (menú "Hablar"): eliges una categoría, escuchas una frase de trabajo o de
+entrevista, la dices y el navegador marca en verde las palabras que entendió y en rojo las que no.
+Es solo práctica: no cuenta para el repaso ni para la meta, y no se guarda nada.
+
+- Usa el reconocimiento de voz del navegador (Web Speech API): gratis y sin claves. Funciona en Chrome
+  y Edge (computadora y Android); en Firefox no está disponible y la página lo avisa.
+- El navegador puede enviar el audio a su propio servicio de reconocimiento (en Chrome, de Google), así
+  que necesita internet.
+- El micrófono solo funciona en `localhost` o con **https**. Si abres la app desde el celular con la IP de
+  tu computadora (`http://192.168...`), el navegador no deja usar el micrófono.
+
 La app se ajusta a ti:
 
 - **Más repetición de lo que fallas:** si fallaste 2 o más de las últimas 5 respuestas de una palabra,
