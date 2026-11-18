@@ -2,8 +2,9 @@
 
 Aplicación web para aprender vocabulario de inglés (empezando por tecnología y trabajo).
 Cada palabra tiene su escritura, su pronunciación y su audio; los verbos muestran presente,
-pasado y futuro. También hay frases para el trabajo y las entrevistas: stand-up, code review y
-entrevista (incluida una respuesta de ejemplo a "Tell me about yourself"). En el repaso siempre **escribes** la respuesta, y las palabras que fallas vuelven
+pasado y futuro. También hay frases para el trabajo y las entrevistas: stand-up, code review,
+entrevista (incluida una respuesta de ejemplo a "Tell me about yourself"), Git y GitHub, Agile y Scrum,
+entrevista técnica de .NET, y reuniones y correo. En el repaso siempre **escribes** la respuesta, y las palabras que fallas vuelven
 antes. Cada vez se elige al azar uno de estos ejercicios:
 
 - Escribir la palabra en inglés a partir del español.

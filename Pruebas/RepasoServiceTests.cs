@@ -17,6 +17,8 @@ public sealed class RepasoServiceTests : IDisposable
     private readonly AppDbContext _db;
     private readonly RepasoService _servicio;
 
+    private static readonly int TotalFrases = FrasesTrabajo.PorCategoria.Values.Sum(f => f.Length);
+
     public RepasoServiceTests()
     {
         // La base en memoria vive mientras la conexión esté abierta.
@@ -43,7 +45,7 @@ public sealed class RepasoServiceTests : IDisposable
     public void Las_migraciones_y_la_carga_inicial_dejan_palabras_y_frases()
     {
         Assert.Equal(35, _db.Palabras.Count(p => p.Tipo != TipoPalabra.Frase));
-        Assert.Equal(36, _db.Palabras.Count(p => p.Tipo == TipoPalabra.Frase));
+        Assert.Equal(TotalFrases, _db.Palabras.Count(p => p.Tipo == TipoPalabra.Frase));
     }
 
     [Fact]
@@ -51,8 +53,30 @@ public sealed class RepasoServiceTests : IDisposable
     {
         SeedData.Cargar(_db);
 
-        Assert.Equal(71, _db.Palabras.Count());
-        Assert.Equal(6, _db.Categorias.Count());
+        Assert.Equal(35 + TotalFrases, _db.Palabras.Count());
+        Assert.Equal(3 + FrasesTrabajo.PorCategoria.Count, _db.Categorias.Count());
+    }
+
+    [Fact]
+    public void Cada_frase_contiene_su_palabra_clave_completa()
+    {
+        // Si la palabra clave no aparece como palabra completa, la frase se queda sin ejercicio de completar.
+        var generador = new GeneradorEjercicios();
+        var sinHueco = _db.Palabras.Where(p => p.Tipo == TipoPalabra.Frase).AsEnumerable()
+            .Where(p => generador.Posibles(p).All(e => e.Tipo != TipoEjercicio.CompletarFrase))
+            .Select(p => p.Ingles)
+            .ToList();
+
+        Assert.Empty(sinHueco);
+    }
+
+    [Fact]
+    public void No_hay_frases_repetidas()
+    {
+        var repetidas = FrasesTrabajo.PorCategoria.Values.SelectMany(f => f)
+            .GroupBy(f => f.Ingles).Where(g => g.Count() > 1).Select(g => g.Key);
+
+        Assert.Empty(repetidas);
     }
 
     [Fact]
