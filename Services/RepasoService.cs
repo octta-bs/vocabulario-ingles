@@ -126,7 +126,8 @@ public class RepasoService
             Acerto = acerto,
             RespuestaDada = (respuesta ?? "").Trim(),
             Palabra = progreso.Palabra,
-            Ejercicio = ejercicio
+            Ejercicio = ejercicio,
+            Explicaciones = acerto ? new() : await ExplicarAsync(ejercicio, respuesta)
         };
     }
 
@@ -143,13 +144,25 @@ public class RepasoService
         }
 
         var ejercicio = _generador.Crear(palabra, tipo);
+        var acerto = ComparadorRespuestas.SonIguales(respuesta, ejercicio.Respuesta);
         return new RepasoResultado
         {
-            Acerto = ComparadorRespuestas.SonIguales(respuesta, ejercicio.Respuesta),
+            Acerto = acerto,
             RespuestaDada = (respuesta ?? "").Trim(),
             Palabra = palabra,
-            Ejercicio = ejercicio
+            Ejercicio = ejercicio,
+            Explicaciones = acerto ? new() : await ExplicarAsync(ejercicio, respuesta)
         };
+    }
+
+    /// <summary>Por qué falló (ver <see cref="ExplicadorErrores"/>). Las palabras de la app sirven para avisar si escribió otra.</summary>
+    private async Task<List<string>> ExplicarAsync(Ejercicio ejercicio, string? respuesta)
+    {
+        var otras = await _db.Palabras
+            .Where(p => p.Id != ejercicio.Palabra.Id && p.Tipo != TipoPalabra.Frase)
+            .Select(p => new { p.Ingles, p.Espanol })
+            .ToListAsync();
+        return ExplicadorErrores.Explicar(ejercicio, respuesta, otras.Select(o => (o.Ingles, o.Espanol)));
     }
 
     /// <summary>Cuántas palabras nuevas te tocan según tus aciertos recientes.</summary>

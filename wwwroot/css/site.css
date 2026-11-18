@@ -1135,3 +1135,21 @@ a.chip {
     text-decoration: none;
     white-space: nowrap;
 }
+
+/* Por qué fallaste (explicaciones bajo la respuesta correcta). */
+.explicaciones {
+    list-style: none;
+    margin: 0 0 12px;
+    padding: 10px 12px;
+    border-radius: var(--radio-chico);
+    background: var(--superficie);
+    font-size: 14px;
+}
+
+.explicaciones li + li {
+    margin-top: 4px;
+}
+
+.explicaciones li::before {
+    content: "💡 ";
+}
