@@ -150,20 +150,24 @@ public class RepasoService
         var conteos = await _db.Palabras
             .Where(p => p.Progreso == null)
             .GroupBy(p => p.CategoriaId)
-            .Select(g => new { CategoriaId = g.Key, Cantidad = g.Count() })
+            .Select(g => new { CategoriaId = g.Key, Cantidad = g.Count(), PrimeraPalabra = g.Min(p => p.Id) })
             .ToListAsync();
 
-        var categorias = await _db.Categorias.ToDictionaryAsync(c => c.Id, c => c.Nombre);
+        // Mismo orden que AgregarNuevasAsync: por nivel y, dentro de cada nivel, como se cargaron.
+        // Así la primera categoría es la que de verdad sigue "en orden".
+        var categorias = await _db.Categorias.ToDictionaryAsync(c => c.Id);
         return conteos
-            .Select(c => new CategoriaSinEmpezar(c.CategoriaId, categorias[c.CategoriaId], c.Cantidad))
-            .OrderBy(c => c.Nombre)
+            .OrderBy(c => categorias[c.CategoriaId].Nivel)
+            .ThenBy(c => c.PrimeraPalabra)
+            .Select(c => new CategoriaSinEmpezar(c.CategoriaId, categorias[c.CategoriaId].Nombre,
+                categorias[c.CategoriaId].Nivel, c.Cantidad))
             .ToList();
     }
 
     /// <summary>
     /// Mete al repaso las siguientes palabras que todavía no se han empezado a aprender.
     /// La cantidad la decide la estrategia de ritmo según tus aciertos. Si eliges una categoría,
-    /// solo salen de ella; si no, en el orden en que se cargaron.
+    /// solo salen de ella; si no, de nivel en nivel (Pre A1 primero).
     /// </summary>
     public async Task<int> AgregarNuevasAsync(int? categoriaId = null)
     {
@@ -178,7 +182,9 @@ public class RepasoService
         var nuevas = await _db.Palabras
             .Where(p => p.Progreso == null)
             .Where(p => categoriaId == null || p.CategoriaId == categoriaId)
-            .OrderBy(p => p.Id)
+            // En orden: primero los niveles más básicos (Pre A1, A1…) y, dentro de cada uno, como se cargaron.
+            .OrderBy(p => p.Categoria!.Nivel)
+            .ThenBy(p => p.Id)
             .Take(cantidad)
             .ToListAsync();
 

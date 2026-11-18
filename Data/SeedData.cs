@@ -12,7 +12,43 @@ public static class SeedData
     public static void Cargar(AppDbContext db)
     {
         CargarVocabularioInicial(db);
+        CargarVocabularioGeneral(db);
         CargarFrasesDeTrabajo(db);
+    }
+
+    /// <summary>
+    /// Agrega cada categoría de <see cref="VocabularioGeneral"/> (Pre A1 a A2) que todavía no exista,
+    /// sin tocar las demás ni el progreso.
+    /// </summary>
+    private static void CargarVocabularioGeneral(AppDbContext db)
+    {
+        var existentes = db.Categorias.Select(c => c.Nombre).ToHashSet();
+
+        foreach (var semilla in VocabularioGeneral.Categorias)
+        {
+            if (existentes.Contains(semilla.Nombre))
+            {
+                continue;
+            }
+
+            var categoria = new Categoria { Nombre = semilla.Nombre, Nivel = semilla.Nivel };
+            db.Categorias.Add(categoria);
+            db.Palabras.AddRange(semilla.Palabras.Select(p => new Palabra
+            {
+                Categoria = categoria,
+                Tipo = p.Pasado == null ? TipoPalabra.Sustantivo : TipoPalabra.Verbo,
+                Ingles = p.Ingles,
+                Espanol = p.Espanol,
+                Pronunciacion = p.Pronunciacion,
+                ComoSeLee = p.ComoSeLee,
+                Pasado = p.Pasado,
+                Participio = p.Participio,
+                Ejemplo = p.Ejemplo,
+                EjemploEs = p.EjemploEs
+            }));
+        }
+
+        db.SaveChanges();
     }
 
     /// <summary>
@@ -30,7 +66,7 @@ public static class SeedData
                 continue;
             }
 
-            var categoria = new Categoria { Nombre = nombre };
+            var categoria = new Categoria { Nombre = nombre, Nivel = FrasesTrabajo.Nivel(nombre) };
             db.Categorias.Add(categoria);
             db.Palabras.AddRange(frases.Select(f => new Palabra
             {

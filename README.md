@@ -2,7 +2,20 @@
 
 Aplicación web para aprender vocabulario de inglés (empezando por tecnología y trabajo).
 Cada palabra tiene su escritura, su pronunciación y su audio; los verbos muestran presente,
-pasado y futuro. También hay frases para el trabajo y las entrevistas: stand-up, code review,
+pasado y futuro. El contenido va **por niveles del MCER** (el mismo orden que usa Cambridge), desde cero hasta intermedio alto:
+
+| Nivel | Contenido |
+|---|---|
+| Pre A1 · Desde cero | Colores, números, animales, familia, el cuerpo |
+| A1 · Principiante | Comida y bebida, la casa, la ropa, días y meses, verbos básicos |
+| A2 · Básico | Tecnología, trabajo, verbos de programación, la ciudad, viajes, salud, verbos comunes |
+| B1 · Intermedio | Stand-up, code review, entrevista, Git y GitHub, Agile y Scrum, reuniones y correo |
+| B2 · Intermedio alto | Entrevista técnica |
+
+"Palabras nuevas" en orden va de nivel en nivel (Pre A1 primero); también puedes elegir una categoría. Las listas
+son propias, ordenadas según el MCER: **no** copian las listas oficiales de Cambridge, que tienen derechos de autor.
+
+También hay frases para el trabajo y las entrevistas: stand-up, code review,
 entrevista (incluida una respuesta de ejemplo a "Tell me about yourself"), Git y GitHub, Agile y Scrum,
 entrevista técnica de .NET, y reuniones y correo. En el repaso siempre **escribes** la respuesta, y las palabras que fallas vuelven
 antes. Cada vez se elige al azar uno de estos ejercicios:
@@ -128,6 +141,9 @@ dotnet ef migrations add NombreDelCambio -o Data/Migraciones
 - Formas de los verbos: [monolithpl/verb.forms.dictionary](https://github.com/monolithpl/verb.forms.dictionary),
   licencia MIT (Copyright 2016 Wiktor Jakubczyc).
 - La columna "Se lee" (aproximación en español) está escrita a mano y debe revisarse.
+- El vocabulario general de Pre A1 a A2 (`Data/VocabularioGeneral.cs`, 168 palabras) tiene traducciones, "se lee" y
+  ejemplos escritos a mano (por revisar); su IPA y las formas de sus verbos se tomaron de los dos conjuntos de datos
+  MIT de arriba.
 - Las frases en pasado y futuro de los verbos (`Data/FrasesVerbos.cs`) están escritas a mano y deben revisarse.
 - Las frases de trabajo y entrevista (`Data/FrasesTrabajo.cs`) están escritas a mano y deben revisarse.
   Las de "Tell me about yourself" son un ejemplo: cambia los años, las tecnologías y el proyecto por los tuyos.

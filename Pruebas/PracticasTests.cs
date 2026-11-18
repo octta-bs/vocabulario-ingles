@@ -15,7 +15,7 @@ public sealed class PracticasTests : IDisposable
     {
         var servicio = new RepasoService(_base.Db, new IntervalosAdaptativos(), new GeneradorEjercicios(),
             new RitmoPorAciertos(), BaseDePrueba.Zona(TimeProvider.System));
-        await servicio.AgregarNuevasAsync();
+        await servicio.AgregarNuevasAsync(_base.Db.Categorias.Single(c => c.Nombre == "Tecnología").Id);
         var antes = _base.Db.Progresos.Single(p => p.PalabraId == 1);
         var (etapa, proximo) = (antes.Etapa, antes.ProximoRepaso);
 
