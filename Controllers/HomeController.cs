@@ -18,6 +18,22 @@ public class HomeController : Controller
         return View(resumen);
     }
 
+    // Pantalla para elegir tu meta diaria de ejercicios.
+    public async Task<IActionResult> Meta()
+    {
+        ViewBag.MetaDiaria = await _repaso.ObtenerMetaDiariaAsync();
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Meta(int metaDiaria)
+    {
+        await _repaso.GuardarMetaDiariaAsync(metaDiaria);
+        TempData["Mensaje"] = $"Listo: tu meta es de {await _repaso.ObtenerMetaDiariaAsync()} ejercicios al día.";
+        return RedirectToAction(nameof(Index));
+    }
+
     public IActionResult Error()
     {
         return View();

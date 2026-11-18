@@ -11,6 +11,43 @@ public static class SeedData
 {
     public static void Cargar(AppDbContext db)
     {
+        CargarVocabularioInicial(db);
+        CargarFrasesDeTrabajo(db);
+    }
+
+    /// <summary>
+    /// Agrega cada categoría de <see cref="FrasesTrabajo"/> que todavía no exista. Así una base que ya
+    /// tiene progreso recibe las frases nuevas sin tocar lo demás.
+    /// </summary>
+    private static void CargarFrasesDeTrabajo(AppDbContext db)
+    {
+        var existentes = db.Categorias.Select(c => c.Nombre).ToHashSet();
+
+        foreach (var (nombre, frases) in FrasesTrabajo.PorCategoria)
+        {
+            if (existentes.Contains(nombre))
+            {
+                continue;
+            }
+
+            var categoria = new Categoria { Nombre = nombre };
+            db.Categorias.Add(categoria);
+            db.Palabras.AddRange(frases.Select(f => new Palabra
+            {
+                Categoria = categoria,
+                Tipo = TipoPalabra.Frase,
+                Ingles = f.Ingles,
+                Espanol = f.Espanol,
+                PalabraClave = f.PalabraClave,
+                Nota = f.Nota
+            }));
+        }
+
+        db.SaveChanges();
+    }
+
+    private static void CargarVocabularioInicial(AppDbContext db)
+    {
         if (db.Palabras.Any())
         {
             return;

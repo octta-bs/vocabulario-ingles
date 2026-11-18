@@ -12,6 +12,8 @@ public class AppDbContext : DbContext
     public DbSet<Categoria> Categorias => Set<Categoria>();
     public DbSet<Palabra> Palabras => Set<Palabra>();
     public DbSet<ProgresoPalabra> Progresos => Set<ProgresoPalabra>();
+    public DbSet<RegistroRespuesta> Respuestas => Set<RegistroRespuesta>();
+    public DbSet<Configuracion> Configuraciones => Set<Configuracion>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -20,5 +22,9 @@ public class AppDbContext : DbContext
             .HasOne(p => p.Palabra)
             .WithOne(p => p.Progreso)
             .HasForeignKey<ProgresoPalabra>(p => p.PalabraId);
+
+        // Se busca seguido por fecha (respuestas de hoy, las últimas N) y por palabra.
+        modelBuilder.Entity<RegistroRespuesta>().HasIndex(r => r.Fecha);
+        modelBuilder.Entity<RegistroRespuesta>().HasIndex(r => new { r.PalabraId, r.Fecha });
     }
 }

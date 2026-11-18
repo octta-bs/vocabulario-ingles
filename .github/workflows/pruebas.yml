@@ -1,0 +1,30 @@
+# Compila la app y corre las pruebas automáticas en cada pull request y en cada push a main.
+name: Pruebas
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: Instalar .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Compilar la app
+        run: dotnet build --configuration Release
+
+      - name: Correr las pruebas
+        run: dotnet test Pruebas --configuration Release --logger "console;verbosity=normal"

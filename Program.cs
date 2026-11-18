@@ -10,18 +10,24 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(opciones =>
     opciones.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 
-// Patrón Strategy: hoy se usan intervalos fijos. Para cambiar a FSRS más adelante
-// solo hay que cambiar esta línea por otra clase que implemente IAlgoritmoRepaso.
-builder.Services.AddScoped<IAlgoritmoRepaso, IntervalosFijos>();
+// Patrón Strategy: hoy se usan intervalos adaptativos (las palabras que fallas seguido vuelven antes).
+// Para volver a intervalos fijos, o cambiar a FSRS más adelante, solo hay que cambiar esta línea
+// por otra clase que implemente IAlgoritmoRepaso.
+builder.Services.AddScoped<IAlgoritmoRepaso, IntervalosAdaptativos>();
+
+// Patrón Strategy: regla para decidir cuántas palabras nuevas te tocan según tus aciertos.
+builder.Services.AddScoped<IRitmoPalabrasNuevas, RitmoPorAciertos>();
+builder.Services.AddSingleton<GeneradorEjercicios>();
 builder.Services.AddScoped<RepasoService>();
 
 var app = builder.Build();
 
-// Crea la base de datos (un archivo SQLite) la primera vez y carga las palabras iniciales.
+// Crea o actualiza la base de datos (un archivo SQLite) con las migraciones, sin perder el progreso
+// (antes de migrar hace un respaldo), y carga las palabras iniciales la primera vez.
 using (var alcance = app.Services.CreateScope())
 {
     var db = alcance.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.EnsureCreated();
+    PreparadorBaseDatos.Preparar(db, app.Logger);
     SeedData.Cargar(db);
 }
 
