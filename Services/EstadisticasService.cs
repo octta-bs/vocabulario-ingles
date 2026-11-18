@@ -71,9 +71,17 @@ public class EstadisticasService
     }
 
     /// <summary>Las palabras que más has fallado (primero las de más fallos).</summary>
-    public async Task<List<PalabraDificil>> MasFalladasAsync(int cantidad)
+    /// <param name="modo">Si viene, solo palabras de ese modo.</param>
+    public async Task<List<PalabraDificil>> MasFalladasAsync(int cantidad, ModoApp? modo = null)
     {
-        var conteos = await _db.Respuestas
+        var respuestas = _db.Respuestas.AsQueryable();
+        if (modo != null)
+        {
+            var categorias = await Modos.CategoriasAsync(_db, modo.Value);
+            respuestas = respuestas.Where(r => categorias.Contains(r.Palabra!.CategoriaId));
+        }
+
+        var conteos = await respuestas
             .GroupBy(r => r.PalabraId)
             .Select(g => new
             {

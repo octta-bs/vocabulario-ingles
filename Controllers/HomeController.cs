@@ -30,6 +30,12 @@ public class HomeController : Controller
     // Inicio: una sola acción principal (empezar el repaso), tu meta y accesos rápidos.
     public async Task<IActionResult> Index()
     {
+        // Sin modo elegido, primero se elige (Principiante, Trabajo o Niños).
+        if (Modos.Leer(Request) is not { } modo)
+        {
+            return RedirectToAction(nameof(Modo));
+        }
+
         var ahora = _zona.AhoraLocal;
         var saludo = ahora.Hour switch
         {
@@ -40,30 +46,67 @@ public class HomeController : Controller
         var fecha = ahora.ToString("dddd d 'de' MMMM", Espanol);
 
         var ritmo = await _repaso.CalcularRitmoAsync();
-        var sinEmpezar = await _repaso.ContarSinEmpezarAsync();
+        var sinEmpezar = await _repaso.ContarSinEmpezarAsync(modo);
 
         return View(new InicioViewModel
         {
+            Modo = modo,
+            PendientesOtroModo = await _repaso.ContarPendientesAsync(Modos.Otro(modo)),
             Saludo = saludo,
             Fecha = char.ToUpper(fecha[0], Espanol) + fecha[1..],
             Meta = await _repaso.ObtenerMetaHoyAsync(),
             Racha = (await _estadisticas.ObtenerAsync()).RachaActual,
-            Pendientes = await _repaso.ContarPendientesAsync(),
+            Pendientes = await _repaso.ContarPendientesAsync(modo),
             NuevasPorAgregar = Math.Min(ritmo.Cantidad, sinEmpezar),
-            Errores = (await _estadisticas.MasFalladasAsync(10)).Count
+            Errores = (await _estadisticas.MasFalladasAsync(10, modo)).Count
         });
+    }
+
+    // Elegir modo: Principiante, Trabajo o Niños.
+    public IActionResult Modo()
+    {
+        return View(Modos.Leer(Request));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [ActionName("Modo")]
+    public IActionResult ElegirModo(string modo)
+    {
+        switch (modo)
+        {
+            case "ninos":
+                return RedirectToAction("Index", "Ninos");
+            case "principiante":
+                Modos.Guardar(Response, ModoApp.Principiante);
+                break;
+            case "trabajo":
+                Modos.Guardar(Response, ModoApp.Trabajo);
+                break;
+            default:
+                return RedirectToAction(nameof(Modo));
+        }
+
+        return RedirectToAction(nameof(Index));
     }
 
     // Practicar: todas las formas de práctica extra en un solo lugar.
     public async Task<IActionResult> Practicar()
     {
+        if (Modos.Leer(Request) is not { } modo)
+        {
+            return RedirectToAction(nameof(Modo));
+        }
+
+        var categorias = await Modos.CategoriasAsync(_db, modo);
         return View(new PracticarViewModel
         {
+            Modo = modo,
             RespuestasEscritas = (await _respuestas.ObtenerAsync()).Count,
             TotalPreguntas = PreguntasEntrevista.Todas.Length,
-            Errores = (await _estadisticas.MasFalladasAsync(10)).Count,
-            TotalPalabras = await _db.Palabras.CountAsync(),
-            Categorias = await _db.Categorias.CountAsync()
+            Errores = (await _estadisticas.MasFalladasAsync(10, modo)).Count,
+            TotalPalabras = await _db.Palabras.CountAsync(p => categorias.Contains(p.CategoriaId)),
+            Categorias = categorias.Count
         });
     }
 

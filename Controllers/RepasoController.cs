@@ -20,11 +20,18 @@ public class RepasoController : Controller
     // Cookie donde se recuerda la última categoría elegida para las palabras nuevas.
     private const string CookieCategoria = "categoriaNuevas";
 
-    // Muestra el siguiente ejercicio pendiente (o avisa que no hay).
+    // Muestra el siguiente ejercicio pendiente del modo actual (o avisa que no hay).
     public async Task<IActionResult> Index()
     {
-        var ejercicio = await _servicio.SiguienteEjercicioAsync();
-        ViewBag.Pendientes = await _servicio.ContarPendientesAsync();
+        if (Modos.Leer(Request) is not { } modo)
+        {
+            return RedirectToAction("Modo", "Home");
+        }
+
+        var ejercicio = await _servicio.SiguienteEjercicioAsync(modo);
+        ViewBag.Modo = modo;
+        ViewBag.Pendientes = await _servicio.ContarPendientesAsync(modo);
+        ViewBag.PendientesOtroModo = await _servicio.ContarPendientesAsync(Modos.Otro(modo));
         ViewBag.Meta = await _servicio.ObtenerMetaHoyAsync();
         return View(ejercicio);
     }
@@ -32,9 +39,15 @@ public class RepasoController : Controller
     // Cuántas palabras nuevas te tocan y de qué categoría agregarlas.
     public async Task<IActionResult> Nuevas()
     {
+        if (Modos.Leer(Request) is not { } modo)
+        {
+            return RedirectToAction("Modo", "Home");
+        }
+
+        ViewBag.Modo = modo;
         ViewBag.Ritmo = await _servicio.CalcularRitmoAsync();
-        ViewBag.SinEmpezar = await _servicio.ContarSinEmpezarAsync();
-        ViewBag.Categorias = await _servicio.CategoriasConNuevasAsync();
+        ViewBag.SinEmpezar = await _servicio.ContarSinEmpezarAsync(modo);
+        ViewBag.Categorias = await _servicio.CategoriasConNuevasAsync(modo);
         ViewBag.CategoriaElegida = int.TryParse(Request.Cookies[CookieCategoria], out var elegida) ? elegida : (int?)null;
         return View();
     }
@@ -55,7 +68,7 @@ public class RepasoController : Controller
     // Práctica extra con las palabras que más has fallado (no cambia el repaso ni la meta).
     public async Task<IActionResult> Errores(int? anterior)
     {
-        var dificiles = await _estadisticas.MasFalladasAsync(10);
+        var dificiles = await _estadisticas.MasFalladasAsync(10, Modos.Leer(Request));
         if (dificiles.Count > 1 && anterior.HasValue)
         {
             dificiles.RemoveAll(d => d.Palabra.Id == anterior.Value);
@@ -101,7 +114,7 @@ public class RepasoController : Controller
         }
 
         var ritmo = await _servicio.CalcularRitmoAsync();
-        var cantidad = await _servicio.AgregarNuevasAsync(categoriaId);
+        var cantidad = await _servicio.AgregarNuevasAsync(categoriaId, Modos.Leer(Request));
         if (cantidad > 0)
         {
             // Las nuevas entran como pendientes: el repaso empieza con ellas.

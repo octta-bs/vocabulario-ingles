@@ -6,19 +6,11 @@
 }
 
 <h1 class="mb-1">Practicar</h1>
-<p class="text-muted mb-4">Práctica extra: no cambia tu repaso.</p>
+<p class="text-muted mb-4">Modo @Model.Modo.Texto() · práctica extra: no cambia tu repaso.</p>
 
 <ul class="opciones">
-    <li>
-        <a class="opcion" asp-controller="Ninos" asp-action="Index">
-            <span class="icono-caja" style="background: #FFF3E0; color: #E65100"><partial name="_Icono" model='"estrella"' view-data="tamano" /></span>
-            <span class="textos">
-                <span class="nombre">Modo niños</span>
-                <span class="detalle">Dibujos, audio y tocar la respuesta (preescolar)</span>
-            </span>
-            <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
-        </a>
-    </li>
+@if (Model.Modo == VocabularioIngles.Services.ModoApp.Trabajo)
+{
     <li>
         <a class="opcion" asp-controller="Simulacro" asp-action="Index">
             <span class="icono-caja"><partial name="_Icono" model='"maletin"' view-data="tamano" /></span>
@@ -30,21 +22,21 @@
         </a>
     </li>
     <li>
-        <a class="opcion" asp-controller="Practica" asp-action="Index">
-            <span class="icono-caja"><partial name="_Icono" model='"microfono"' view-data="tamano" /></span>
-            <span class="textos">
-                <span class="nombre">Hablar en voz alta</span>
-                <span class="detalle">Di frases de trabajo y revisa tu pronunciación</span>
-            </span>
-            <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
-        </a>
-    </li>
-    <li>
         <a class="opcion" asp-controller="Practica" asp-action="Shadowing">
             <span class="icono-caja"><partial name="_Icono" model='"bocina"' view-data="tamano" /></span>
             <span class="textos">
                 <span class="nombre">Shadowing</span>
                 <span class="detalle">Escucha, repite junto con el audio y dila tú solo</span>
+            </span>
+            <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
+        </a>
+    </li>
+    <li>
+        <a class="opcion" asp-controller="Practica" asp-action="Index">
+            <span class="icono-caja"><partial name="_Icono" model='"microfono"' view-data="tamano" /></span>
+            <span class="textos">
+                <span class="nombre">Hablar en voz alta</span>
+                <span class="detalle">Di frases de trabajo y revisa tu pronunciación</span>
             </span>
             <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
         </a>
@@ -79,4 +71,36 @@
             <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
         </a>
     </li>
+}
+else
+{
+    <li>
+        <a class="opcion" asp-controller="Repaso" asp-action="Errores">
+            <span class="icono-caja"><partial name="_Icono" model='"diana"' view-data="tamano" /></span>
+            <span class="textos">
+                <span class="nombre">Mis errores</span>
+                <span class="detalle">@(Model.Errores == 0 ? "Todavía no has fallado ninguna palabra" : Model.Errores == 1 ? "1 palabra que fallaste" : $"{Model.Errores} palabras que más fallas")</span>
+            </span>
+            <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
+        </a>
+    </li>
+    <li>
+        <a class="opcion" asp-controller="Palabras" asp-action="Index">
+            <span class="icono-caja"><partial name="_Icono" model='"lista"' view-data="tamano" /></span>
+            <span class="textos">
+                <span class="nombre">Todas las palabras</span>
+                <span class="detalle">@Model.TotalPalabras palabras y frases en @Model.Categorias categorías</span>
+            </span>
+            <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
+        </a>
+    </li>
+}
 </ul>
+
+@if (Model.Modo == VocabularioIngles.Services.ModoApp.Principiante)
+{
+    <p class="text-muted small mt-3">
+        Hablar, shadowing y el simulacro de entrevista están en el modo Trabajo.
+        <a asp-action="Modo">Cambiar de modo</a>
+    </p>
+}

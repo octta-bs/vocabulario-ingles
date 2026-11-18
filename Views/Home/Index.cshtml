@@ -7,7 +7,12 @@
     var dash = $"{lleno.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)} {contorno.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)}";
 }
 
-<p class="inicio-fecha">@Model.Fecha</p>
+<div class="d-flex align-items-center justify-content-between mb-1">
+    <p class="inicio-fecha">@Model.Fecha</p>
+    <a class="chip" asp-action="Modo" aria-label="Modo @Model.Modo.Texto(). Cambiar modo">
+        Modo @Model.Modo.Texto() · Cambiar
+    </a>
+</div>
 <h1 class="mb-4">@Model.Saludo</h1>
 
 @if (TempData["Mensaje"] != null)
@@ -76,18 +81,43 @@ else
     </div>
 }
 
+@if (Model.PendientesOtroModo > 0)
+{
+    <p class="alert alert-info small">
+        También tienes @Model.PendientesOtroModo @(Model.PendientesOtroModo == 1 ? "palabra pendiente" : "palabras pendientes")
+        en modo @VocabularioIngles.Services.Modos.Otro(Model.Modo).Texto().
+        <a asp-action="Modo">Cambiar de modo</a>
+    </p>
+}
+
 <h2 class="seccion-titulo">Practica también</h2>
 <div class="accesos">
-    <a class="acceso" asp-controller="Practica" asp-action="Index">
-        <span class="icono-caja"><partial name="_Icono" model='"microfono"' view-data='new ViewDataDictionary(ViewData) { ["Tamano"] = 22 }' /></span>
-        <span class="nombre">Hablar</span>
-        <span class="detalle">Di frases en voz alta</span>
-    </a>
-    <a class="acceso" asp-controller="Simulacro" asp-action="Index">
-        <span class="icono-caja"><partial name="_Icono" model='"maletin"' view-data='new ViewDataDictionary(ViewData) { ["Tamano"] = 22 }' /></span>
-        <span class="nombre">Entrevista</span>
-        <span class="detalle">Simulacro de 5 preguntas</span>
-    </a>
+    @if (Model.Modo == VocabularioIngles.Services.ModoApp.Trabajo)
+    {
+        <a class="acceso" asp-controller="Practica" asp-action="Shadowing">
+            <span class="icono-caja"><partial name="_Icono" model='"microfono"' view-data='new ViewDataDictionary(ViewData) { ["Tamano"] = 22 }' /></span>
+            <span class="nombre">Shadowing</span>
+            <span class="detalle">Repite frases junto con el audio</span>
+        </a>
+        <a class="acceso" asp-controller="Simulacro" asp-action="Index">
+            <span class="icono-caja"><partial name="_Icono" model='"maletin"' view-data='new ViewDataDictionary(ViewData) { ["Tamano"] = 22 }' /></span>
+            <span class="nombre">Entrevista</span>
+            <span class="detalle">Simulacro de 5 preguntas</span>
+        </a>
+    }
+    else
+    {
+        <a class="acceso" asp-controller="Palabras" asp-action="Index">
+            <span class="icono-caja"><partial name="_Icono" model='"lista"' view-data='new ViewDataDictionary(ViewData) { ["Tamano"] = 22 }' /></span>
+            <span class="nombre">Todas las palabras</span>
+            <span class="detalle">Escúchalas por categoría</span>
+        </a>
+        <a class="acceso" asp-controller="Ninos" asp-action="Index">
+            <span class="icono-caja"><partial name="_Icono" model='"estrella"' view-data='new ViewDataDictionary(ViewData) { ["Tamano"] = 22 }' /></span>
+            <span class="nombre">Niños</span>
+            <span class="detalle">Dibujos y audio para preescolar</span>
+        </a>
+    }
     <a class="acceso" asp-controller="Repaso" asp-action="Errores">
         <span class="icono-caja"><partial name="_Icono" model='"diana"' view-data='new ViewDataDictionary(ViewData) { ["Tamano"] = 22 }' /></span>
         <span class="nombre">Mis errores</span>
