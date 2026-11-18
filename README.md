@@ -28,6 +28,11 @@ Con las frases de trabajo hay tres ejercicios: escribir la frase completa a part
 completar su palabra clave ("I'm ___ on the login page") y el dictado de la frase. Las contracciones
 cuentan igual que la forma larga ("I'm" = "I am", "don't" = "do not").
 
+**Shadowing** (en Practicar): por frase, 3 pasos. 1) Escuchas. 2) Repites **al mismo tiempo** que el audio,
+copiando ritmo y entonación (lento y normal, las veces que quieras). 3) La dices tú solo y se marcan en verde y rojo
+las palabras que se entendieron. Solo se califica el paso 3, porque mientras suena el audio el micrófono también
+lo captaría; antes de grabar, la app detiene su audio. Es solo práctica: no se guarda nada.
+
 **Modo niños** (en Practicar): para preescolar, con dibujos grandes, audio y tocar la respuesta (sin escribir).
 
 - 4 categorías de Pre A1: Colores, Números, Animales y El cuerpo (48 palabras). Los dibujos son SVG propios

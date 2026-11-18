@@ -1036,3 +1036,39 @@ body.modo-ninos {
         animation: none;
     }
 }
+
+/* ---------- Shadowing: 3 pasos numerados ---------- */
+
+.pasos-shadowing {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.paso {
+    background: var(--superficie);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+    padding: 16px;
+}
+
+.paso .numero {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    margin-right: 6px;
+    border-radius: 999px;
+    background: var(--acento-suave);
+    color: var(--acento-suave-texto);
+    font-size: 14px;
+}
+
+.paso.hecho .numero {
+    background: var(--exito);
+    color: #FFFFFF;
+}

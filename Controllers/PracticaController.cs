@@ -22,6 +22,21 @@ public class PracticaController : Controller
     /// <param name="anterior">La frase que acabas de practicar, para no repetirla enseguida.</param>
     public async Task<IActionResult> Index(int? categoriaId, int? anterior)
     {
+        return View(await ElegirFraseAsync(categoriaId, anterior));
+    }
+
+    /// <summary>
+    /// Shadowing en 3 pasos: escuchas la frase, la repites al mismo tiempo que el audio (lento y normal)
+    /// y al final la dices tú solo; solo ese último paso se califica.
+    /// </summary>
+    public async Task<IActionResult> Shadowing(int? categoriaId, int? anterior)
+    {
+        return View(await ElegirFraseAsync(categoriaId, anterior));
+    }
+
+    /// <summary>Una frase al azar (de la categoría elegida, si hay) y la lista de categorías para el filtro.</summary>
+    private async Task<Palabra?> ElegirFraseAsync(int? categoriaId, int? anterior)
+    {
         var frases = _db.Palabras.Where(p => p.Tipo == TipoPalabra.Frase);
 
         ViewBag.Categorias = await frases
@@ -44,11 +59,10 @@ public class PracticaController : Controller
 
         if (candidatas.Count == 0)
         {
-            return View((Palabra?)null);
+            return null;
         }
 
         var id = candidatas[Random.Shared.Next(candidatas.Count)];
-        var frase = await _db.Palabras.Include(p => p.Categoria).FirstAsync(p => p.Id == id);
-        return View(frase);
+        return await _db.Palabras.Include(p => p.Categoria).FirstAsync(p => p.Id == id);
     }
 }
