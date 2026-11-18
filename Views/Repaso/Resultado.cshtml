@@ -64,6 +64,15 @@
     {
         <p class="mb-1 small">Escribiste <strong>@escrito</strong>. Lo correcto es:</p>
         <p class="correcta mb-2">@ejercicio.Respuesta</p>
+        @if (Model.Explicaciones.Count > 0)
+        {
+            <ul class="explicaciones" aria-label="Por qué">
+                @foreach (var explicacion in Model.Explicaciones)
+                {
+                    <li>@explicacion</li>
+                }
+            </ul>
+        }
         @if (!esPractica)
         {
             <p class="small text-muted">Esta palabra volverá en unos minutos para que la practiques otra vez.</p>

@@ -2,7 +2,11 @@
 
 Aplicación web para aprender vocabulario de inglés (empezando por tecnología y trabajo).
 Cada palabra tiene su escritura, su pronunciación y su audio; los verbos muestran presente,
-pasado y futuro. La app tiene **3 modos**, que eliges al entrar y se recuerdan (puedes cambiar desde el Inicio):
+pasado y futuro. Cuando fallas, el resultado explica **por qué** (sin IA, con reglas): si escribiste otro tiempo verbal
+("escribiste el presente; aquí va el pasado"), te faltó o sobró una letra (y cuál), escribiste otra palabra de la
+app, respondiste en español o, en frases, qué palabras faltaron y cuáles sobraron (`Services/ExplicadorErrores.cs`).
+
+La app tiene **3 modos**, que eliges al entrar y se recuerdan (puedes cambiar desde el Inicio):
 
 - **Principiante:** el vocabulario general de Pre A1 a A2.
 - **Trabajo:** el inglés técnico y las frases de trabajo y entrevista (A2 a B2), con Hablar, Shadowing,
