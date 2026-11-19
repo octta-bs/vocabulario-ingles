@@ -17,6 +17,7 @@ public class AppDbContext : DbContext
     public DbSet<RespuestaPropia> RespuestasPropias => Set<RespuestaPropia>();
     public DbSet<PerfilInfantil> PerfilesInfantiles => Set<PerfilInfantil>();
     public DbSet<ProgresoInfantil> ProgresosInfantiles => Set<ProgresoInfantil>();
+    public DbSet<Lectura> Lecturas => Set<Lectura>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -39,5 +40,9 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<ProgresoInfantil>().HasIndex(p => p.PalabraId).IsUnique();
         modelBuilder.Entity<ProgresoInfantil>().Ignore(p => p.Aprendida);
         modelBuilder.Entity<PerfilInfantil>().Property(p => p.Nombre).HasMaxLength(PerfilInfantil.LargoMaximoNombre);
+
+        // Lecturas: textos que pegas para leer y guardar palabras con su frase.
+        modelBuilder.Entity<Lectura>().Property(l => l.Titulo).HasMaxLength(Lectura.LargoMaximoTitulo);
+        modelBuilder.Entity<Lectura>().Property(l => l.Texto).HasMaxLength(Lectura.LargoMaximoTexto);
     }
 }

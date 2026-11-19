@@ -1,0 +1,59 @@
+@model LecturaParaLeer
+@using System.Text.Json
+@{
+    ViewData["Title"] = Model.Lectura.Titulo;
+    var icono = new ViewDataDictionary(ViewData) { ["Tamano"] = 22 };
+}
+
+<div class="barra-enfoque">
+    <a class="boton-icono" asp-action="Index" aria-label="Volver a mis lecturas">
+        <partial name="_Icono" model='"cerrar"' view-data="icono" />
+    </a>
+    <span class="avance-texto" style="flex: 1">Toca una palabra que no conozcas</span>
+</div>
+
+<h1 class="h4 mb-3">@Model.Lectura.Titulo</h1>
+
+@Html.AntiForgeryToken()
+<article class="card card-body lectura-texto" lang="en" id="lectura"
+         data-significado="@Url.Action("Significado")" data-guardar="@Url.Action("GuardarPalabra")">@foreach (var s in Model.Segmentos)
+    {
+        if (s.EsPalabra)
+        {<button type="button" class="palabra-lectura @(s.YaLaAprendes ? "aprendiendo" : "")" data-oracion="@s.Oracion">@s.Texto</button>}
+        else
+        {@s.Texto}
+    }</article>
+
+<p class="small text-muted mt-2">
+    <span class="palabra-lectura aprendiendo muestra" aria-hidden="true">así</span> = ya está en tu repaso.
+</p>
+
+<form asp-action="Borrar" asp-route-id="@Model.Lectura.Id" method="post" class="mt-4"
+      onsubmit="return confirm('¿Borrar esta lectura? Las palabras que guardaste siguen en tu repaso.');">
+    <button type="submit" class="btn btn-link ps-0 text-muted">Borrar esta lectura</button>
+</form>
+
+<dialog id="panel-palabra" class="panel-palabra" aria-labelledby="panel-titulo">
+    <form method="dialog" class="d-flex align-items-center gap-2 mb-2">
+        <h2 id="panel-titulo" class="palabra-grande mb-0" style="flex: 1"></h2>
+        <button type="button" class="boton-icono btn-audio" id="panel-audio" aria-label="Escuchar la palabra">
+            <partial name="_Icono" model='"bocina"' view-data="icono" />
+        </button>
+        <button class="boton-icono" value="cerrar" aria-label="Cerrar">
+            <partial name="_Icono" model='"cerrar"' view-data="icono" />
+        </button>
+    </form>
+    <p class="small text-muted mb-1">En la frase:</p>
+    <p class="mb-3" id="panel-frase"></p>
+    <label for="panel-significado" class="form-label">¿Qué significa?</label>
+    <input id="panel-significado" class="form-control mb-1" maxlength="120" autocomplete="off" />
+    <p class="form-text mt-0 mb-3" id="panel-ayuda">Escríbelo en español. Si no lo sabes, búscalo y anótalo aquí.</p>
+    <p id="panel-mensaje" class="small mb-2" aria-live="polite"></p>
+    <button type="button" class="btn btn-primary btn-lg btn-bloque" id="panel-guardar">Guardar en mi repaso</button>
+</dialog>
+
+<script type="application/json" id="oraciones">@Html.Raw(JsonSerializer.Serialize(Model.Oraciones))</script>
+
+@section Scripts {
+    <script src="~/js/lecturas.js" asp-append-version="true"></script>
+}

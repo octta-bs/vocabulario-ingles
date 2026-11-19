@@ -2,7 +2,12 @@
 
 Aplicación web para aprender vocabulario de inglés (empezando por tecnología y trabajo).
 Cada palabra tiene su escritura, su pronunciación y su audio; los verbos muestran presente,
-pasado y futuro. Cuando fallas, el resultado explica **por qué** (sin IA, con reglas): si escribiste otro tiempo verbal
+pasado y futuro. **Leer en contexto** (modo Trabajo, en Practicar): pegas un texto real en inglés (documentación, un README, un
+correo), tocas las palabras que no conoces, escribes qué significan y entran a tu repaso con la frase donde
+aparecieron como ejemplo. Los textos quedan en "Mis lecturas" y las palabras que ya aprendes salen resaltadas.
+Si la palabra ya existe en la app, su significado aparece solo y no se duplica.
+
+Cuando fallas, el resultado explica **por qué** (sin IA, con reglas): si escribiste otro tiempo verbal
 ("escribiste el presente; aquí va el pasado"), te faltó o sobró una letra (y cuál), escribiste otra palabra de la
 app, respondiste en español o, en frases, qué palabras faltaron y cuáles sobraron (`Services/ExplicadorErrores.cs`).
 

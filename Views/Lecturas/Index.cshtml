@@ -1,0 +1,49 @@
+@model List<Lectura>
+@{
+    ViewData["Title"] = "Mis lecturas";
+    var es = System.Globalization.CultureInfo.GetCultureInfo("es-MX");
+}
+
+<h1 class="mb-1">Leer en contexto</h1>
+<p class="text-muted mb-3">
+    Pega un texto real en inglés (documentación, un README, un correo), toca las palabras que no conoces y
+    guárdalas en tu repaso con la frase donde aparecieron.
+</p>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-info" role="status">@TempData["Mensaje"]</div>
+}
+
+<form asp-action="Crear" method="post" class="card card-body mb-4">
+    <label for="titulo" class="form-label">Título <span class="text-muted">(opcional)</span></label>
+    <input id="titulo" name="titulo" class="form-control mb-3" maxlength="@Lectura.LargoMaximoTitulo" placeholder="Por ejemplo: README del proyecto" />
+    <label for="texto" class="form-label">Texto en inglés</label>
+    <textarea id="texto" name="texto" class="form-control mb-3" rows="6" maxlength="@Lectura.LargoMaximoTexto"
+              lang="en" spellcheck="false" required placeholder="Pega aquí el texto"></textarea>
+    <button type="submit" class="btn btn-primary btn-lg btn-bloque">Leer</button>
+</form>
+
+<h2 class="seccion-titulo">Mis lecturas</h2>
+@if (Model.Count == 0)
+{
+    <p class="text-muted">Todavía no tienes lecturas.</p>
+}
+else
+{
+    <ul class="opciones lista-lecturas">
+        @foreach (var lectura in Model)
+        {
+            <li>
+                <a class="opcion" asp-action="Leer" asp-route-id="@lectura.Id">
+                    <span class="icono-caja"><partial name="_Icono" model='"lista"' view-data='new ViewDataDictionary(ViewData) { ["Tamano"] = 22 }' /></span>
+                    <span class="textos">
+                        <span class="nombre">@lectura.Titulo</span>
+                        <span class="detalle">@lectura.Creada.ToLocalTime().ToString("d 'de' MMMM", es)</span>
+                    </span>
+                    <span class="flecha"><partial name="_Icono" model='"chevron"' view-data='new ViewDataDictionary(ViewData) { ["Tamano"] = 20 }' /></span>
+                </a>
+            </li>
+        }
+    </ul>
+}
