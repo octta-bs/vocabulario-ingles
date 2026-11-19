@@ -12,6 +12,16 @@
 @if (Model.Modo == VocabularioIngles.Services.ModoApp.Trabajo)
 {
     <li>
+        <a class="opcion" asp-controller="Lecturas" asp-action="Index">
+            <span class="icono-caja"><partial name="_Icono" model='"lista"' view-data="tamano" /></span>
+            <span class="textos">
+                <span class="nombre">Leer en contexto</span>
+                <span class="detalle">Pega un texto de tu trabajo y guarda las palabras que no conoces</span>
+            </span>
+            <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
+        </a>
+    </li>
+    <li>
         <a class="opcion" asp-controller="Simulacro" asp-action="Index">
             <span class="icono-caja"><partial name="_Icono" model='"maletin"' view-data="tamano" /></span>
             <span class="textos">

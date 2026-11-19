@@ -70,9 +70,11 @@ Con los datos de Progreso, no a ciegas. Candidatos:
 Salen de comparar la app con Anki, LingQ, Duolingo, ELSA Speak y Speak (noviembre de 2026). Todas son gratis
 y sin IA de pago. Van después de la Fase 2, porque el uso real dirá cuál conviene primero. Orden recomendado:
 
-- [ ] **Leer en contexto** (como LingQ): pegar un texto real del trabajo (documentación, un README, un correo),
+- [x] **Leer en contexto** (como LingQ): pegar un texto real del trabajo (documentación, un README, un correo),
   tocar las palabras que no se conocen y meterlas al repaso con su frase. Es lo que más acerca al inglés real de
-  un developer.
+  un developer. Hecho: "Mis lecturas" (modo Trabajo, en Practicar) guarda los textos (tabla `Lecturas`); el
+  significado lo escribes tú (o aparece solo si la palabra ya existe); la palabra entra directo al repaso en la
+  categoría "Mis lecturas" (B1) con la frase como ejemplo. Sin IPA para estas palabras (el audio sí funciona).
 - [x] **Explicar el error sin IA** (como "Explain My Answer" de Duolingo): en vez de solo mostrar la respuesta
   correcta, decir por qué con reglas sencillas: tiempo verbal equivocado ("usaste presente; aquí va pasado"),
   una letra de más o de menos, o una palabra parecida. Hecho en `Services/ExplicadorErrores.cs`: nada escrito,
