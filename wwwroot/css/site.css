@@ -242,6 +242,11 @@ body.modo-enfocado .panel-resultado {
 
 /* ---------- Botones ---------- */
 
+/* Un botón con el atributo hidden debe ocultarse aunque .btn le dé display. */
+.btn[hidden] {
+    display: none;
+}
+
 .btn {
     display: inline-flex;
     align-items: center;
@@ -1211,4 +1216,69 @@ a.chip {
     color: inherit;
     padding: 0 2px;
     border-radius: 3px;
+}
+
+/* ---------- Situaciones guiadas: diálogo en burbujas ----------
+   La otra persona a la izquierda (blanco) y tú a la derecha (color de acento). */
+
+.dialogo {
+    list-style: none;
+    margin: 0 0 16px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.burbuja {
+    max-width: 85%;
+    padding: 10px 14px;
+    border-radius: 18px;
+    overflow-wrap: anywhere;
+}
+
+.burbuja-app {
+    align-self: flex-start;
+    background: var(--superficie);
+    border: 1px solid var(--borde);
+    border-bottom-left-radius: 4px;
+}
+
+.burbuja-tu {
+    align-self: flex-end;
+    background: var(--acento);
+    color: #FFFFFF;
+    border-bottom-right-radius: 4px;
+}
+
+.burbuja details {
+    margin-top: 4px;
+    font-size: 14px;
+    color: var(--texto-2);
+}
+
+.respuestas-modelo {
+    list-style: none;
+    margin: 0 0 12px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.respuestas-modelo li {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.respuestas-modelo .ingles {
+    display: block;
+    font-weight: 600;
+}
+
+.respuestas-modelo .espanol {
+    display: block;
+    font-size: 14px;
+    color: var(--texto-2);
 }
