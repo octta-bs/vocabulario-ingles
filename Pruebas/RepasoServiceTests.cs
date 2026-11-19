@@ -19,6 +19,7 @@ public sealed class RepasoServiceTests : IDisposable
 
     private static readonly int TotalFrases = FrasesTrabajo.PorCategoria.Values.Sum(f => f.Length);
     private static readonly int TotalGeneral = VocabularioGeneral.Categorias.Sum(c => c.Palabras.Length);
+    private static readonly int TotalGramatica = TemasGramatica.Todos.Sum(t => t.Frases.Length);
     private const int TotalInicial = 35;
 
     /// <summary>Mete al repaso las primeras palabras de Tecnología ("code", "bug"…), como antes de los niveles.</summary>
@@ -53,8 +54,9 @@ public sealed class RepasoServiceTests : IDisposable
     [Fact]
     public void Las_migraciones_y_la_carga_inicial_dejan_palabras_y_frases()
     {
-        Assert.Equal(TotalInicial + TotalGeneral, _db.Palabras.Count(p => p.Tipo != TipoPalabra.Frase));
+        Assert.Equal(TotalInicial + TotalGeneral, _db.Palabras.Count(p => p.Tipo != TipoPalabra.Frase && p.Tipo != TipoPalabra.Gramatica));
         Assert.Equal(TotalFrases, _db.Palabras.Count(p => p.Tipo == TipoPalabra.Frase));
+        Assert.Equal(TotalGramatica, _db.Palabras.Count(p => p.Tipo == TipoPalabra.Gramatica));
     }
 
     [Fact]
@@ -62,8 +64,9 @@ public sealed class RepasoServiceTests : IDisposable
     {
         SeedData.Cargar(_db);
 
-        Assert.Equal(TotalInicial + TotalGeneral + TotalFrases, _db.Palabras.Count());
-        Assert.Equal(3 + VocabularioGeneral.Categorias.Length + FrasesTrabajo.PorCategoria.Count, _db.Categorias.Count());
+        Assert.Equal(TotalInicial + TotalGeneral + TotalFrases + TotalGramatica, _db.Palabras.Count());
+        Assert.Equal(3 + VocabularioGeneral.Categorias.Length + FrasesTrabajo.PorCategoria.Count + TemasGramatica.Todos.Length,
+            _db.Categorias.Count());
     }
 
     [Fact]
@@ -147,7 +150,8 @@ public sealed class RepasoServiceTests : IDisposable
     {
         var generador = new GeneradorEjercicios();
         var generales = _db.Palabras.Where(p => p.Categoria!.Nivel <= NivelMcer.A2 && p.Categoria.Nombre != "Tecnología"
-                                               && p.Categoria.Nombre != "Trabajo" && p.Categoria.Nombre != "Verbos de programación")
+                                               && p.Categoria.Nombre != "Trabajo" && p.Categoria.Nombre != "Verbos de programación"
+                                               && p.Tipo != TipoPalabra.Gramatica)
             .ToList();
 
         Assert.Equal(TotalGeneral, generales.Count);

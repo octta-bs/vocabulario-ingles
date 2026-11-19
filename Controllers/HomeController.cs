@@ -106,7 +106,13 @@ public class HomeController : Controller
             TotalPreguntas = PreguntasEntrevista.Todas.Length,
             Errores = (await _estadisticas.MasFalladasAsync(10, modo)).Count,
             TotalPalabras = await _db.Palabras.CountAsync(p => categorias.Contains(p.CategoriaId)),
-            Categorias = categorias.Count
+            Categorias = categorias.Count,
+            TotalTemasGramatica = TemasGramatica.Todos.Length,
+            TemasGramaticaEmpezados = await _db.Palabras
+                .Where(p => p.Tipo == TipoPalabra.Gramatica && p.Progreso != null)
+                .Select(p => p.CategoriaId)
+                .Distinct()
+                .CountAsync()
         });
     }
 

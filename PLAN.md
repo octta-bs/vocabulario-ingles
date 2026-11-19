@@ -92,6 +92,20 @@ Descartadas por ahora:
 - Cambiar el algoritmo de repaso a FSRS (como Anki): vale la pena, pero cuando haya semanas de historial para
   notar la diferencia. El patrón Strategy (`IAlgoritmoRepaso`) ya permite cambiarlo sin tocar lo demás.
 
+## Fase 6 · Gramática ✅
+
+Se adelantó antes de terminar la Fase 2, a pedido. Los temas que más usa un developer, enfocados en los errores
+típicos de hispanohablantes.
+
+- [x] 10 temas (present perfect o pasado, for y since, will o going to, pedir con cortesía, orden de las preguntas,
+  in/on/at, a/an/the, voz pasiva, primer condicional y errores típicos), cada uno con su regla corta en español y
+  6 o 7 frases de trabajo con su versión con el error (`Data/TemasGramatica.cs`).
+- [x] Tú eliges el tema: "Practicar este tema" mete sus frases a tu repaso del modo Trabajo. No entran solas con
+  las palabras nuevas del día.
+- [x] Ejercicios: "Corrige la frase" (nuevo), completar la parte gramatical y dictado. El resultado muestra la regla.
+
+Pendiente: ajustar los temas con lo que se falle en la Fase 2.
+
 ## Ideas para después
 
 Anotarlas aquí antes de programarlas:

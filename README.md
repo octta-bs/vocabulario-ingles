@@ -14,7 +14,7 @@ app, respondiste en español o, en frases, qué palabras faltaron y cuáles sobr
 La app tiene **3 modos**, que eliges al entrar y se recuerdan (puedes cambiar desde el Inicio):
 
 - **Principiante:** el vocabulario general de Pre A1 a A2.
-- **Trabajo:** el inglés técnico y las frases de trabajo y entrevista (A2 a B2), con Leer en contexto, Situaciones
+- **Trabajo:** el inglés técnico y las frases de trabajo y entrevista (A2 a B2), con Leer en contexto, Gramática, Situaciones
   guiadas, Hablar, Shadowing, el simulacro y Mis respuestas.
 - **Niños:** el modo infantil.
 
@@ -51,6 +51,12 @@ cuentan igual que la forma larga ("I'm" = "I am", "don't" = "do not").
 copiando ritmo y entonación (lento y normal, las veces que quieras). 3) La dices tú solo y se marcan en verde y rojo
 las palabras que se entendieron. Solo se califica el paso 3, porque mientras suena el audio el micrófono también
 lo captaría; antes de grabar, la app detiene su audio. Es solo práctica: no se guarda nada.
+
+**Gramática** (modo Trabajo, en Practicar): 10 temas que más usa un developer (present perfect, for y since, will o
+going to, preguntas, in/on/at, a/an/the, pasiva, condicional…) con su regla corta en español y ejemplos de la frase
+con el error típico de hispanohablantes junto a la correcta. Con "Practicar este tema" sus frases entran a tu repaso:
+"Corrige la frase" (ves la frase con el error y la escribes bien), completar la parte gramatical y dictado. Las frases
+de gramática no entran solas con las palabras nuevas del día. Los temas están en `Data/TemasGramatica.cs`.
 
 **Situaciones guiadas** (modo Trabajo, en Practicar): diálogos cortos de daily stand-up, entrevista, code review y
 pedir ayuda con un bug. La app dice su parte en voz alta y tú respondes con una de las respuestas modelo (con su

@@ -15,5 +15,8 @@ public enum TipoEjercicio
 
     // Dictado: oyes la palabra (o la frase de ejemplo) y la escribes.
     DictadoPalabra,
-    DictadoFrase
+    DictadoFrase,
+
+    // Solo gramática: ves la frase con el error y la escribes bien.
+    CorregirFrase
 }

@@ -53,6 +53,15 @@ public class RepasoService
         return _db.Palabras.Where(p => ids.Contains(p.CategoriaId));
     }
 
+    /// <summary>
+    /// Las palabras sin empezar que pueden entrar solas como nuevas. Las de gramática no: entran todas juntas
+    /// cuando eliges practicar su tema (ver <see cref="GramaticaService"/>).
+    /// </summary>
+    private async Task<IQueryable<Palabra>> SinEmpezarAsync(ModoApp? modo)
+    {
+        return (await PalabrasDelModoAsync(modo)).Where(p => p.Progreso == null && p.Tipo != TipoPalabra.Gramatica);
+    }
+
     /// <summary>La palabra que más tiempo lleva sin repasarse entre las que ya tocan.</summary>
     public async Task<ProgresoPalabra?> SiguientePendienteAsync(ModoApp? modo = null)
     {
@@ -159,7 +168,7 @@ public class RepasoService
     private async Task<List<string>> ExplicarAsync(Ejercicio ejercicio, string? respuesta)
     {
         var otras = await _db.Palabras
-            .Where(p => p.Id != ejercicio.Palabra.Id && p.Tipo != TipoPalabra.Frase)
+            .Where(p => p.Id != ejercicio.Palabra.Id && p.Tipo != TipoPalabra.Frase && p.Tipo != TipoPalabra.Gramatica)
             .Select(p => new { p.Ingles, p.Espanol })
             .ToListAsync();
         return ExplicadorErrores.Explicar(ejercicio, respuesta, otras.Select(o => (o.Ingles, o.Espanol)));
@@ -179,14 +188,13 @@ public class RepasoService
 
     public async Task<int> ContarSinEmpezarAsync(ModoApp? modo = null)
     {
-        return await (await PalabrasDelModoAsync(modo)).CountAsync(p => p.Progreso == null);
+        return await (await SinEmpezarAsync(modo)).CountAsync();
     }
 
     /// <summary>Las categorías que todavía tienen palabras sin empezar, con cuántas les quedan.</summary>
     public async Task<List<CategoriaSinEmpezar>> CategoriasConNuevasAsync(ModoApp? modo = null)
     {
-        var conteos = await (await PalabrasDelModoAsync(modo))
-            .Where(p => p.Progreso == null)
+        var conteos = await (await SinEmpezarAsync(modo))
             .GroupBy(p => p.CategoriaId)
             .Select(g => new { CategoriaId = g.Key, Cantidad = g.Count(), PrimeraPalabra = g.Min(p => p.Id) })
             .ToListAsync();
@@ -217,8 +225,7 @@ public class RepasoService
 
         var ahora = DateTime.UtcNow;
 
-        var nuevas = await (await PalabrasDelModoAsync(modo))
-            .Where(p => p.Progreso == null)
+        var nuevas = await (await SinEmpezarAsync(modo))
             .Where(p => categoriaId == null || p.CategoriaId == categoriaId)
             // En orden: primero los niveles más básicos (Pre A1, A1…) y, dentro de cada uno, como se cargaron.
             .OrderBy(p => p.Categoria!.Nivel)
