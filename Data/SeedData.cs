@@ -14,6 +14,39 @@ public static class SeedData
         CargarVocabularioInicial(db);
         CargarVocabularioGeneral(db);
         CargarFrasesDeTrabajo(db);
+        CargarGramatica(db);
+    }
+
+    /// <summary>
+    /// Agrega cada tema de <see cref="TemasGramatica"/> que todavía no exista, como una categoría con sus frases
+    /// de tipo gramática. No entran al repaso hasta que eliges practicar el tema.
+    /// </summary>
+    private static void CargarGramatica(AppDbContext db)
+    {
+        var existentes = db.Categorias.Select(c => c.Nombre).ToHashSet();
+
+        foreach (var tema in TemasGramatica.Todos)
+        {
+            if (existentes.Contains(tema.Categoria))
+            {
+                continue;
+            }
+
+            var categoria = new Categoria { Nombre = tema.Categoria, Nivel = tema.Nivel };
+            db.Categorias.Add(categoria);
+            db.Palabras.AddRange(tema.Frases.Select(f => new Palabra
+            {
+                Categoria = categoria,
+                Tipo = TipoPalabra.Gramatica,
+                Ingles = f.Correcta,
+                Espanol = f.Espanol,
+                FraseIncorrecta = f.Incorrecta,
+                PalabraClave = f.PalabraClave,
+                Nota = f.Por
+            }));
+        }
+
+        db.SaveChanges();
     }
 
     /// <summary>

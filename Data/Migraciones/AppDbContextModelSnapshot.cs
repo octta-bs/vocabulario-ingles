@@ -98,6 +98,9 @@ namespace VocabularioIngles.Data.Migraciones
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("FraseIncorrecta")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Ingles")
                         .IsRequired()
                         .HasColumnType("TEXT");

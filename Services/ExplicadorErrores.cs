@@ -29,6 +29,14 @@ public static class ExplicadorErrores
             return explicaciones;
         }
 
+        // En "Corrige la frase", si la dejó igual, el error sigue ahí.
+        if (ejercicio.Tipo == TipoEjercicio.CorregirFrase
+            && dada == ComparadorRespuestas.Normalizar(ejercicio.Palabra.FraseIncorrecta))
+        {
+            explicaciones.Add("Escribiste la frase igual que estaba: el error sigue ahí.");
+            return explicaciones;
+        }
+
         // Si escribió otra palabra en inglés que existe en la app, eso explica más que cualquier otra regla
         // (por ejemplo, "error" en vez de "bug", aunque "error" también aparezca en su traducción).
         var otra = otrasPalabras.FirstOrDefault(o => ComparadorRespuestas.Normalizar(o.Ingles) == dada);

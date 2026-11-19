@@ -1,0 +1,62 @@
+@model VocabularioIngles.Services.TemaConEstado
+@{
+    var tema = Model.Tema;
+    ViewData["Title"] = tema.Titulo;
+    var icono = new ViewDataDictionary(ViewData) { ["Tamano"] = 18 };
+    // Unos cuantos ejemplos para entender la regla; el resto se descubre en el repaso.
+    var ejemplos = tema.Frases.Take(3).ToList();
+}
+
+<p class="small mb-1"><a asp-action="Index">← Gramática</a></p>
+<h1 class="mb-1">@tema.Titulo <span class="badge">@tema.Nivel.Texto()</span></h1>
+<p class="text-muted">@tema.Resumen</p>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-info" role="status">@TempData["Mensaje"]</div>
+}
+
+<section class="card card-body mb-3" aria-labelledby="titulo-regla">
+    <h2 class="h6 mb-2" id="titulo-regla">La regla</h2>
+    <ul class="regla-gramatica">
+        @foreach (var punto in tema.Regla)
+        {
+            <li>@punto</li>
+        }
+    </ul>
+</section>
+
+<section class="card card-body mb-3" aria-labelledby="titulo-ejemplos">
+    <h2 class="h6 mb-2" id="titulo-ejemplos">Ejemplos</h2>
+    <ul class="ejemplos-gramatica">
+        @foreach (var f in ejemplos)
+        {
+            <li>
+                <p class="mb-0 frase-con-error"><span aria-hidden="true">✗</span> <span class="visually-hidden">Mal:</span> @f.Incorrecta</p>
+                <p class="mb-0 frase-correcta">
+                    <span aria-hidden="true">✓</span> <span class="visually-hidden">Bien:</span> @f.Correcta
+                    <button type="button" class="boton-icono btn-audio" data-texto="@f.Correcta" aria-label="Escuchar: @f.Correcta">
+                        <partial name="_Icono" model='"bocina"' view-data="icono" />
+                    </button>
+                </p>
+                <p class="mb-0 small text-muted">@f.Por</p>
+            </li>
+        }
+    </ul>
+</section>
+
+@if (Model.Completo)
+{
+    <p class="mb-2">Las @Model.Total frases de este tema ya están en tu repaso.</p>
+    <a class="btn btn-primary btn-lg btn-bloque" asp-controller="Repaso" asp-action="Index">Ir al repaso</a>
+}
+else
+{
+    <form asp-action="Practicar" asp-route-id="@tema.Clave" method="post">
+        <p class="small text-muted mb-2">
+            @(Model.Empezado ? $"Faltan {Model.Total - Model.EnRepaso} de {Model.Total} frases por entrar a tu repaso." : $"Sus {Model.Total} frases entran a tu repaso del modo Trabajo:")
+            corregir la frase, completarla y dictado.
+        </p>
+        <button type="submit" class="btn btn-primary btn-lg btn-bloque">Practicar este tema</button>
+    </form>
+}

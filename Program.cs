@@ -25,6 +25,7 @@ builder.Services.AddScoped<EstadisticasService>();
 builder.Services.AddScoped<RespuestasPropiasService>();
 builder.Services.AddScoped<JuegoInfantilService>();
 builder.Services.AddScoped<LecturasService>();
+builder.Services.AddScoped<GramaticaService>();
 
 var app = builder.Build();
 

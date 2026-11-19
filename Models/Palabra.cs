@@ -20,6 +20,9 @@ public class Palabra
     // Solo para frases: la palabra que se quita en el ejercicio de completar ("working").
     public string? PalabraClave { get; set; }
 
+    // Solo para gramática: la misma frase con el error típico ("I have been working here since two years.").
+    public string? FraseIncorrecta { get; set; }
+
     public string Ejemplo { get; set; } = "";
     public string EjemploEs { get; set; } = "";
     public string? Nota { get; set; }
@@ -31,4 +34,8 @@ public class Palabra
 
     public bool EsVerbo => Tipo == TipoPalabra.Verbo;
     public bool EsFrase => Tipo == TipoPalabra.Frase;
+    public bool EsGramatica => Tipo == TipoPalabra.Gramatica;
+
+    // Frases de trabajo y de gramática se muestran igual (una frase completa, no una palabra).
+    public bool EsFraseCompleta => EsFrase || EsGramatica;
 }

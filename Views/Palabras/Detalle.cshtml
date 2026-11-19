@@ -8,7 +8,7 @@
 <div class="card">
     <div class="card-body">
         <div class="d-flex align-items-center gap-3 flex-wrap">
-            <h1 class="@(Model.EsFrase ? "frase-hueco" : "palabra-grande") mb-0">@Model.Ingles</h1>
+            <h1 class="@(Model.EsFraseCompleta ? "frase-hueco" : "palabra-grande") mb-0">@Model.Ingles</h1>
             <button type="button" class="btn btn-outline-secondary btn-audio" data-texto="@Model.Ingles">🔊 Escuchar</button>
         </div>
 
@@ -36,6 +36,11 @@
                     <tr><th class="pe-4">Participio</th><td>I have @Model.Participio</td></tr>
                 </tbody>
             </table>
+        }
+
+        @if (Model.EsGramatica && !string.IsNullOrEmpty(Model.FraseIncorrecta))
+        {
+            <p class="mb-2">Con el error: <span class="frase-con-error">@Model.FraseIncorrecta</span></p>
         }
 
         @if (!string.IsNullOrEmpty(Model.Nota))

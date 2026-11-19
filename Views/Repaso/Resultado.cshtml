@@ -20,7 +20,7 @@
 
 <section class="card card-body" aria-label="La palabra">
     <div class="d-flex align-items-center gap-3 flex-wrap">
-        <h1 class="@(Model.Palabra.EsFrase ? "frase-hueco" : "palabra-grande") mb-0">@Model.Palabra.Ingles</h1>
+        <h1 class="@(Model.Palabra.EsFraseCompleta ? "frase-hueco" : "palabra-grande") mb-0">@Model.Palabra.Ingles</h1>
         <button type="button" class="boton-icono btn-audio" data-texto="@Model.Palabra.Ingles" aria-label="Escuchar @Model.Palabra.Ingles">
             <partial name="_Icono" model='"bocina"' view-data="icono" />
         </button>
@@ -30,7 +30,15 @@
     {
         <p class="mb-1 small">@Model.Palabra.Pronunciacion · se lee: <strong>@Model.Palabra.ComoSeLee</strong></p>
     }
-    @if (Model.Palabra.EsFrase)
+    @if (Model.Palabra.EsGramatica)
+    {
+        @if (!string.IsNullOrEmpty(Model.Palabra.FraseIncorrecta))
+        {
+            <p class="mb-1 mt-2 small">Con el error: <span class="frase-con-error">@Model.Palabra.FraseIncorrecta</span></p>
+        }
+        <p class="mb-0 mt-2 small"><strong>La regla:</strong> @Model.Palabra.Nota</p>
+    }
+    else if (Model.Palabra.EsFrase)
     {
         @if (!string.IsNullOrEmpty(Model.Palabra.Nota))
         {

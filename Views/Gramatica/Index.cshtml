@@ -1,0 +1,28 @@
+@model List<VocabularioIngles.Services.TemaConEstado>
+@{
+    ViewData["Title"] = "Gramática";
+    var tamano = new ViewDataDictionary(ViewData) { ["Tamano"] = 22 };
+    var chico = new ViewDataDictionary(ViewData) { ["Tamano"] = 20 };
+}
+
+<h1 class="mb-1">Gramática</h1>
+<p class="text-muted mb-4">
+    Los temas que más usa un developer y los errores típicos de quien habla español.
+    Lee la regla y, cuando quieras, mete sus frases a tu repaso.
+</p>
+
+<ul class="opciones">
+@foreach (var t in Model)
+{
+    <li>
+        <a class="opcion" asp-action="Tema" asp-route-id="@t.Tema.Clave">
+            <span class="icono-caja"><partial name="_Icono" model='t.Empezado ? "palomita" : "lapiz"' view-data="tamano" /></span>
+            <span class="textos">
+                <span class="nombre">@t.Tema.Titulo <span class="badge">@t.Tema.Nivel.Texto()</span></span>
+                <span class="detalle">@t.Tema.Resumen · @(t.Empezado ? $"{t.EnRepaso} de {t.Total} en tu repaso" : $"{t.Total} frases")</span>
+            </span>
+            <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
+        </a>
+    </li>
+}
+</ul>

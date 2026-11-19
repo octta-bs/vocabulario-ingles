@@ -18,11 +18,20 @@
         <h1 id="enunciado" class="frase-hueco mb-2">@Model.FraseConHueco</h1>
         <p class="text-muted mb-0">@Model.FraseEs</p>
     }
+    else if (Model.Tipo == TipoEjercicio.CorregirFrase)
+    {
+        <p class="mb-2 d-flex align-items-center gap-2">
+            <span class="text-muted" style="font-weight: 600">Corrige la frase</span>
+            <span class="badge">gramática</span>
+        </p>
+        <h1 id="enunciado" class="frase-hueco frase-con-error mb-2">@Model.Palabra.FraseIncorrecta</h1>
+        <p class="text-muted mb-0">Tiene un error. Escríbela bien completa. (@Model.Palabra.Espanol)</p>
+    }
     else if (Model.EsDictado)
     {
         <h1 id="enunciado" class="h6 text-muted mb-3">
             Dictado: escucha y escribe
-            @(Model.Tipo == TipoEjercicio.DictadoFrase || Model.Palabra.EsFrase ? "la frase completa" : "la palabra")
+            @(Model.Tipo == TipoEjercicio.DictadoFrase || Model.Palabra.EsFraseCompleta ? "la frase completa" : "la palabra")
         </h1>
         <div class="d-flex gap-2 flex-wrap">
             <button type="button" class="btn btn-outline-primary btn-lg btn-audio" data-autoplay data-texto="@Model.TextoAudio">
@@ -35,8 +44,8 @@
     }
     else
     {
-        <p class="text-muted mb-2" style="font-weight: 600">@(Model.Palabra.EsFrase ? "Escribe la frase en inglés" : "¿Cómo se dice en inglés?")</p>
-        <h1 id="enunciado" class="@(Model.Palabra.EsFrase ? "frase-hueco" : "palabra-grande") mb-0">@Model.Palabra.Espanol</h1>
+        <p class="text-muted mb-2" style="font-weight: 600">@(Model.Palabra.EsFraseCompleta ? "Escribe la frase en inglés" : "¿Cómo se dice en inglés?")</p>
+        <h1 id="enunciado" class="@(Model.Palabra.EsFraseCompleta ? "frase-hueco" : "palabra-grande") mb-0">@Model.Palabra.Espanol</h1>
         @if (Model.Palabra.EsVerbo)
         {
             <p class="text-muted mb-0 mt-1">(verbo)</p>
@@ -50,7 +59,7 @@
     <label for="respuesta" class="form-label">Tu respuesta</label>
     <input type="text" id="respuesta" name="respuesta" class="form-control form-control-lg"
            autocomplete="off" autocapitalize="none" spellcheck="false" autofocus
-           placeholder="@(Model.EsCompletar ? "Lo que va en el hueco" : Model.EsDictado ? "Escribe lo que oyes" : "")" />
+           placeholder="@(Model.EsCompletar ? "Lo que va en el hueco" : Model.EsDictado ? "Escribe lo que oyes" : Model.Tipo == TipoEjercicio.CorregirFrase ? "La frase corregida" : "")" />
     <p class="form-text">No cuentan mayúsculas ni puntos.</p>
     <div class="barra-accion">
         <button type="submit" class="btn btn-primary btn-lg btn-bloque">Comprobar</button>

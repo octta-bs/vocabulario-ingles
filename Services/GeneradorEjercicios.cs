@@ -34,15 +34,21 @@ public class GeneradorEjercicios
 
     /// <summary>
     /// Vuelve a armar un ejercicio concreto (por ejemplo, al revisar la respuesta).
-    /// Si ese tipo no se puede hacer con la palabra, regresa "escribir la palabra".
+    /// Si ese tipo no se puede hacer con la palabra, regresa el primero que sí se puede.
     /// </summary>
     public Ejercicio Crear(Palabra palabra, TipoEjercicio tipo)
     {
-        return Posibles(palabra).FirstOrDefault(e => e.Tipo == tipo) ?? EscribirPalabra(palabra);
+        var posibles = Posibles(palabra);
+        return posibles.FirstOrDefault(e => e.Tipo == tipo) ?? posibles[0];
     }
 
     public List<Ejercicio> Posibles(Palabra palabra)
     {
+        if (palabra.EsGramatica)
+        {
+            return PosiblesDeGramatica(palabra);
+        }
+
         var lista = new List<Ejercicio> { EscribirPalabra(palabra) };
 
         // En una frase de trabajo se quita su palabra clave; en una palabra, la palabra dentro de su ejemplo.
@@ -92,6 +98,43 @@ public class GeneradorEjercicios
                 FraseEs = palabra.EjemploEs
             });
         }
+
+        return lista;
+    }
+
+    /// <summary>
+    /// Una frase de gramática: corregir la versión con el error, completar su parte gramatical o escribirla al oírla.
+    /// No se pide traducirla completa: hay muchas formas válidas de decir lo mismo y lo que importa es la regla.
+    /// </summary>
+    private static List<Ejercicio> PosiblesDeGramatica(Palabra palabra)
+    {
+        var lista = new List<Ejercicio>();
+
+        if (!string.IsNullOrWhiteSpace(palabra.FraseIncorrecta))
+        {
+            lista.Add(new Ejercicio
+            {
+                Palabra = palabra,
+                Tipo = TipoEjercicio.CorregirFrase,
+                Respuesta = palabra.Ingles,
+                FraseCompleta = palabra.Ingles,
+                FraseEs = palabra.Espanol
+            });
+        }
+
+        if (Completar(palabra, TipoEjercicio.CompletarFrase, palabra.Ingles, palabra.Espanol,
+                palabra.PalabraClave ?? "", null) is { } completar)
+        {
+            lista.Add(completar);
+        }
+
+        lista.Add(new Ejercicio
+        {
+            Palabra = palabra,
+            Tipo = TipoEjercicio.DictadoPalabra,
+            Respuesta = palabra.Ingles,
+            TextoAudio = palabra.Ingles
+        });
 
         return lista;
     }

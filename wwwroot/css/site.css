@@ -1282,3 +1282,38 @@ a.chip {
     font-size: 14px;
     color: var(--texto-2);
 }
+
+/* ---------- Gramática ----------
+   La frase con el error en rojo y la correcta en verde; la regla en una lista corta. */
+
+.frase-con-error {
+    color: var(--error-texto);
+}
+
+.frase-correcta {
+    color: var(--exito);
+    font-weight: 600;
+}
+
+.frase-correcta .boton-icono {
+    display: inline-flex;
+    vertical-align: middle;
+}
+
+.regla-gramatica {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.regla-gramatica li + li {
+    margin-top: 6px;
+}
+
+.ejemplos-gramatica {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}

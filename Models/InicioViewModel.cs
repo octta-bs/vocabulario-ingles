@@ -28,4 +28,8 @@ public class PracticarViewModel
     public int Errores { get; init; }
     public int TotalPalabras { get; init; }
     public int Categorias { get; init; }
+
+    // Gramática: cuántos temas hay y en cuántos ya elegiste "Practicar este tema".
+    public int TotalTemasGramatica { get; init; }
+    public int TemasGramaticaEmpezados { get; init; }
 }
