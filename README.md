@@ -14,8 +14,8 @@ app, respondiste en español o, en frases, qué palabras faltaron y cuáles sobr
 La app tiene **3 modos**, que eliges al entrar y se recuerdan (puedes cambiar desde el Inicio):
 
 - **Principiante:** el vocabulario general de Pre A1 a A2.
-- **Trabajo:** el inglés técnico y las frases de trabajo y entrevista (A2 a B2), con Hablar, Shadowing,
-  el simulacro y Mis respuestas.
+- **Trabajo:** el inglés técnico y las frases de trabajo y entrevista (A2 a B2), con Leer en contexto, Situaciones
+  guiadas, Hablar, Shadowing, el simulacro y Mis respuestas.
 - **Niños:** el modo infantil.
 
 Principiante y Trabajo tienen cada uno su repaso, sus palabras nuevas y sus errores; el Inicio avisa si hay
@@ -51,6 +51,12 @@ cuentan igual que la forma larga ("I'm" = "I am", "don't" = "do not").
 copiando ritmo y entonación (lento y normal, las veces que quieras). 3) La dices tú solo y se marcan en verde y rojo
 las palabras que se entendieron. Solo se califica el paso 3, porque mientras suena el audio el micrófono también
 lo captaría; antes de grabar, la app detiene su audio. Es solo práctica: no se guarda nada.
+
+**Situaciones guiadas** (modo Trabajo, en Practicar): diálogos cortos de daily stand-up, entrevista, code review y
+pedir ayuda con un bug. La app dice su parte en voz alta y tú respondes con una de las respuestas modelo (con su
+traducción). Cuenta como bien si se entiende al menos el 80 % de las palabras de alguna de ellas. Al final dice
+cuántos turnos respondiste bien a la primera. Los diálogos están en `Data/SituacionesGuiadas.cs`. Es solo práctica:
+no se guarda nada.
 
 **Modo niños** (en Practicar): para preescolar, con dibujos grandes, audio y tocar la respuesta (sin escribir).
 

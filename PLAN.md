@@ -65,7 +65,7 @@ Con los datos de Progreso, no a ciegas. Candidatos:
 - [ ] Más categorías para niños (comida, familia, casa).
 - [ ] Revisión del inglés escrito a mano (frases, ejemplos y "se lee").
 
-## Fase 5 · Funciones inspiradas en otras apps 🔄
+## Fase 5 · Funciones inspiradas en otras apps ✅
 
 Salen de comparar la app con Anki, LingQ, Duolingo, ELSA Speak y Speak (noviembre de 2026). Todas son gratis
 y sin IA de pago. Van después de la Fase 2, porque el uso real dirá cuál conviene primero. Orden recomendado:
@@ -80,8 +80,10 @@ y sin IA de pago. Van después de la Fase 2, porque el uso real dirá cuál conv
   una letra de más o de menos, o una palabra parecida. Hecho en `Services/ExplicadorErrores.cs`: nada escrito,
   respuesta en español, tiempo verbal, plural, una letra (faltó, sobró, cambiada o volteada), otra palabra de la
   app y, en frases, qué faltó y qué sobró. Se muestra en el resultado del repaso y de Mis errores.
-- [ ] **Situaciones guiadas** (como el roleplay de Duolingo y Speak): diálogos armados de stand-up y de entrevista;
-  la app dice su parte y tú respondes en voz alta.
+- [x] **Situaciones guiadas** (como el roleplay de Duolingo y Speak): diálogos armados de stand-up y de entrevista;
+  la app dice su parte y tú respondes en voz alta. Hecho: 4 situaciones (daily stand-up, entrevista, code review y
+  pedir ayuda con un bug) en `Data/SituacionesGuiadas.cs`, sin tocar la base. Cada turno trae de 1 a 3 respuestas
+  modelo; cuenta como bien con el 80 % de las palabras de alguna, con la misma comparación de Hablar.
 
 Descartadas por ahora:
 
