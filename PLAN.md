@@ -97,7 +97,7 @@ Descartadas por ahora:
 Se adelantó antes de terminar la Fase 2, a pedido. Los temas que más usa un developer, enfocados en los errores
 típicos de hispanohablantes.
 
-- [x] 10 temas (present perfect o pasado, for y since, will o going to, pedir con cortesía, orden de las preguntas,
+- [x] 11 temas (presente, pasado y futuro; present perfect o pasado, for y since, will o going to, pedir con cortesía, orden de las preguntas,
   in/on/at, a/an/the, voz pasiva, primer condicional y errores típicos), cada uno con su regla corta en español y
   6 o 7 frases de trabajo con su versión con el error (`Data/TemasGramatica.cs`).
 - [x] Tú eliges el tema: "Practicar este tema" mete sus frases a tu repaso del modo Trabajo. No entran solas con
