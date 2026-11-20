@@ -32,4 +32,10 @@ public class PracticarViewModel
     // Gramática: cuántos temas hay y en cuántos ya elegiste "Practicar este tema".
     public int TotalTemasGramatica { get; init; }
     public int TemasGramaticaEmpezados { get; init; }
+
+    // La práctica que se sugiere hoy (arriba de todo), o null si no hay ninguna en especial.
+    public VocabularioIngles.Services.Recomendacion? Recomendacion { get; init; }
 }
+
+/// <summary>Una opción de la lista de Practicar (vista parcial _OpcionPracticar).</summary>
+public record OpcionPracticar(string Controlador, string Accion, string Icono, string Nombre, string Detalle, string? Id = null);
