@@ -8,17 +8,17 @@
 <h1 class="mb-1">Situaciones guiadas</h1>
 <p class="text-muted mb-4">
     La app dice su parte del diálogo y tú respondes en voz alta con una de las respuestas modelo.
-    Es solo práctica: no cambia tu repaso.
+    Van de la más fácil a la más difícil. Es solo práctica: no cambia tu repaso.
 </p>
 
 <ul class="opciones">
-@foreach (var situacion in Model)
+@foreach (var (situacion, i) in Model.Select((s, i) => (s, i)))
 {
     <li>
         <a class="opcion" asp-action="Ver" asp-route-id="@situacion.Clave">
-            <span class="icono-caja"><partial name="_Icono" model="situacion.Icono" view-data="tamano" /></span>
+            <span class="icono-caja numero-tema">@(i + 1)</span>
             <span class="textos">
-                <span class="nombre">@situacion.Titulo</span>
+                <span class="nombre">@situacion.Titulo <span class="badge">@situacion.Nivel.Texto()</span></span>
                 <span class="detalle">@situacion.Descripcion · @situacion.Turnos.Length turnos</span>
             </span>
             <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>

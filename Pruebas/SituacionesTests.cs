@@ -10,7 +10,10 @@ public class SituacionesTests
     [Fact]
     public void Hay_cuatro_situaciones_con_clave_unica()
     {
-        Assert.Equal(new[] { "standup", "entrevista", "codereview", "ayuda" }, SituacionesGuiadas.Todas.Select(s => s.Clave));
+        Assert.Equal(new[] { "standup", "ayuda", "codereview", "entrevista" }, SituacionesGuiadas.Todas.Select(s => s.Clave));
+        // En orden de dificultad: el nivel nunca baja.
+        var niveles = SituacionesGuiadas.Todas.Select(s => s.Nivel).ToList();
+        Assert.Equal(niveles.Order(), niveles);
     }
 
     [Fact]

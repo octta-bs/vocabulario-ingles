@@ -18,7 +18,7 @@
         <option value="">Todas las frases</option>
         @foreach (var categoria in categorias)
         {
-            <option value="@categoria.Id" selected="@(categoria.Id == categoriaId)">@categoria.Nombre</option>
+            <option value="@categoria.Id" selected="@(categoria.Id == categoriaId)">@categoria.Nombre (@categoria.Nivel.Texto())</option>
         }
     </select>
     <noscript><button type="submit" class="btn btn-outline-secondary">Cambiar</button></noscript>

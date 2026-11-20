@@ -5,7 +5,8 @@ using VocabularioIngles.Models;
 namespace VocabularioIngles.Services;
 
 /// <summary>Un tema de gramática con cuántas de sus frases ya están en tu repaso.</summary>
-public record TemaConEstado(TemasGramatica.Tema Tema, int Total, int EnRepaso)
+/// <param name="Numero">Su lugar en la secuencia de estudio (1 = el más básico).</param>
+public record TemaConEstado(TemasGramatica.Tema Tema, int Numero, int Total, int EnRepaso)
 {
     public bool Empezado => EnRepaso > 0;
     public bool Completo => Total > 0 && EnRepaso == Total;
@@ -35,11 +36,14 @@ public class GramaticaService
             .ToDictionaryAsync(g => g.Nombre);
 
         return TemasGramatica.Todos
-            .Select(t => conteos.TryGetValue(t.Categoria, out var c)
-                ? new TemaConEstado(t, c.Total, c.EnRepaso)
-                : new TemaConEstado(t, 0, 0))
+            .Select((t, i) => conteos.TryGetValue(t.Categoria, out var c)
+                ? new TemaConEstado(t, i + 1, c.Total, c.EnRepaso)
+                : new TemaConEstado(t, i + 1, 0, 0))
             .ToList();
     }
+
+    /// <summary>El siguiente tema que conviene estudiar: el primero de la secuencia que todavía no empiezas.</summary>
+    public static TemaConEstado? Siguiente(IEnumerable<TemaConEstado> temas) => temas.FirstOrDefault(t => !t.Empezado);
 
     public async Task<TemaConEstado?> ObtenerAsync(string? clave)
     {

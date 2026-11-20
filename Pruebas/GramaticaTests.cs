@@ -48,6 +48,33 @@ public sealed class GramaticaTests : IDisposable
     }
 
     [Fact]
+    public async Task Los_temas_van_de_facil_a_avanzado_y_sigue_el_primero_sin_empezar()
+    {
+        var niveles = TemasGramatica.Todos.Select(t => t.Nivel).ToList();
+        Assert.Equal(niveles.Order(), niveles);
+        Assert.Equal("errores-tipicos", TemasGramatica.Todos[0].Clave);
+
+        var temas = await _gramatica.ListarAsync();
+        Assert.Equal(Enumerable.Range(1, temas.Count), temas.Select(t => t.Numero));
+        Assert.Equal(1, GramaticaService.Siguiente(temas)!.Numero);
+
+        await _gramatica.PracticarAsync("errores-tipicos");
+        Assert.Equal(2, GramaticaService.Siguiente(await _gramatica.ListarAsync())!.Numero);
+    }
+
+    [Fact]
+    public void Una_base_vieja_recibe_el_nivel_nuevo_del_tema()
+    {
+        var categoria = _base.Db.Categorias.Single(c => c.Nombre == TemasGramatica.Buscar("errores-tipicos")!.Categoria);
+        categoria.Nivel = NivelMcer.B1;
+        _base.Db.SaveChanges();
+
+        SeedData.Cargar(_base.Db);
+
+        Assert.Equal(NivelMcer.A2, _base.Db.Categorias.Single(c => c.Id == categoria.Id).Nivel);
+    }
+
+    [Fact]
     public void Las_frases_se_cargan_como_gramatica_del_modo_trabajo_y_sin_duplicar()
     {
         SeedData.Cargar(_base.Db);

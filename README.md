@@ -53,7 +53,8 @@ las palabras que se entendieron. Solo se califica el paso 3, porque mientras sue
 lo captaría; antes de grabar, la app detiene su audio. Es solo práctica: no se guarda nada.
 
 **Gramática** (modo Trabajo, en Practicar): 10 temas que más usa un developer (present perfect, for y since, will o
-going to, preguntas, in/on/at, a/an/the, pasiva, condicional…) con su regla corta en español y ejemplos de la frase
+going to, preguntas, in/on/at, a/an/the, pasiva, condicional…), numerados en orden de estudio (primero A2, luego B1;
+"Sigue este" marca el siguiente), con su regla corta en español y ejemplos de la frase
 con el error típico de hispanohablantes junto a la correcta. Con "Practicar este tema" sus frases entran a tu repaso:
 "Corrige la frase" (ves la frase con el error y la escribes bien), completar la parte gramatical y dictado. Las frases
 de gramática no entran solas con las palabras nuevas del día. Los temas están en `Data/TemasGramatica.cs`.
@@ -109,6 +110,8 @@ fallas. La racha usa tu meta actual también para los días anteriores. Desde ah
 
 La app se ajusta a ti:
 
+- **Sin repeticiones de más:** si aciertas una palabra, ya no vuelve el mismo día (pasa a mañana, luego a 3, 7, 14
+  y 30 días). Si la fallas, vuelve al final de la sesión. Cuando ya no quedan pendientes, la sesión termina.
 - **Más repetición de lo que fallas:** si fallaste 2 o más de las últimas 5 respuestas de una palabra,
   sus intervalos se reducen a la mitad (1, 1, 3, 7 y 15 días) hasta que la aciertes varias veces seguidas.
 - **Palabras nuevas a tu ritmo:** el botón calcula cuántas te tocan según tus aciertos en las últimas
@@ -130,7 +133,7 @@ El plan de cambios futuros, por fases, está en [PLAN.md](PLAN.md).
   Los íconos están en `Views/Shared/_Icono.cshtml`.
 - Entity Framework Core con SQLite (un solo archivo, `vocabulario.db`, que se crea solo) y migraciones
 - Patrón **Strategy** para el algoritmo de repaso (`IAlgoritmoRepaso`): hoy `IntervalosAdaptativos`,
-  que usa los intervalos fijos (mismo día, 1, 3, 7, 14 y 30 días) y los acorta para las palabras difíciles;
+  que usa los intervalos fijos (1, 3, 7, 14 y 30 días; un fallo vuelve en la misma sesión) y los acorta para las palabras difíciles;
   se puede cambiar a `IntervalosFijos` o a FSRS en `Program.cs` sin tocar el resto
 - Patrón **Strategy** también para el ritmo de palabras nuevas (`IRitmoPalabrasNuevas`, hoy `RitmoPorAciertos`)
 - Audio con la voz del navegador (Web Speech API) y manifiesto para instalarla en el celular

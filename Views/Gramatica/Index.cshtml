@@ -3,21 +3,33 @@
     ViewData["Title"] = "Gramática";
     var tamano = new ViewDataDictionary(ViewData) { ["Tamano"] = 22 };
     var chico = new ViewDataDictionary(ViewData) { ["Tamano"] = 20 };
+    var siguiente = VocabularioIngles.Services.GramaticaService.Siguiente(Model);
 }
 
 <h1 class="mb-1">Gramática</h1>
 <p class="text-muted mb-4">
     Los temas que más usa un developer y los errores típicos de quien habla español.
-    Lee la regla y, cuando quieras, mete sus frases a tu repaso.
+    Van en orden, del más básico (1) al más avanzado: sigue la secuencia.
 </p>
 
 <ul class="opciones">
 @foreach (var t in Model)
 {
     <li>
-        <a class="opcion" asp-action="Tema" asp-route-id="@t.Tema.Clave">
-            <span class="icono-caja"><partial name="_Icono" model='t.Empezado ? "palomita" : "lapiz"' view-data="tamano" /></span>
+        <a class="opcion @(t == siguiente ? "opcion-siguiente" : "")" asp-action="Tema" asp-route-id="@t.Tema.Clave">
+            @if (t.Empezado)
+            {
+                <span class="icono-caja icono-hecho" aria-label="Empezado"><partial name="_Icono" model='"palomita"' view-data="tamano" /></span>
+            }
+            else
+            {
+                <span class="icono-caja numero-tema">@t.Numero</span>
+            }
             <span class="textos">
+                @if (t == siguiente)
+                {
+                    <span class="sigue-este">Sigue este</span>
+                }
                 <span class="nombre">@t.Tema.Titulo <span class="badge">@t.Tema.Nivel.Texto()</span></span>
                 <span class="detalle">@t.Tema.Resumen · @(t.Empezado ? $"{t.EnRepaso} de {t.Total} en tu repaso" : $"{t.Total} frases")</span>
             </span>

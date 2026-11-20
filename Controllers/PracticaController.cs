@@ -42,7 +42,9 @@ public class PracticaController : Controller
         ViewBag.Categorias = await frases
             .Select(p => p.Categoria!)
             .Distinct()
-            .OrderBy(c => c.Nombre)
+            // De la más fácil a la más difícil, igual que las palabras nuevas.
+            .OrderBy(c => c.Nivel)
+            .ThenBy(c => c.Nombre)
             .ToListAsync();
         ViewBag.CategoriaId = categoriaId;
 

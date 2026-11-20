@@ -208,11 +208,42 @@ public sealed class RepasoServiceTests : IDisposable
     }
 
     [Fact]
+    public async Task Si_aciertas_cada_palabra_una_vez_la_sesion_termina_y_un_fallo_vuelve_al_final()
+    {
+        var agregadas = await AgregarTecnologiaAsync();
+        Assert.True(agregadas >= 2);
+
+        // La primera se falla; las demás se aciertan a la primera.
+        var vistas = new List<int>();
+        int? fallada = null;
+        for (var i = 0; i < agregadas + 5; i++)
+        {
+            var progreso = await _servicio.SiguientePendienteAsync();
+            if (progreso == null)
+            {
+                break;
+            }
+
+            vistas.Add(progreso.PalabraId);
+            var correcta = progreso.Palabra!.Ingles;
+            var respuesta = fallada == null ? "mal" : correcta;
+            fallada ??= progreso.PalabraId;
+            await _servicio.ResponderAsync(progreso.PalabraId, TipoEjercicio.EscribirPalabra, respuesta);
+        }
+
+        // Cada palabra salió una vez, más la fallada otra vez al final; después ya no queda nada para hoy.
+        Assert.Equal(agregadas + 1, vistas.Count);
+        Assert.Equal(agregadas, vistas.Distinct().Count());
+        Assert.Equal(fallada, vistas[^1]);
+        Assert.Null(await _servicio.SiguientePendienteAsync());
+    }
+
+    [Fact]
     public async Task Una_palabra_que_fallas_seguido_vuelve_antes()
     {
         await AgregarTecnologiaAsync();
 
-        // "bug" (id 2): dos fallos y luego tres aciertos. En la etapa 3 lo normal son 3 días; difícil, 1.
+        // "bug" (id 2): dos fallos y luego tres aciertos. En la etapa 3 lo normal son 7 días; difícil, 3.
         await _servicio.ResponderAsync(2, TipoEjercicio.EscribirPalabra, "mal");
         await _servicio.ResponderAsync(2, TipoEjercicio.EscribirPalabra, "mal");
         for (var i = 0; i < 3; i++)
@@ -222,7 +253,7 @@ public sealed class RepasoServiceTests : IDisposable
 
         var progreso = _db.Progresos.Single(p => p.PalabraId == 2);
         Assert.Equal(3, progreso.Etapa);
-        Assert.Equal(1, (progreso.ProximoRepaso - progreso.UltimoRepaso!.Value).TotalDays, precision: 3);
+        Assert.Equal(3, (progreso.ProximoRepaso - progreso.UltimoRepaso!.Value).TotalDays, precision: 3);
     }
 
     [Fact]

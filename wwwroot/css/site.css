@@ -1331,3 +1331,28 @@ a.chip {
     background: rgba(255, 255, 255, 0.16);
     color: #FFFFFF;
 }
+
+/* Gramática en secuencia: número del tema, tema hecho y el que sigue. */
+.numero-tema {
+    font-weight: 700;
+    font-size: 17px;
+}
+
+.icono-hecho {
+    background: var(--exito-suave);
+    color: var(--exito);
+}
+
+.opcion-siguiente {
+    box-shadow: 0 0 0 2px var(--acento);
+}
+
+.sigue-este {
+    align-self: flex-start;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--acento-suave-texto);
+    background: var(--acento-suave);
+    border-radius: 999px;
+    padding: 1px 8px;
+}
