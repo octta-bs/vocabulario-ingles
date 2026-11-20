@@ -99,20 +99,23 @@ public class HomeController : Controller
         }
 
         var categorias = await Modos.CategoriasAsync(_db, modo);
+        var errores = (await _estadisticas.MasFalladasAsync(10, modo)).Count;
+        var temasEmpezados = await _db.Palabras
+            .Where(p => p.Tipo == TipoPalabra.Gramatica && p.Progreso != null)
+            .Select(p => p.CategoriaId)
+            .Distinct()
+            .CountAsync();
         return View(new PracticarViewModel
         {
             Modo = modo,
             RespuestasEscritas = (await _respuestas.ObtenerAsync()).Count,
             TotalPreguntas = PreguntasEntrevista.Todas.Length,
-            Errores = (await _estadisticas.MasFalladasAsync(10, modo)).Count,
+            Errores = errores,
             TotalPalabras = await _db.Palabras.CountAsync(p => categorias.Contains(p.CategoriaId)),
             Categorias = categorias.Count,
             TotalTemasGramatica = TemasGramatica.Todos.Length,
-            TemasGramaticaEmpezados = await _db.Palabras
-                .Where(p => p.Tipo == TipoPalabra.Gramatica && p.Progreso != null)
-                .Select(p => p.CategoriaId)
-                .Distinct()
-                .CountAsync()
+            TemasGramaticaEmpezados = temasEmpezados,
+            Recomendacion = RecomendadorPractica.Elegir(modo, _zona.Hoy, errores, temasEmpezados)
         });
     }
 

@@ -1,0 +1,16 @@
+@model OpcionPracticar
+@* Una opción de la lista de Practicar: ícono, nombre, detalle y flecha. *@
+@{
+    var tamano = new ViewDataDictionary(ViewData) { ["Tamano"] = 22 };
+    var chico = new ViewDataDictionary(ViewData) { ["Tamano"] = 20 };
+}
+<li>
+    <a class="opcion" asp-controller="@Model.Controlador" asp-action="@Model.Accion" asp-route-id="@Model.Id">
+        <span class="icono-caja"><partial name="_Icono" model="Model.Icono" view-data="tamano" /></span>
+        <span class="textos">
+            <span class="nombre">@Model.Nombre</span>
+            <span class="detalle">@Model.Detalle</span>
+        </span>
+        <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
+    </a>
+</li>

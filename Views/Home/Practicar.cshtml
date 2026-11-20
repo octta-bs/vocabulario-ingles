@@ -1,136 +1,64 @@
 @model PracticarViewModel
+@using VocabularioIngles.Services
 @{
     ViewData["Title"] = "Practicar";
-    var tamano = new ViewDataDictionary(ViewData) { ["Tamano"] = 22 };
-    var chico = new ViewDataDictionary(ViewData) { ["Tamano"] = 20 };
+    var errores = Model.Errores == 0 ? "Todavía no has fallado ninguna palabra"
+        : Model.Errores == 1 ? "1 palabra que fallaste" : $"{Model.Errores} palabras que más fallas";
+    var misErrores = new OpcionPracticar("Repaso", "Errores", "diana", "Mis errores", errores);
+    var todas = new OpcionPracticar("Palabras", "Index", "lista", "Todas las palabras",
+        $"{Model.TotalPalabras} palabras y frases en {Model.Categorias} categorías");
 }
 
 <h1 class="mb-1">Practicar</h1>
-<p class="text-muted mb-4">Modo @Model.Modo.Texto() · práctica extra: no cambia tu repaso.</p>
+<p class="text-muted mb-4">Modo @Model.Modo.Texto() · práctica extra, además de tu repaso.</p>
 
-<ul class="opciones">
-@if (Model.Modo == VocabularioIngles.Services.ModoApp.Trabajo)
+@if (Model.Recomendacion is { } r)
 {
-    <li>
-        <a class="opcion" asp-controller="Lecturas" asp-action="Index">
-            <span class="icono-caja"><partial name="_Icono" model='"lista"' view-data="tamano" /></span>
-            <span class="textos">
-                <span class="nombre">Leer en contexto</span>
-                <span class="detalle">Pega un texto de tu trabajo y guarda las palabras que no conoces</span>
-            </span>
-            <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
-        </a>
-    </li>
-    <li>
-        <a class="opcion" asp-controller="Gramatica" asp-action="Index">
-            <span class="icono-caja"><partial name="_Icono" model='"lapiz"' view-data="tamano" /></span>
-            <span class="textos">
-                <span class="nombre">Gramática</span>
-                <span class="detalle">@Model.TotalTemasGramatica temas con su regla · @Model.TemasGramaticaEmpezados en tu repaso</span>
-            </span>
-            <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
-        </a>
-    </li>
-    <li>
-        <a class="opcion" asp-controller="Situaciones" asp-action="Index">
-            <span class="icono-caja"><partial name="_Icono" model='"bandera"' view-data="tamano" /></span>
-            <span class="textos">
-                <span class="nombre">Situaciones guiadas</span>
-                <span class="detalle">Stand-up, entrevista, code review y pedir ayuda, en voz alta</span>
-            </span>
-            <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
-        </a>
-    </li>
-    <li>
-        <a class="opcion" asp-controller="Simulacro" asp-action="Index">
-            <span class="icono-caja"><partial name="_Icono" model='"maletin"' view-data="tamano" /></span>
-            <span class="textos">
-                <span class="nombre">Simulacro de entrevista</span>
-                <span class="detalle">5 preguntas · @Model.RespuestasEscritas de @Model.TotalPreguntas respuestas tuyas escritas</span>
-            </span>
-            <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
-        </a>
-    </li>
-    <li>
-        <a class="opcion" asp-controller="Practica" asp-action="Shadowing">
-            <span class="icono-caja"><partial name="_Icono" model='"bocina"' view-data="tamano" /></span>
-            <span class="textos">
-                <span class="nombre">Shadowing</span>
-                <span class="detalle">Escucha, repite junto con el audio y dila tú solo</span>
-            </span>
-            <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
-        </a>
-    </li>
-    <li>
-        <a class="opcion" asp-controller="Practica" asp-action="Index">
-            <span class="icono-caja"><partial name="_Icono" model='"microfono"' view-data="tamano" /></span>
-            <span class="textos">
-                <span class="nombre">Hablar en voz alta</span>
-                <span class="detalle">Di frases de trabajo y revisa tu pronunciación</span>
-            </span>
-            <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
-        </a>
-    </li>
-    <li>
-        <a class="opcion" asp-controller="Repaso" asp-action="Errores">
-            <span class="icono-caja"><partial name="_Icono" model='"diana"' view-data="tamano" /></span>
-            <span class="textos">
-                <span class="nombre">Mis errores</span>
-                <span class="detalle">@(Model.Errores == 0 ? "Todavía no has fallado ninguna palabra" : Model.Errores == 1 ? "1 palabra que fallaste" : $"{Model.Errores} palabras que más fallas")</span>
-            </span>
-            <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
-        </a>
-    </li>
-    <li>
-        <a class="opcion" asp-controller="MisRespuestas" asp-action="Index">
-            <span class="icono-caja"><partial name="_Icono" model='"lapiz"' view-data="tamano" /></span>
-            <span class="textos">
-                <span class="nombre">Mis respuestas</span>
-                <span class="detalle">Escribe tus respuestas de entrevista</span>
-            </span>
-            <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
-        </a>
-    </li>
-    <li>
-        <a class="opcion" asp-controller="Palabras" asp-action="Index">
-            <span class="icono-caja"><partial name="_Icono" model='"lista"' view-data="tamano" /></span>
-            <span class="textos">
-                <span class="nombre">Todas las palabras</span>
-                <span class="detalle">@Model.TotalPalabras palabras y frases en @Model.Categorias categorías</span>
-            </span>
-            <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
-        </a>
-    </li>
+    <h2 class="seccion-titulo">Hoy te recomiendo</h2>
+    <a class="boton-principal mb-4" id="recomendacion" asp-controller="@r.Controlador" asp-action="@r.Accion" asp-route-id="@r.Id">
+        <span class="icono-caja icono-recomendado"><partial name="_Icono" model="r.Icono" /></span>
+        <span style="flex: 1">
+            <span class="titulo">@r.Titulo</span>
+            <span class="subtitulo">@r.Motivo</span>
+        </span>
+        <partial name="_Icono" model='"flecha"' />
+    </a>
 }
-else
-{
-    <li>
-        <a class="opcion" asp-controller="Repaso" asp-action="Errores">
-            <span class="icono-caja"><partial name="_Icono" model='"diana"' view-data="tamano" /></span>
-            <span class="textos">
-                <span class="nombre">Mis errores</span>
-                <span class="detalle">@(Model.Errores == 0 ? "Todavía no has fallado ninguna palabra" : Model.Errores == 1 ? "1 palabra que fallaste" : $"{Model.Errores} palabras que más fallas")</span>
-            </span>
-            <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
-        </a>
-    </li>
-    <li>
-        <a class="opcion" asp-controller="Palabras" asp-action="Index">
-            <span class="icono-caja"><partial name="_Icono" model='"lista"' view-data="tamano" /></span>
-            <span class="textos">
-                <span class="nombre">Todas las palabras</span>
-                <span class="detalle">@Model.TotalPalabras palabras y frases en @Model.Categorias categorías</span>
-            </span>
-            <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
-        </a>
-    </li>
-}
-</ul>
 
-@if (Model.Modo == VocabularioIngles.Services.ModoApp.Principiante)
+@if (Model.Modo == ModoApp.Trabajo)
+{
+    <section class="grupo-practicar" aria-labelledby="grupo-hablar">
+        <h2 class="seccion-titulo" id="grupo-hablar">Hablar</h2>
+        <ul class="opciones">
+            <partial name="_OpcionPracticar" model='new OpcionPracticar("Situaciones", "Index", "bandera", "Situaciones guiadas", "Conversaciones de trabajo: stand-up, entrevista, code review")' />
+            <partial name="_OpcionPracticar" model='new OpcionPracticar("Simulacro", "Index", "maletin", "Simulacro de entrevista", $"5 preguntas · {Model.RespuestasEscritas} de {Model.TotalPreguntas} respuestas tuyas escritas")' />
+            <partial name="_OpcionPracticar" model='new OpcionPracticar("Practica", "Shadowing", "bocina", "Shadowing", "Escucha, repite junto con el audio y dila tú solo")' />
+            <partial name="_OpcionPracticar" model='new OpcionPracticar("Practica", "Index", "microfono", "Hablar en voz alta", "Di frases de trabajo y revisa tu pronunciación")' />
+        </ul>
+    </section>
+
+    <section class="grupo-practicar" aria-labelledby="grupo-leer">
+        <h2 class="seccion-titulo" id="grupo-leer">Leer y escribir</h2>
+        <ul class="opciones">
+            <partial name="_OpcionPracticar" model='new OpcionPracticar("Gramatica", "Index", "lapiz", "Gramática", $"{Model.TotalTemasGramatica} temas con su regla · {Model.TemasGramaticaEmpezados} en tu repaso")' />
+            <partial name="_OpcionPracticar" model='new OpcionPracticar("Lecturas", "Index", "lista", "Leer en contexto", "Pega un texto de tu trabajo y guarda las palabras que no conoces")' />
+            <partial name="_OpcionPracticar" model='new OpcionPracticar("MisRespuestas", "Index", "lapiz", "Mis respuestas", "Escribe tus respuestas de entrevista")' />
+        </ul>
+    </section>
+}
+
+<section class="grupo-practicar" aria-labelledby="grupo-repasar">
+    <h2 class="seccion-titulo" id="grupo-repasar">Repasar</h2>
+    <ul class="opciones">
+        <partial name="_OpcionPracticar" model="misErrores" />
+        <partial name="_OpcionPracticar" model="todas" />
+    </ul>
+</section>
+
+@if (Model.Modo == ModoApp.Principiante)
 {
     <p class="text-muted small mt-3">
-        Hablar, shadowing y el simulacro de entrevista están en el modo Trabajo.
+        Hablar, gramática, situaciones guiadas y el simulacro de entrevista están en el modo Trabajo.
         <a asp-action="Modo">Cambiar de modo</a>
     </p>
 }

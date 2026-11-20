@@ -1317,3 +1317,17 @@ a.chip {
     flex-direction: column;
     gap: 14px;
 }
+
+/* ---------- Practicar: recomendación del día y grupos ---------- */
+
+.grupo-practicar {
+    margin-bottom: 24px;
+}
+
+.boton-principal .icono-recomendado {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.16);
+    color: #FFFFFF;
+}
