@@ -295,6 +295,30 @@ namespace VocabularioIngles.Data.Migraciones
                     b.ToTable("RespuestasPropias");
                 });
 
+            modelBuilder.Entity("VocabularioIngles.Models.RespuestaSonido", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Acerto")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Ejercicio")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Sonido")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RespuestasSonido");
+                });
+
             modelBuilder.Entity("VocabularioIngles.Models.Palabra", b =>
                 {
                     b.HasOne("VocabularioIngles.Models.Categoria", "Categoria")

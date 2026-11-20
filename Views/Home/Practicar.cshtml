@@ -32,6 +32,7 @@
     <section class="grupo-practicar" aria-labelledby="grupo-hablar">
         <h2 class="seccion-titulo" id="grupo-hablar">Hablar</h2>
         <ul class="opciones">
+            <partial name="_OpcionPracticar" model='new OpcionPracticar("Sonidos", "Index", "bocina", "Sonidos difíciles", "Ship o sheep, th, v y b, -ed: entrena el oído y la boca")' />
             <partial name="_OpcionPracticar" model='new OpcionPracticar("Situaciones", "Index", "bandera", "Situaciones guiadas", "Conversaciones de trabajo: stand-up, entrevista, code review")' />
             <partial name="_OpcionPracticar" model='new OpcionPracticar("Simulacro", "Index", "maletin", "Simulacro de entrevista", $"5 preguntas · {Model.RespuestasEscritas} de {Model.TotalPreguntas} respuestas tuyas escritas")' />
             <partial name="_OpcionPracticar" model='new OpcionPracticar("Practica", "Shadowing", "bocina", "Shadowing", "Escucha, repite junto con el audio y dila tú solo")' />

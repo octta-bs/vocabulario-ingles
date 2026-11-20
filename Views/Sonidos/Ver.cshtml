@@ -1,0 +1,100 @@
+@model VocabularioIngles.Services.SonidoConEstado
+@using System.Text.Json
+@{
+    var sonido = Model.Sonido;
+    ViewData["Title"] = sonido.Titulo;
+    var icono = new ViewDataDictionary(ViewData) { ["Tamano"] = 18 };
+    var todos = VocabularioIngles.Data.SonidosDificiles.Todos;
+    // Model.Numero empieza en 1, así que en ese índice está el sonido que sigue.
+    var proximo = Model.Numero < todos.Length ? todos[Model.Numero] : null;
+    var pares = sonido.Pares.Select(p => new[] { p.Con, p.Contra });
+}
+
+<p class="small mb-1"><a asp-action="Index">← Sonidos difíciles</a> · Sonido @Model.Numero de @todos.Length</p>
+<h1 class="mb-1">@sonido.Titulo <span class="badge">@sonido.Simbolos</span></h1>
+<p class="text-muted">@sonido.Resumen</p>
+
+@Html.AntiForgeryToken()
+<script type="application/json" id="pares">@Html.Raw(JsonSerializer.Serialize(pares))</script>
+<div id="sonido" data-sonido="@sonido.Clave" data-responder="@Url.Action("Responder")" hidden></div>
+
+<p class="avance-sonido mb-3" id="avance-sonido" aria-live="polite">
+    @(Model.Dominado ? "¡Ya dominas este sonido! Puedes seguir practicando."
+        : Model.Empezado ? $"Tu avance: {Model.Aciertos} de {Model.Respondidas} en tus últimas respuestas (lo dominas con 8 de 10)."
+        : "Lo dominas cuando aciertas 8 de tus últimas 10 respuestas.")
+</p>
+
+<section class="card card-body mb-3" aria-labelledby="titulo-como">
+    <h2 class="h6 mb-2" id="titulo-como">Cómo se hace</h2>
+    <ul class="regla-gramatica">
+        @foreach (var paso in sonido.ComoSeHace)
+        {
+            <li>@paso</li>
+        }
+    </ul>
+</section>
+
+<section class="card card-body mb-3" aria-labelledby="titulo-pares">
+    <h2 class="h6 mb-2" id="titulo-pares">Escucha la diferencia</h2>
+    <ul class="pares-sonido">
+        @foreach (var par in sonido.Pares)
+        {
+            <li>
+                <button type="button" class="btn btn-outline-primary btn-audio" data-texto="@par.Con">
+                    <partial name="_Icono" model='"bocina"' view-data="icono" /> @par.Con
+                </button>
+                <span class="text-muted" aria-hidden="true">≠</span>
+                <button type="button" class="btn btn-outline-secondary btn-audio" data-texto="@par.Contra">
+                    <partial name="_Icono" model='"bocina"' view-data="icono" /> @par.Contra
+                </button>
+            </li>
+        }
+    </ul>
+</section>
+
+<section class="card card-body mb-3" id="escuchar" aria-labelledby="titulo-escuchar">
+    <h2 class="h6 mb-1" id="titulo-escuchar">1. Escucha y elige</h2>
+    <p class="small text-muted mb-2">La app dice una palabra; toca la que oíste. Son 8 rondas.</p>
+    <div id="escuchar-sin-voz" class="alert alert-warning mb-0" hidden>Tu navegador no tiene voz para este ejercicio.</div>
+    <button type="button" class="btn btn-primary btn-lg btn-bloque" id="btn-empezar-escuchar">Empezar</button>
+    <div id="ronda-escuchar" hidden>
+        <p class="small text-muted mb-2" id="numero-ronda"></p>
+        <button type="button" class="btn btn-outline-secondary mb-3" id="btn-repetir-escuchar">
+            <partial name="_Icono" model='"bocina"' view-data="icono" /> Repetir
+        </button>
+        <div class="opciones-sonido" id="opciones-escuchar"></div>
+        <p class="mb-0 mt-2" id="mensaje-escuchar" aria-live="polite"></p>
+    </div>
+</section>
+
+<section class="card card-body mb-3" id="decir" aria-labelledby="titulo-decir">
+    <h2 class="h6 mb-1" id="titulo-decir">2. Dila tú</h2>
+    <p class="small text-muted mb-2">Di la palabra y mira cuál entendió el navegador.</p>
+    <div id="decir-sin-voz" class="alert alert-warning mb-0" hidden>
+        Tu navegador no tiene reconocimiento de voz. Usa Chrome o Edge (en <strong>localhost</strong> o con <strong>https</strong>).
+    </div>
+    <div id="ronda-decir">
+        <p class="palabra-grande mb-2" id="palabra-decir"></p>
+        <div class="d-flex gap-2 flex-wrap">
+            <button type="button" class="btn btn-primary btn-lg" id="btn-decir">
+                <partial name="_Icono" model='"microfono"' view-data="icono" /> Decirla
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-lg" id="btn-escuchar-decir">
+                <partial name="_Icono" model='"bocina"' view-data="icono" /> Escuchar
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-lg" id="btn-otra-decir">Otra palabra</button>
+        </div>
+        <p class="mb-0 mt-2" id="mensaje-decir" aria-live="polite"></p>
+    </div>
+</section>
+
+@if (proximo != null)
+{
+    <p class="mt-3 mb-0 text-center">
+        <a asp-action="Ver" asp-route-id="@proximo.Clave" id="siguiente-sonido">Siguiente sonido: @proximo.Titulo →</a>
+    </p>
+}
+
+@section Scripts {
+    <script src="~/js/sonidos.js" asp-append-version="true"></script>
+}

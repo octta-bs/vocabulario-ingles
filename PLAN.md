@@ -120,6 +120,20 @@ agrega sale de tus resultados y no de adivinar (apoya a la Fase 4).
   llegas al nivel más alto de un área. Se guarda (tabla `Diagnosticos`) para compararlo cada mes; no toca el repaso.
 - [ ] Paso 2: hablar (decir 2 o 3 frases con el micrófono).
 
+## Fase 8 · Sonidos difíciles ✅
+
+Fonética para hispanohablantes, sin IA de pago: los 10 sonidos del inglés de EE. UU. que el español no tiene
+(sin "e" antes de s, v/b, h, i corta y larga, sh/ch, z, th sorda y sonora, a abierta y corta, -ed), en orden de
+estudio, con pares mínimos (ship / sheep) en `Data/SonidosDificiles.cs`.
+
+- [x] "Cómo se hace" en español y los pares para escuchar.
+- [x] "Escucha y elige" (8 rondas con la voz del navegador) y "Dila tú" (el reconocimiento de voz dice qué palabra
+  entendió; si no entiende ninguna de las dos, no cuenta).
+- [x] Avance guardado (tabla `RespuestasSonido`): un sonido se domina con 8 de tus últimas 10 respuestas; "Sigue
+  este" marca el primero sin dominar.
+
+Límite conocido: no dice cómo mover la lengua (como ELSA); solo si se entendió la palabra que querías decir.
+
 ## Ideas para después
 
 Anotarlas aquí antes de programarlas:

@@ -1394,3 +1394,47 @@ a.chip {
 .le-falta {
     padding-left: 32px;
 }
+
+/* ---------- Sonidos difíciles ---------- */
+
+.avance-sonido {
+    font-weight: 600;
+    color: var(--acento-suave-texto);
+}
+
+.pares-sonido {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.pares-sonido li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pares-sonido .btn {
+    flex: 1;
+}
+
+.opciones-sonido {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.opcion-sonido.correcta {
+    background: var(--exito-suave);
+    border-color: var(--exito);
+    color: var(--exito);
+}
+
+.opcion-sonido.incorrecta {
+    background: var(--error-suave);
+    border-color: var(--error);
+    color: var(--error-texto);
+}
