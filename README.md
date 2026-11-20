@@ -59,6 +59,12 @@ con el error típico de hispanohablantes junto a la correcta. Con "Practicar est
 "Corrige la frase" (ves la frase con el error y la escribes bien), completar la parte gramatical y dictado. Las frases
 de gramática no entran solas con las palabras nuevas del día. Los temas están en `Data/TemasGramatica.cs`.
 
+**Diagnóstico de nivel** (en Progreso y en Practicar): 23 preguntas de fácil a difícil (vocabulario, un tema de
+gramática por pregunta y dictados) que estiman tu nivel en cada área, te dan tus 3 puntos débiles con enlace para
+practicarlos y te dicen qué contenido le falta a la app si ya llegas a lo más difícil que tiene. Se guarda para
+comparar tu avance (hazlo una vez al mes) y no cuenta para tu repaso. Si nunca lo has hecho, es lo primero que
+recomienda Practicar.
+
 **Situaciones guiadas** (modo Trabajo, en Practicar): diálogos cortos de daily stand-up, entrevista, code review y
 pedir ayuda con un bug. La app dice su parte en voz alta y tú respondes con una de las respuestas modelo (con su
 traducción). Cuenta como bien si se entiende al menos el 80 % de las palabras de alguna de ellas. Al final dice

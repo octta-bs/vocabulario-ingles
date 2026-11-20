@@ -1,0 +1,86 @@
+@model ResultadoDiagnostico
+@{
+    ViewData["Title"] = "Tu nivel";
+    var anterior = (Diagnostico?)ViewBag.Anterior;
+    var chico = new ViewDataDictionary(ViewData) { ["Tamano"] = 20 };
+
+    NivelMcer? Antes(AreaDiagnostico area) => anterior == null ? null : area switch
+    {
+        AreaDiagnostico.Vocabulario => anterior.NivelVocabulario,
+        AreaDiagnostico.Gramatica => anterior.NivelGramatica,
+        _ => anterior.NivelEscucha
+    };
+
+    // Sin nivel cuenta como el más bajo de todos.
+    static int Valor(NivelMcer? n) => n.HasValue ? (int)n.Value + 1 : 0;
+    static string Cambio(NivelMcer? antes, NivelMcer? ahora) =>
+        Valor(ahora) == Valor(antes) ? "Igual que la vez pasada"
+        : Valor(ahora) > Valor(antes) ? $"Subiste ↑ (antes {antes?.Texto() ?? "—"})"
+        : $"Bajaste ↓ (antes {antes?.Texto() ?? "—"})";
+}
+
+<p class="small mb-1"><a asp-action="Index">← Diagnóstico</a></p>
+<h1 class="mb-1">Tu nivel</h1>
+<p class="text-muted mb-4">Acertaste @Model.Aciertos de @Model.Total preguntas.</p>
+
+<ul class="areas-diagnostico" aria-label="Tu nivel por área">
+    @foreach (var a in Model.Areas)
+    {
+        var antes = Antes(a.Area);
+        var porcentaje = a.Total == 0 ? 0 : a.Aciertos * 100 / a.Total;
+        <li class="card card-body">
+            <div class="d-flex align-items-center gap-3">
+                <span class="nivel-diagnostico">@(a.Nivel?.Texto() ?? "—")</span>
+                <span style="flex: 1">
+                    <span class="d-block" style="font-weight: 600">@a.Area.Texto()</span>
+                    <span class="d-block small text-muted">
+                        @(a.Nivel == null ? "Todavía no llegas al primer nivel que mide la app." : a.Nivel.Value.Descripcion())
+                    </span>
+                    @if (anterior != null)
+                    {
+                        <span class="d-block small cambio-nivel">
+                            @Cambio(antes, a.Nivel)
+                        </span>
+                    }
+                </span>
+            </div>
+            <div class="avance mt-2" role="img" aria-label="@a.Aciertos de @a.Total aciertos">
+                <div style="width: @porcentaje%"></div>
+            </div>
+            <p class="small text-muted mb-0 mt-1">@a.Aciertos de @a.Total · la app llega hasta @a.NivelMaximo.Texto()</p>
+        </li>
+    }
+</ul>
+
+<h2 class="seccion-titulo mt-4">Tus puntos débiles</h2>
+@if (Model.PuntosDebiles.Count == 0)
+{
+    <p>¡No fallaste nada! 🎉</p>
+}
+else
+{
+    <ul class="opciones mb-4" id="puntos-debiles">
+        @foreach (var s in Model.PuntosDebiles)
+        {
+            <li>
+                <a class="opcion" asp-controller="@s.Controlador" asp-action="@s.Accion" asp-route-id="@s.Id">
+                    <span class="textos"><span class="nombre">@s.Texto</span></span>
+                    <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
+                </a>
+            </li>
+        }
+    </ul>
+}
+
+@if (Model.LeFalta.Count > 0)
+{
+    <h2 class="seccion-titulo">Lo que le falta a la app</h2>
+    <ul class="alert alert-info le-falta" id="le-falta">
+        @foreach (var f in Model.LeFalta)
+        {
+            <li>@f</li>
+        }
+    </ul>
+}
+
+<a class="btn btn-outline-primary btn-lg btn-bloque mt-3" asp-controller="Home" asp-action="Practicar">Ir a practicar</a>

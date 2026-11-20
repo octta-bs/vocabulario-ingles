@@ -18,6 +18,7 @@ public class AppDbContext : DbContext
     public DbSet<PerfilInfantil> PerfilesInfantiles => Set<PerfilInfantil>();
     public DbSet<ProgresoInfantil> ProgresosInfantiles => Set<ProgresoInfantil>();
     public DbSet<Lectura> Lecturas => Set<Lectura>();
+    public DbSet<Diagnostico> Diagnosticos => Set<Diagnostico>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

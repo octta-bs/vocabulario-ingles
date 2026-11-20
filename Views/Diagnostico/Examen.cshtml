@@ -1,0 +1,68 @@
+@model List<PreguntaDiagnostico>
+@{
+    ViewData["Title"] = "Diagnóstico de nivel";
+    ViewData["ModoEnfocado"] = true;
+    var icono = new ViewDataDictionary(ViewData) { ["Tamano"] = 22 };
+}
+
+<div class="barra-enfoque">
+    <a class="boton-icono" asp-action="Index" aria-label="Salir del diagnóstico">
+        <partial name="_Icono" model='"cerrar"' view-data="icono" />
+    </a>
+    <div class="avance" role="progressbar" aria-label="Avance del diagnóstico" aria-valuemin="0" aria-valuemax="@Model.Count">
+        <div id="avance-diagnostico" style="width: 0%"></div>
+    </div>
+    <span class="avance-texto" id="numero-pregunta">@Model.Count preguntas</span>
+</div>
+
+<form asp-action="Calificar" method="post" id="diagnostico" autocomplete="off">
+    @for (var i = 0; i < Model.Count; i++)
+    {
+        var p = Model[i];
+        var e = p.Ejercicio;
+        <section class="card card-body mb-3 pregunta-diagnostico" data-indice="@i" data-area="@p.Area.Texto()" aria-labelledby="enunciado-@i">
+            <p class="mb-2 d-flex align-items-center gap-2">
+                <span class="text-muted" style="font-weight: 600">@p.Area.Texto()</span>
+                <span class="badge">@p.Nivel.Texto()</span>
+            </p>
+            @if (e.EsCompletar)
+            {
+                <p class="text-muted small mb-1">Completa la frase</p>
+                <h2 id="enunciado-@i" class="frase-hueco mb-1">@e.FraseConHueco</h2>
+                <p class="text-muted mb-3">@e.FraseEs</p>
+            }
+            else if (e.EsDictado)
+            {
+                <h2 id="enunciado-@i" class="h6 text-muted mb-2">Escucha y escribe lo que oyes</h2>
+                <div class="d-flex gap-2 flex-wrap mb-3">
+                    <button type="button" class="btn btn-outline-primary btn-audio" data-texto="@e.TextoAudio">
+                        <partial name="_Icono" model='"bocina"' view-data='new ViewDataDictionary(ViewData) { ["Tamano"] = 18 }' /> Escuchar
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary btn-audio" data-lento data-texto="@e.TextoAudio">Más lento</button>
+                </div>
+            }
+            else
+            {
+                <p class="text-muted small mb-1">¿Cómo se dice en inglés?</p>
+                <h2 id="enunciado-@i" class="palabra-grande mb-3">@e.Palabra.Espanol</h2>
+            }
+
+            <input type="hidden" name="palabraId" value="@e.Palabra.Id" />
+            <input type="hidden" name="tipo" value="@e.Tipo" />
+            <label for="respuesta-@i" class="form-label">Tu respuesta</label>
+            <input type="text" id="respuesta-@i" name="respuesta" class="form-control form-control-lg"
+                   autocapitalize="none" spellcheck="false"
+                   placeholder="@(e.EsCompletar ? "Lo que va en el hueco" : e.EsDictado ? "Escribe lo que oyes" : "")" />
+            <p class="form-text mb-0">Si no la sabes, déjala vacía y sigue: así el resultado es más real.</p>
+        </section>
+    }
+
+    <div class="barra-accion">
+        <button type="button" class="btn btn-primary btn-lg btn-bloque" id="btn-siguiente-diagnostico" hidden>Siguiente</button>
+        <button type="submit" class="btn btn-primary btn-lg btn-bloque" id="btn-terminar-diagnostico">Terminar y ver mi nivel</button>
+    </div>
+</form>
+
+@section Scripts {
+    <script src="~/js/diagnostico.js" asp-append-version="true"></script>
+}

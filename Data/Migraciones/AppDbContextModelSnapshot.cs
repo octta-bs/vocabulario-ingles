@@ -49,6 +49,39 @@ namespace VocabularioIngles.Data.Migraciones
                     b.ToTable("Configuraciones");
                 });
 
+            modelBuilder.Entity("VocabularioIngles.Models.Diagnostico", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Aciertos")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Detalle")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("NivelEscucha")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("NivelGramatica")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("NivelVocabulario")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Total")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Diagnosticos");
+                });
+
             modelBuilder.Entity("VocabularioIngles.Models.Lectura", b =>
                 {
                     b.Property<int>("Id")
