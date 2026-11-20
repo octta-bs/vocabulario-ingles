@@ -134,6 +134,15 @@ estudio, con pares mínimos (ship / sheep) en `Data/SonidosDificiles.cs`.
 
 Límite conocido: no dice cómo mover la lengua (como ELSA); solo si se entendió la palabra que querías decir.
 
+## Revisión del contenido ✅
+
+Revisión de todo el contenido (vocabulario, frases, gramática y sonidos) como la haría un profesor. Los cambios, el
+porqué y las dudas de nivel para confirmar en el English Vocabulary Profile están en
+[docs/revision-contenido.md](docs/revision-contenido.md).
+
+- [ ] Confirmar en englishprofile.org (con tu cuenta) las 15 dudas de nivel de la revisión.
+- [ ] Una conversación a la semana con un nativo (intercambio de idiomas).
+
 ## Ideas para después
 
 Anotarlas aquí antes de programarlas:

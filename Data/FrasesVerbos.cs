@@ -13,7 +13,7 @@ public static class FrasesVerbos
 {
     private static readonly Dictionary<string, FrasesVerbo> Frases = new(StringComparer.OrdinalIgnoreCase)
     {
-        ["fix"] = new("Yesterday I fixed a bug in the login.", "Ayer arreglé un error en el inicio de sesión.",
+        ["fix"] = new("Yesterday I fixed a bug on the login page.", "Ayer arreglé un error en la página de inicio de sesión.",
                       "Tomorrow I will fix the tests.", "Mañana arreglaré las pruebas."),
         ["write"] = new("Yesterday I wrote a test for the API.", "Ayer escribí una prueba para la API.",
                         "Tomorrow I will write the documentation.", "Mañana escribiré la documentación."),
@@ -30,7 +30,7 @@ public static class FrasesVerbos
         ["delete"] = new("Yesterday I deleted the old files.", "Ayer borré los archivos viejos.",
                          "Tomorrow I will delete the test data.", "Mañana borraré los datos de prueba."),
         ["open"] = new("This morning I opened the project.", "Esta mañana abrí el proyecto.",
-                       "Tomorrow I will open a new task.", "Mañana abriré una tarea nueva."),
+                       "Tomorrow I will open a pull request.", "Mañana abriré un pull request."),
         ["learn"] = new("Last year I learned C#.", "El año pasado aprendí C#.",
                         "Next month I will learn a new framework.", "El próximo mes aprenderé un framework nuevo."),
         ["read"] = new("Yesterday I read the documentation.", "Ayer leí la documentación.",

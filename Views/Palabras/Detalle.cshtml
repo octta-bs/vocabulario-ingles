@@ -23,7 +23,13 @@
         @if (!string.IsNullOrEmpty(Model.Pronunciacion))
         {
             <p class="mb-1"><strong>Pronunciación:</strong> @Model.Pronunciacion</p>
-            <p class="mb-3"><strong>Se lee:</strong> @Model.ComoSeLee</p>
+            <p class="mb-3">
+                <strong>Se lee:</strong> @Model.ComoSeLee
+                @if (Model.ComoSeLee.Contains("th"))
+                {
+                    <span class="small text-muted">(th: la punta de la lengua entre los dientes)</span>
+                }
+            </p>
         }
 
         @if (Model.EsVerbo)
