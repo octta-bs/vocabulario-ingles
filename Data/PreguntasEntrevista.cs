@@ -59,7 +59,7 @@ public static class PreguntasEntrevista
             new[]
             {
                 "I use async and await for operations that wait on the database.",
-                "The thread is free while the operation runs.",
+                "The thread isn't blocked while it waits.",
                 "That way the app can handle more requests."
             },
             "Menciona operaciones de entrada y salida: base de datos, archivos o llamadas HTTP."),

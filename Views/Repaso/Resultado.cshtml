@@ -28,7 +28,13 @@
     <p class="text-muted mb-1">@Model.Palabra.Espanol</p>
     @if (!string.IsNullOrEmpty(Model.Palabra.Pronunciacion))
     {
-        <p class="mb-1 small">@Model.Palabra.Pronunciacion · se lee: <strong>@Model.Palabra.ComoSeLee</strong></p>
+        <p class="mb-1 small">
+            @Model.Palabra.Pronunciacion · se lee: <strong>@Model.Palabra.ComoSeLee</strong>
+            @if (Model.Palabra.ComoSeLee.Contains("th"))
+            {
+                <span class="text-muted">(th: la punta de la lengua entre los dientes)</span>
+            }
+        </p>
     }
     @if (Model.Palabra.EsGramatica)
     {

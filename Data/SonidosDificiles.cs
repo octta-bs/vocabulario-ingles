@@ -27,7 +27,7 @@ public static class SonidosDificiles
                 "En inglés la palabra empieza directo con la s: alarga la sssss y entra a la siguiente letra.",
                 "Truco: piensa que la palabra anterior termina en s (\"this state\") y únelas."
             },
-            new Par[] { new("state", "estate"), new("steam", "esteem"), new("special", "especial") }),
+            new Par[] { new("state", "estate"), new("steam", "esteem"), new("sleep", "asleep") }),
 
         new("v-b", "V y B", "/v/ y /b/",
             "Very no es berry: en inglés la v suena distinto.",

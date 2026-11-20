@@ -70,6 +70,43 @@ public sealed class RepasoServiceTests : IDisposable
     }
 
     [Fact]
+    public async Task Las_correcciones_del_contenido_llegan_a_una_base_que_ya_existe_sin_tocar_el_progreso()
+    {
+        // Una base vieja: textos de antes de la revisión, una palabra con progreso y una palabra propia.
+        var three = _db.Palabras.Single(p => p.Ingles == "three");
+        three.ComoSeLee = "zrí";
+        var bug = _db.Palabras.Single(p => p.Ingles == "bug");
+        bug.Ejemplo = "I fix a bug in the database.";
+        _db.Progresos.Add(new ProgresoPalabra { PalabraId = bug.Id, Etapa = 3, Aciertos = 4, ProximoRepaso = DateTime.UtcNow });
+        var propia = new Categoria { Nombre = LecturasService.NombreCategoria };
+        _db.Palabras.Add(new Palabra { Categoria = propia, Ingles = "flaky", Espanol = "mi traducción", Ejemplo = "mi frase" });
+        await _db.SaveChangesAsync();
+
+        SeedData.Cargar(_db);
+        _db.ChangeTracker.Clear();
+
+        Assert.Equal("thrí", _db.Palabras.Single(p => p.Ingles == "three").ComoSeLee);
+        Assert.Equal("There is a bug in the database.", _db.Palabras.Single(p => p.Ingles == "bug").Ejemplo);
+        var progreso = _db.Progresos.Single(p => p.PalabraId == bug.Id);
+        Assert.Equal((3, 4), (progreso.Etapa, progreso.Aciertos));
+        var mia = _db.Palabras.Single(p => p.Ingles == "flaky");
+        Assert.Equal(("mi traducción", "mi frase"), (mia.Espanol, mia.Ejemplo));
+    }
+
+    [Fact]
+    public void Ningun_se_lee_empieza_con_e_antes_de_s_ni_usa_z_para_la_th()
+    {
+        var palabras = _db.Palabras.Where(p => p.ComoSeLee != "").ToList();
+
+        // "escrín" enseñaría justo el error de agregar una e antes de s + consonante.
+        Assert.DoesNotContain(palabras, p => p.Ingles.StartsWith('s') && p.ComoSeLee.StartsWith("es")
+                                             && !p.Ingles.StartsWith("se") && !p.Ingles.StartsWith("si") && !p.Ingles.StartsWith("so")
+                                             && !p.Ingles.StartsWith("su") && !p.Ingles.StartsWith("sa") && !p.Ingles.StartsWith("sy"));
+        // La th sorda (/θ/) no se escribe con z: en México la z suena s.
+        Assert.DoesNotContain(palabras, p => p.Pronunciacion.Contains('θ') && p.ComoSeLee.Contains('z'));
+    }
+
+    [Fact]
     public void Cada_frase_contiene_su_palabra_clave_completa()
     {
         // Si la palabra clave no aparece como palabra completa, la frase se queda sin ejercicio de completar.
