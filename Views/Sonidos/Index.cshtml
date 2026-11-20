@@ -1,0 +1,43 @@
+@model List<VocabularioIngles.Services.SonidoConEstado>
+@{
+    ViewData["Title"] = "Sonidos difíciles";
+    var tamano = new ViewDataDictionary(ViewData) { ["Tamano"] = 22 };
+    var chico = new ViewDataDictionary(ViewData) { ["Tamano"] = 20 };
+    var siguiente = VocabularioIngles.Services.SonidosService.Siguiente(Model);
+}
+
+<h1 class="mb-1">Sonidos difíciles</h1>
+<p class="text-muted mb-4">
+    Los sonidos del inglés que el español no tiene. Con cada uno entrenas el oído (escucha y elige) y la boca
+    (dila tú). Van en orden: sigue la secuencia.
+</p>
+
+<ul class="opciones">
+@foreach (var s in Model)
+{
+    <li>
+        <a class="opcion @(s == siguiente ? "opcion-siguiente" : "")" asp-action="Ver" asp-route-id="@s.Sonido.Clave">
+            @if (s.Dominado)
+            {
+                <span class="icono-caja icono-hecho" aria-label="Dominado"><partial name="_Icono" model='"palomita"' view-data="tamano" /></span>
+            }
+            else
+            {
+                <span class="icono-caja numero-tema">@s.Numero</span>
+            }
+            <span class="textos">
+                @if (s == siguiente)
+                {
+                    <span class="sigue-este">Sigue este</span>
+                }
+                <span class="nombre">@s.Sonido.Titulo</span>
+                <span class="detalle">
+                    @s.Sonido.Resumen ·
+                    @(s.Dominado ? "dominado" : s.Empezado ? $"{s.Aciertos} de {s.Respondidas} en tus últimas respuestas" : "sin empezar")
+                </span>
+            </span>
+            <span class="flecha"><partial name="_Icono" model='"chevron"' view-data="chico" /></span>
+        </a>
+    </li>
+}
+</ul>

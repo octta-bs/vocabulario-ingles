@@ -65,6 +65,11 @@ practicarlos y te dicen qué contenido le falta a la app si ya llegas a lo más 
 comparar tu avance (hazlo una vez al mes) y no cuenta para tu repaso. Si nunca lo has hecho, es lo primero que
 recomienda Practicar.
 
+**Sonidos difíciles** (modo Trabajo, en Practicar → Hablar): los 10 sonidos del inglés que el español no tiene
+(ship/sheep, th, v/b, h, z, -ed…), en orden, con "cómo se hace" en español y pares mínimos para escuchar. "Escucha y
+elige" entrena el oído y "Dila tú" usa el reconocimiento de voz para ver qué palabra se entendió. Un sonido se domina
+con 8 de tus últimas 10 respuestas.
+
 **Situaciones guiadas** (modo Trabajo, en Practicar): diálogos cortos de daily stand-up, entrevista, code review y
 pedir ayuda con un bug. La app dice su parte en voz alta y tú respondes con una de las respuestas modelo (con su
 traducción). Cuenta como bien si se entiende al menos el 80 % de las palabras de alguna de ellas. Al final dice
