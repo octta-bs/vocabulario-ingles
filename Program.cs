@@ -28,6 +28,7 @@ builder.Services.AddScoped<LecturasService>();
 builder.Services.AddScoped<GramaticaService>();
 builder.Services.AddScoped<DiagnosticoService>();
 builder.Services.AddScoped<SonidosService>();
+builder.Services.AddScoped<RutaService>();
 
 var app = builder.Build();
 

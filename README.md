@@ -59,6 +59,10 @@ con el error típico de hispanohablantes junto a la correcta. Con "Practicar est
 "Corrige la frase" (ves la frase con el error y la escribes bien), completar la parte gramatical y dictado. Las frases
 de gramática no entran solas con las palabras nuevas del día. Los temas están en `Data/TemasGramatica.cs`.
 
+**Tu ruta** (en el Inicio): 5 etapas de cero a intermedio alto (Pre A1 a B2), cada una con metas de vocabulario,
+gramática, escuchar, hablar y leer. Marca tu etapa y "lo siguiente" sin bloquear nada; el avance se calcula solo con
+lo que ya haces y el diagnóstico de nivel marca como hechas las etapas que ya dominas.
+
 **Diagnóstico de nivel** (en Progreso y en Practicar): 23 preguntas de fácil a difícil (vocabulario, un tema de
 gramática por pregunta y dictados) que estiman tu nivel en cada área, te dan tus 3 puntos débiles con enlace para
 practicarlos y te dicen qué contenido le falta a la app si ya llegas a lo más difícil que tiene. Se guarda para

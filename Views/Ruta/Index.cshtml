@@ -1,0 +1,89 @@
+@model VocabularioIngles.Services.RutaEstado
+@{
+    ViewData["Title"] = "Tu ruta";
+    var chico = new ViewDataDictionary(ViewData) { ["Tamano"] = 20 };
+    var palomita = new ViewDataDictionary(ViewData) { ["Tamano"] = 18 };
+}
+
+<h1 class="mb-1">Tu ruta</h1>
+<p class="text-muted">
+    De cero a intermedio alto, en 5 etapas. Cada etapa junta vocabulario, gramática, escuchar, hablar y leer.
+    Es una guía: puedes abrir cualquier cosa cuando quieras.
+</p>
+
+@if (Model.Siguiente is { } siguiente)
+{
+    <h2 class="seccion-titulo">Lo siguiente</h2>
+    <a class="boton-principal mb-4" id="siguiente-ruta" asp-action="Ir" asp-route-etapa="@siguiente.Etapa" asp-route-meta="@siguiente.Indice">
+        <span style="flex: 1">
+            <span class="titulo">@siguiente.Meta.Texto</span>
+            <span class="subtitulo">Etapa @Model.Actual.Etapa.Numero · @siguiente.Meta.Habilidad · @siguiente.Detalle</span>
+        </span>
+        <partial name="_Icono" model='"flecha"' />
+    </a>
+}
+
+<ol class="etapas-ruta">
+    @foreach (var e in Model.Etapas)
+    {
+        var esActual = e == Model.Actual;
+        <li class="card card-body etapa-ruta @(esActual ? "etapa-actual" : "") @(e.Completa ? "etapa-completa" : "")" id="etapa-@e.Etapa.Numero">
+            <details open="@esActual">
+                <summary>
+                    <span class="d-flex align-items-center gap-3">
+                        <span class="icono-caja @(e.Completa ? "icono-hecho" : "numero-tema")">
+                            @if (e.Completa)
+                            {
+                                <partial name="_Icono" model='"palomita"' view-data="chico" />
+                            }
+                            else
+                            {
+                                @e.Etapa.Numero
+                            }
+                        </span>
+                        <span style="flex: 1">
+                            @if (esActual)
+                            {
+                                <span class="sigue-este">Tu etapa</span>
+                            }
+                            <span class="d-block" style="font-weight: 700">@e.Etapa.Titulo <span class="badge">@e.Etapa.Nivel.Texto()</span></span>
+                            <span class="d-block small text-muted">
+                                @(e.PorDiagnostico ? "Hecha según tu diagnóstico" : e.Completa ? "Completa" : $"{e.Porcentaje} % hecho")
+                            </span>
+                        </span>
+                    </span>
+                    <span class="avance mt-2" role="progressbar" aria-label="Avance de la etapa @e.Etapa.Numero"
+                          aria-valuenow="@e.Porcentaje" aria-valuemin="0" aria-valuemax="100">
+                        <span style="width: @e.Porcentaje%"></span>
+                    </span>
+                </summary>
+                <p class="small text-muted mt-3 mb-2">@e.Etapa.Descripcion</p>
+                <ul class="metas-ruta">
+                    @foreach (var m in e.Metas)
+                    {
+                        <li class="@(m.Hecha ? "meta-hecha" : "")">
+                            <a asp-action="Ir" asp-route-etapa="@m.Etapa" asp-route-meta="@m.Indice">
+                                <span class="marca-meta" aria-hidden="true">
+                                    @if (m.Hecha)
+                                    {
+                                        <partial name="_Icono" model='"palomita"' view-data="palomita" />
+                                    }
+                                </span>
+                                <span style="flex: 1">
+                                    <span class="d-block">@m.Meta.Texto</span>
+                                    <span class="d-block small text-muted">@m.Meta.Habilidad · @m.Detalle</span>
+                                </span>
+                                <partial name="_Icono" model='"chevron"' view-data="palomita" />
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </details>
+        </li>
+    }
+</ol>
+
+<p class="small text-muted mt-3">
+    La app llega hasta B2. ¿No sabes en qué etapa empezar? Haz el
+    <a asp-controller="Diagnostico" asp-action="Index">diagnóstico de nivel</a>: las etapas que ya dominas se marcan solas.
+</p>

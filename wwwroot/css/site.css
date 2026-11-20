@@ -156,15 +156,22 @@ code {
     margin-bottom: 24px;
 }
 
-.barra-enfoque .avance {
-    flex: 1;
+/* Barra de avance: en la barra del repaso y también suelta (diagnóstico, ruta). */
+.avance {
+    display: block;
     height: 10px;
     background: var(--borde);
     border-radius: 999px;
     overflow: hidden;
 }
 
-.barra-enfoque .avance > div {
+.barra-enfoque .avance {
+    flex: 1;
+}
+
+.avance > div,
+.avance > span {
+    display: block;
     height: 100%;
     background: var(--acento);
     border-radius: 999px;
@@ -486,6 +493,7 @@ textarea.form-control {
 /* ---------- Utilidades (las pocas que usan las vistas) ---------- */
 
 .d-flex { display: flex; }
+.d-block { display: block; }
 .flex-wrap { flex-wrap: wrap; }
 .align-items-center { align-items: center; }
 .align-items-baseline { align-items: baseline; }
@@ -1437,4 +1445,69 @@ a.chip {
     background: var(--error-suave);
     border-color: var(--error);
     color: var(--error-texto);
+}
+
+/* ---------- Ruta de aprendizaje ---------- */
+
+.etapas-ruta {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.etapa-actual {
+    box-shadow: 0 0 0 2px var(--acento);
+}
+
+.etapa-ruta summary {
+    list-style: none;
+    cursor: pointer;
+}
+
+.etapa-ruta summary::-webkit-details-marker {
+    display: none;
+}
+
+.metas-ruta {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.metas-ruta li + li {
+    border-top: 1px solid var(--borde);
+}
+
+.metas-ruta a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 48px;
+    padding: 8px 0;
+    color: var(--texto);
+    text-decoration: none;
+}
+
+.marca-meta {
+    flex: none;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    border: 2px solid var(--borde-fuerte);
+}
+
+.meta-hecha .marca-meta {
+    border-color: var(--exito);
+    background: var(--exito);
+    color: #FFFFFF;
+}
+
+.meta-hecha .d-block:first-child {
+    color: var(--texto-2);
 }

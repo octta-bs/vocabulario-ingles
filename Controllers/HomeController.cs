@@ -17,9 +17,12 @@ public class HomeController : Controller
     private readonly ZonaHorariaUsuario _zona;
     private readonly AppDbContext _db;
 
+    private readonly RutaService _ruta;
+
     public HomeController(RepasoService repaso, EstadisticasService estadisticas,
-        RespuestasPropiasService respuestas, ZonaHorariaUsuario zona, AppDbContext db)
+        RespuestasPropiasService respuestas, ZonaHorariaUsuario zona, AppDbContext db, RutaService ruta)
     {
+        _ruta = ruta;
         _repaso = repaso;
         _estadisticas = estadisticas;
         _respuestas = respuestas;
@@ -58,7 +61,8 @@ public class HomeController : Controller
             Racha = (await _estadisticas.ObtenerAsync()).RachaActual,
             Pendientes = await _repaso.ContarPendientesAsync(modo),
             NuevasPorAgregar = Math.Min(ritmo.Cantidad, sinEmpezar),
-            Errores = (await _estadisticas.MasFalladasAsync(10, modo)).Count
+            Errores = (await _estadisticas.MasFalladasAsync(10, modo)).Count,
+            Ruta = await _ruta.CalcularAsync()
         });
     }
 

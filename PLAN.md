@@ -134,6 +134,18 @@ estudio, con pares mínimos (ship / sheep) en `Data/SonidosDificiles.cs`.
 
 Límite conocido: no dice cómo mover la lengua (como ELSA); solo si se entendió la palabra que querías decir.
 
+## Ruta de aprendizaje ✅
+
+Un camino de cero a intermedio alto en 5 etapas (Pre A1, A1, A2, B1 y B2), cada una con metas de vocabulario,
+gramática, escuchar, hablar y leer, armado con el contenido que ya existe (`Data/RutaAprendizaje.cs`).
+
+- [x] Guía sin bloquear: marca tu etapa y "lo siguiente", pero todo se puede abrir cuando quieras.
+- [x] El avance sale de lo que ya se guarda: palabras y frases aprendidas (acertadas en días distintos), temas de
+  gramática, sonidos dominados, lecturas y respuestas escritas. Situaciones, shadowing y simulacro se sugieren sin
+  medirse.
+- [x] Una etapa se completa con el 80 % de sus metas medibles, o si el diagnóstico ya te pone en ese nivel.
+- [x] En el Inicio: tu etapa, el porcentaje y "Lo siguiente".
+
 ## Revisión del contenido ✅
 
 Revisión de todo el contenido (vocabulario, frases, gramática y sonidos) como la haría un profesor. Los cambios, el
