@@ -23,12 +23,14 @@ public static class SeedData
     /// </summary>
     private static void CargarGramatica(AppDbContext db)
     {
-        var existentes = db.Categorias.Select(c => c.Nombre).ToHashSet();
+        var existentes = db.Categorias.ToDictionary(c => c.Nombre);
 
         foreach (var tema in TemasGramatica.Todos)
         {
-            if (existentes.Contains(tema.Categoria))
+            if (existentes.TryGetValue(tema.Categoria, out var existente))
             {
+                // Si el tema cambió de nivel, se actualiza (sin tocar sus frases ni el progreso).
+                existente.Nivel = tema.Nivel;
                 continue;
             }
 

@@ -104,6 +104,9 @@ típicos de hispanohablantes.
   las palabras nuevas del día.
 - [x] Ejercicios: "Corrige la frase" (nuevo), completar la parte gramatical y dictado. El resultado muestra la regla.
 
+Ajustes tras usarla: los temas van numerados de fácil a avanzado (A2 y luego B1) con "Sigue este"; las situaciones
+guiadas también van por dificultad; y en el repaso un acierto ya no se repite el mismo día.
+
 Pendiente: ajustar los temas con lo que se falle en la Fase 2.
 
 ## Ideas para después

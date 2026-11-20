@@ -13,13 +13,12 @@ public class IntervalosTests
     private static readonly bool[] Dificil = { true, true, false, false };
 
     [Theory]
-    [InlineData(0, 1, 0)]
-    [InlineData(1, 2, 1)]
-    [InlineData(2, 3, 3)]
-    [InlineData(3, 4, 7)]
-    [InlineData(4, 5, 14)]
-    [InlineData(5, 6, 30)]
-    [InlineData(6, 6, 30)] // ya está en la etapa máxima: no sube más
+    [InlineData(0, 1, 1)] // un acierto ya no se repite el mismo día: pasa a mañana
+    [InlineData(1, 2, 3)]
+    [InlineData(2, 3, 7)]
+    [InlineData(3, 4, 14)]
+    [InlineData(4, 5, 30)]
+    [InlineData(5, 5, 30)] // ya está en la etapa máxima: no sube más
     public void Fijos_un_acierto_sube_una_etapa(int etapa, int etapaEsperada, int diasEsperados)
     {
         var resultado = new IntervalosFijos().Calcular(etapa, true, Ahora, SinFallos);
@@ -38,11 +37,11 @@ public class IntervalosTests
     }
 
     [Theory]
-    [InlineData(1, 1)]  // 1 día → mínimo 1
-    [InlineData(2, 1)]  // 3 días → 1
-    [InlineData(3, 3)]  // 7 → 3
-    [InlineData(4, 7)]  // 14 → 7
-    [InlineData(5, 15)] // 30 → 15
+    [InlineData(0, 1)]  // 1 día → mínimo 1
+    [InlineData(1, 1)]  // 3 días → 1
+    [InlineData(2, 3)]  // 7 → 3
+    [InlineData(3, 7)]  // 14 → 7
+    [InlineData(4, 15)] // 30 → 15
     public void Adaptativos_una_palabra_dificil_espera_la_mitad(int etapa, int diasEsperados)
     {
         var resultado = new IntervalosAdaptativos().Calcular(etapa, true, Ahora, Dificil);
@@ -51,18 +50,22 @@ public class IntervalosTests
         Assert.Equal(Ahora.AddDays(diasEsperados), resultado.ProximoRepaso);
     }
 
-    [Fact]
-    public void Adaptativos_el_mismo_dia_sigue_siendo_el_mismo_dia()
+    [Theory]
+    [InlineData(0)]
+    [InlineData(5)]
+    public void Ningun_acierto_se_repite_el_mismo_dia(int etapa)
     {
-        var resultado = new IntervalosAdaptativos().Calcular(0, true, Ahora, Dificil);
-
-        Assert.Equal(Ahora, resultado.ProximoRepaso);
+        foreach (var historial in new[] { SinFallos, Dificil })
+        {
+            Assert.True(new IntervalosFijos().Calcular(etapa, true, Ahora, historial).ProximoRepaso >= Ahora.AddDays(1));
+            Assert.True(new IntervalosAdaptativos().Calcular(etapa, true, Ahora, historial).ProximoRepaso >= Ahora.AddDays(1));
+        }
     }
 
     [Theory]
     [InlineData(0)]
     [InlineData(3)]
-    [InlineData(6)]
+    [InlineData(5)]
     public void Adaptativos_sin_fallos_es_igual_que_fijos(int etapa)
     {
         var fijos = new IntervalosFijos().Calcular(etapa, true, Ahora, SinFallos);
