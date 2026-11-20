@@ -27,6 +27,40 @@ public static class TemasGramatica
     /// <summary>En orden de estudio: de lo más básico (A2) a lo más avanzado (B1).</summary>
     public static readonly Tema[] Todos =
     {
+        new("tiempos-basicos", "Presente, pasado y futuro", NivelMcer.A2,
+            "Los tres tiempos básicos: I fix, I fixed, I will fix.",
+            new[]
+            {
+                "Presente simple para rutinas y hechos: I work, they work. Con he, she o it el verbo lleva -s: she works.",
+                "En presente, la negación es don't o doesn't + el verbo sin cambios: He doesn't use Docker.",
+                "Pasado simple para algo que ya terminó: los regulares llevan -ed (deployed); los irregulares cambian (write → wrote). La negación es didn't + el verbo sin cambios.",
+                "Futuro: will + el verbo sin cambios: I will call you. Para planes ya decididos también se usa going to (tema 6)."
+            },
+            new FraseGramatica[]
+            {
+                new("She works from home on Fridays.", "She work from home on Fridays.",
+                    "Ella trabaja desde casa los viernes.", "works",
+                    "Con he, she o it, el presente lleva -s: works."),
+                new("The build takes ten minutes.", "The build take ten minutes.",
+                    "El build tarda diez minutos.", "takes",
+                    "The build es \"it\": el presente lleva -s (takes)."),
+                new("He doesn't use Docker.", "He don't use Docker.",
+                    "Él no usa Docker.", "doesn't",
+                    "Con he, she o it, la negación en presente es doesn't."),
+                new("I deployed the app yesterday.", "I deploy the app yesterday.",
+                    "Publiqué la aplicación ayer.", "deployed",
+                    "Yesterday es pasado: deployed, con -ed."),
+                new("We wrote the tests last week.", "We writed the tests last week.",
+                    "Escribimos las pruebas la semana pasada.", "wrote",
+                    "Write es irregular: su pasado es wrote, no \"writed\"."),
+                new("I didn't finish the task.", "I didn't finished the task.",
+                    "No terminé la tarea.", "finish",
+                    "Con didn't, el verbo va sin cambios: finish, no finished."),
+                new("I will call you tomorrow.", "I call you tomorrow.",
+                    "Te llamo mañana.", "will",
+                    "Para el futuro usa will + verbo: I will call. En español se dice en presente, en inglés no.")
+            }),
+
         new("errores-tipicos", "Errores típicos de hispanohablantes", NivelMcer.A2,
             "Los que más delatan en una entrevista: \"I am agree\", \"people is\"…",
             new[]

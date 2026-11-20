@@ -26,7 +26,7 @@ public sealed class GramaticaTests : IDisposable
     [Fact]
     public void Los_temas_son_validos()
     {
-        Assert.Equal(10, TemasGramatica.Todos.Length);
+        Assert.Equal(11, TemasGramatica.Todos.Length);
         Assert.Equal(TemasGramatica.Todos.Length, TemasGramatica.Todos.Select(t => t.Clave).Distinct().Count());
 
         foreach (var tema in TemasGramatica.Todos)
@@ -52,13 +52,13 @@ public sealed class GramaticaTests : IDisposable
     {
         var niveles = TemasGramatica.Todos.Select(t => t.Nivel).ToList();
         Assert.Equal(niveles.Order(), niveles);
-        Assert.Equal("errores-tipicos", TemasGramatica.Todos[0].Clave);
+        Assert.Equal("tiempos-basicos", TemasGramatica.Todos[0].Clave);
 
         var temas = await _gramatica.ListarAsync();
         Assert.Equal(Enumerable.Range(1, temas.Count), temas.Select(t => t.Numero));
         Assert.Equal(1, GramaticaService.Siguiente(temas)!.Numero);
 
-        await _gramatica.PracticarAsync("errores-tipicos");
+        await _gramatica.PracticarAsync("tiempos-basicos");
         Assert.Equal(2, GramaticaService.Siguiente(await _gramatica.ListarAsync())!.Numero);
     }
 

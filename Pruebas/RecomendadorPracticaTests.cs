@@ -1,3 +1,4 @@
+using VocabularioIngles.Data;
 using VocabularioIngles.Services;
 
 namespace VocabularioIngles.Pruebas;
@@ -24,11 +25,12 @@ public class RecomendadorPracticaTests
     }
 
     [Fact]
-    public void En_trabajo_sin_gramatica_recomienda_los_errores_tipicos()
+    public void En_trabajo_sin_gramatica_recomienda_el_tema_1()
     {
         var r = RecomendadorPractica.Elegir(ModoApp.Trabajo, Hoy, errores: 0, temasGramaticaEmpezados: 0)!;
 
-        Assert.Equal(("Gramatica", "Tema", "errores-tipicos"), (r.Controlador, r.Accion, r.Id));
+        Assert.Equal(("Gramatica", "Tema", "tiempos-basicos"), (r.Controlador, r.Accion, r.Id));
+        Assert.Equal(TemasGramatica.Todos[0].Clave, r.Id);
     }
 
     [Fact]
