@@ -115,7 +115,8 @@ public class HomeController : Controller
             Categorias = categorias.Count,
             TotalTemasGramatica = TemasGramatica.Todos.Length,
             TemasGramaticaEmpezados = temasEmpezados,
-            Recomendacion = RecomendadorPractica.Elegir(modo, _zona.Hoy, errores, temasEmpezados)
+            Recomendacion = RecomendadorPractica.Elegir(modo, _zona.Hoy, errores, temasEmpezados,
+                diagnosticoHecho: await _db.Diagnosticos.AnyAsync())
         });
     }
 

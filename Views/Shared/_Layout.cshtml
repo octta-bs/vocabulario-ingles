@@ -8,7 +8,7 @@
     var pestana = controlador switch
     {
         "Repaso" => "repaso",
-        "Progreso" => "progreso",
+        "Progreso" or "Diagnostico" => "progreso",
         "Practica" or "Simulacro" or "MisRespuestas" or "Palabras" or "Lecturas" or "Situaciones" or "Gramatica" => "practicar",
         "Home" when accion == "Practicar" => "practicar",
         _ => "inicio"

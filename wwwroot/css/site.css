@@ -1356,3 +1356,41 @@ a.chip {
     border-radius: 999px;
     padding: 1px 8px;
 }
+
+/* ---------- Diagnóstico de nivel ---------- */
+
+.pregunta-diagnostico[hidden] {
+    display: none;
+}
+
+.areas-diagnostico {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.nivel-diagnostico {
+    flex: none;
+    min-width: 56px;
+    height: 56px;
+    padding: 0 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radio-chico);
+    background: var(--acento-suave);
+    color: var(--acento-suave-texto);
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.cambio-nivel {
+    color: var(--texto-2);
+}
+
+.le-falta {
+    padding-left: 32px;
+}

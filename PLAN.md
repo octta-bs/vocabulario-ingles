@@ -109,6 +109,17 @@ guiadas también van por dificultad; y en el repaso un acierto ya no se repite e
 
 Pendiente: ajustar los temas con lo que se falle en la Fase 2.
 
+## Fase 7 · Diagnóstico de nivel 🔄
+
+Un examen corto que dice tu nivel por área, tus puntos débiles y qué contenido le falta a la app. Así lo que se
+agrega sale de tus resultados y no de adivinar (apoya a la Fase 4).
+
+- [x] Paso 1: 23 preguntas de fácil a difícil (8 de vocabulario de Pre A1 a B2, 1 por cada tema de gramática y
+  4 dictados de A1 a B2). Nivel por área: el más alto al que llegas acertando al menos la mitad de cada nivel, sin
+  saltarte ninguno. Muestra tus 3 puntos débiles con enlace para practicarlos y "lo que le falta a la app" cuando
+  llegas al nivel más alto de un área. Se guarda (tabla `Diagnosticos`) para compararlo cada mes; no toca el repaso.
+- [ ] Paso 2: hablar (decir 2 o 3 frases con el micrófono).
+
 ## Ideas para después
 
 Anotarlas aquí antes de programarlas:

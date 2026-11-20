@@ -5,6 +5,7 @@ public record Recomendacion(string Titulo, string Motivo, string Icono, string C
 
 /// <summary>
 /// Elige UNA práctica para hoy, para no tener que decidir entre muchas opciones. Reglas, en orden:
+/// 0) si nunca has hecho el diagnóstico de nivel, el diagnóstico (en los dos modos);
 /// 1) si fallas seguido 5 palabras o más, Mis errores; 2) en modo Trabajo, si no has empezado gramática, el tema 1
 /// (presente, pasado y futuro); 3) si no, una práctica en voz alta que cambia cada día (situaciones, shadowing o simulacro).
 /// En modo Principiante solo aplica la primera regla.
@@ -13,8 +14,16 @@ public static class RecomendadorPractica
 {
     public const int MinimoErrores = 5;
 
-    public static Recomendacion? Elegir(ModoApp modo, DateOnly hoy, int errores, int temasGramaticaEmpezados)
+    public static Recomendacion? Elegir(ModoApp modo, DateOnly hoy, int errores, int temasGramaticaEmpezados,
+        bool diagnosticoHecho = true)
     {
+        if (!diagnosticoHecho)
+        {
+            return new Recomendacion("Diagnóstico de nivel",
+                "10 a 15 minutos para saber tu nivel y qué practicar primero.",
+                "diana", "Diagnostico", "Index");
+        }
+
         if (errores >= MinimoErrores)
         {
             return new Recomendacion("Mis errores",

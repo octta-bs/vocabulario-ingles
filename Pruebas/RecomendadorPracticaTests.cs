@@ -19,6 +19,16 @@ public class RecomendadorPracticaTests
     }
 
     [Fact]
+    public void Si_nunca_has_hecho_el_diagnostico_es_lo_primero_en_los_dos_modos()
+    {
+        foreach (var modo in new[] { ModoApp.Trabajo, ModoApp.Principiante })
+        {
+            var r = RecomendadorPractica.Elegir(modo, Hoy, errores: 9, temasGramaticaEmpezados: 0, diagnosticoHecho: false)!;
+            Assert.Equal("Diagnostico", r.Controlador);
+        }
+    }
+
+    [Fact]
     public void En_principiante_sin_errores_no_recomienda_nada()
     {
         Assert.Null(RecomendadorPractica.Elegir(ModoApp.Principiante, Hoy, errores: 4, temasGramaticaEmpezados: 0));

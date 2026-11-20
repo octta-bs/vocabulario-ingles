@@ -5,6 +5,8 @@
     var errores = Model.Errores == 0 ? "Todavía no has fallado ninguna palabra"
         : Model.Errores == 1 ? "1 palabra que fallaste" : $"{Model.Errores} palabras que más fallas";
     var misErrores = new OpcionPracticar("Repaso", "Errores", "diana", "Mis errores", errores);
+    var diagnostico = new OpcionPracticar("Diagnostico", "Index", "diana", "Diagnóstico de nivel",
+        "Tu nivel por área y qué te falta practicar");
     var todas = new OpcionPracticar("Palabras", "Index", "lista", "Todas las palabras",
         $"{Model.TotalPalabras} palabras y frases en {Model.Categorias} categorías");
 }
@@ -51,6 +53,7 @@
     <h2 class="seccion-titulo" id="grupo-repasar">Repasar</h2>
     <ul class="opciones">
         <partial name="_OpcionPracticar" model="misErrores" />
+        <partial name="_OpcionPracticar" model="diagnostico" />
         <partial name="_OpcionPracticar" model="todas" />
     </ul>
 </section>

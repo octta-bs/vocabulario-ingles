@@ -1,0 +1,44 @@
+@model List<Diagnostico>
+@inject VocabularioIngles.Services.ZonaHorariaUsuario Zona
+@{
+    ViewData["Title"] = "Diagnóstico de nivel";
+    var cultura = System.Globalization.CultureInfo.GetCultureInfo("es-MX");
+    string Nivel(NivelMcer? n) => n?.Texto() ?? "—";
+}
+
+<h1 class="mb-1">Diagnóstico de nivel</h1>
+<p class="text-muted">
+    Unas 23 preguntas, de fácil a difícil, en 10 a 15 minutos: vocabulario, gramática y escuchar.
+    Al final te dice tu nivel en cada área, tus puntos débiles y qué contenido le falta a la app para tu nivel.
+    No cuenta para tu repaso.
+</p>
+
+<a class="boton-principal mb-4" asp-action="Examen" id="empezar-diagnostico">
+    <span style="flex: 1">
+        <span class="titulo">@(Model.Count == 0 ? "Empezar diagnóstico" : "Hacer otro diagnóstico")</span>
+        <span class="subtitulo">@(Model.Count == 0 ? "Te recomiendo hacerlo una vez al mes" : "Hazlo una vez al mes para ver tu avance")</span>
+    </span>
+    <partial name="_Icono" model='"flecha"' />
+</a>
+
+@if (Model.Count > 0)
+{
+    <h2 class="seccion-titulo">Tus diagnósticos</h2>
+    <ul class="opciones">
+        @foreach (var d in Model)
+        {
+            var fecha = Zona.DiaLocal(d.Fecha);
+            <li>
+                <a class="opcion" asp-action="Resultado" asp-route-id="@d.Id">
+                    <span class="textos">
+                        <span class="nombre">@fecha.ToString("d 'de' MMMM yyyy", cultura)</span>
+                        <span class="detalle">
+                            Vocabulario @Nivel(d.NivelVocabulario) · Gramática @Nivel(d.NivelGramatica) · Escuchar @Nivel(d.NivelEscucha)
+                            · @d.Aciertos de @d.Total
+                        </span>
+                    </span>
+                </a>
+            </li>
+        }
+    </ul>
+}
