@@ -17,6 +17,9 @@ public class InicioViewModel
     // Cuántas palabras nuevas te tocan ahora (ya limitado a las que quedan sin empezar).
     public int NuevasPorAgregar { get; init; }
     public int Errores { get; init; }
+
+    // La ruta de aprendizaje: en qué etapa vas y qué sigue.
+    public VocabularioIngles.Services.RutaEstado? Ruta { get; init; }
 }
 
 /// <summary>Lo que muestra la pantalla "Practicar".</summary>

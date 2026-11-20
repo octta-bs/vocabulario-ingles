@@ -18,7 +18,7 @@ public class RepasoController : Controller
     }
 
     // Cookie donde se recuerda la última categoría elegida para las palabras nuevas.
-    private const string CookieCategoria = "categoriaNuevas";
+    public const string CookieCategoria = "categoriaNuevas";
 
     // Muestra el siguiente ejercicio pendiente del modo actual (o avisa que no hay).
     public async Task<IActionResult> Index()

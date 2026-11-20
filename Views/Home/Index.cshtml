@@ -90,6 +90,28 @@ else
     </p>
 }
 
+@if (Model.Ruta is { } ruta)
+{
+    <section class="card card-body mb-4 tarjeta-ruta" aria-labelledby="titulo-ruta">
+        <div class="d-flex align-items-center justify-content-between gap-2 mb-1">
+            <h2 class="h6 mb-0" id="titulo-ruta">Tu ruta · Etapa @ruta.Actual.Etapa.Numero de 5</h2>
+            <a class="small" asp-controller="Ruta" asp-action="Index">Ver ruta</a>
+        </div>
+        <p class="small text-muted mb-2">@ruta.Actual.Etapa.Titulo (@ruta.Actual.Etapa.Nivel.Texto()) · @ruta.Actual.Porcentaje % hecho</p>
+        <span class="avance mb-3" role="progressbar" aria-label="Avance de tu etapa"
+              aria-valuenow="@ruta.Actual.Porcentaje" aria-valuemin="0" aria-valuemax="100">
+            <span style="width: @ruta.Actual.Porcentaje%"></span>
+        </span>
+        @if (ruta.Siguiente is { } siguiente)
+        {
+            <a class="btn btn-outline-primary btn-bloque" id="siguiente-inicio"
+               asp-controller="Ruta" asp-action="Ir" asp-route-etapa="@siguiente.Etapa" asp-route-meta="@siguiente.Indice">
+                Lo siguiente: @siguiente.Meta.Texto
+            </a>
+        }
+    </section>
+}
+
 <h2 class="seccion-titulo">Practica también</h2>
 <div class="accesos">
     @if (Model.Modo == VocabularioIngles.Services.ModoApp.Trabajo)
